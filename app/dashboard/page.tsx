@@ -8,9 +8,11 @@ import { getAppLocale, tx } from "@/lib/costera/i18n";
 const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
 function discoveredChannels() {
+  const priceById = new Map(sampleInput.menuItems.map((m) => [m.id, m.sellingPrice]));
   const map = new Map<string, number>();
   for (const sale of sampleInput.sales) {
-    map.set(sale.channel, (map.get(sale.channel) || 0) + (sale.netSales || 0));
+    const revenue = sale.netSales ?? sale.quantity * (priceById.get(sale.menuItemId) || 0);
+    map.set(sale.channel, (map.get(sale.channel) || 0) + revenue);
   }
   return [...map.entries()]
     .map(([channel, sales]) => ({ channel, sales }))
@@ -158,7 +160,7 @@ export default async function DashboardPage(){
      <div className="overview-channel-total"><span>{tx(locale,"Tracked sales","Takip edilen satış")}</span><strong>{money(channelRows.reduce((s,x)=>s+x.sales,0))}</strong></div>
      <div className="overview-channel-bars">
       {channelRows.map((r)=><div key={r.channel}>
-        <div><span>{r.channel}</span><b>{"$"+r.sales.toLocaleString()}</b></div>
+        <div><span>{r.channel}</span><b>{money(r.sales)}</b></div>
         <i><em style={{width: Math.max(8,(r.sales/maxChannel)*100)+"%"}} /></i>
         <small>{r.channel.toLowerCase()==="dine-in"?tx(locale,"Direct sale","Direkt satış"):tx(locale,"Check fee coverage","Komisyon verisini kontrol et")}</small>
       </div>)}

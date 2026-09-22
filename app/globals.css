@@ -10336,7 +10336,8 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   border-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 8px;
   color: #fff;
   background: linear-gradient(135deg,#0a304b,#123f5d);
   box-shadow: 0 9px 18px rgba(7,42,66,.12);
