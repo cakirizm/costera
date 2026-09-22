@@ -1939,3 +1939,41 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   height: 16px;
   flex-basis: 24px;
 }
+
+
+/* =========================================================
+   DESKTOP 100% VIEW = PREVIOUS 90% BROWSER-ZOOM COMPOSITION
+   Keep the homepage visually compact without asking the user
+   to change browser zoom.
+   ========================================================= */
+@media (min-width: 1200px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .site-header,
+  .reference-home {
+    zoom: .90;
+    width: 111.111111%;
+  }
+
+  .site-header {
+    max-width: 111.111111%;
+  }
+}
+
+/* Make the handwritten note readable on both light laptop UI
+   and the restaurant background. */
+.reference-hand-note {
+  color: #0a2943;
+  font-weight: 650;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.95),
+    0 0 8px rgba(255,255,255,.95),
+    0 2px 12px rgba(255,255,255,.82);
+}
+
+.reference-hand-note::after {
+  border-bottom-color: #b47a2f;
+  opacity: .95;
+}
