@@ -4792,7 +4792,7 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 
 .control-equation-v2 {
   display: grid;
-  grid-template-columns: repeat(4,minmax(120px,1fr)) repeat(3,22px);
+  grid-template-columns: minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);
   align-items: center;
   gap: 7px;
 }
@@ -4881,7 +4881,7 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 .control-flow-row {
   margin-top: 14px;
   display: grid;
-  grid-template-columns: repeat(4,minmax(0,1fr)) repeat(3,22px);
+  grid-template-columns: minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);
   gap: 7px;
   align-items: center;
 }
