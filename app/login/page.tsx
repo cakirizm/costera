@@ -5,13 +5,14 @@ export default function LoginPage() {
   return (
     <main className="auth-page">
       <div className="auth-visual">
-        <Link href="/" className="auth-brand"><Brand /></Link>
+        <div className="auth-brand-row">
+          <Link href="/" className="auth-brand"><Brand light /></Link>
+          <Link href="/tr/login" className="language-switch auth-language">TR</Link>
+        </div>
         <div className="auth-visual-copy">
           <div className="eyebrow eyebrow-light">RESTAURANT COST INTELLIGENCE</div>
           <h1>One clear view of cost, stock and variance.</h1>
-          <p>
-            Secure access for restaurant owners, managers and operational teams.
-          </p>
+          <p>Secure access for restaurant owners, managers and operational teams.</p>
         </div>
       </div>
       <div className="auth-panel">
@@ -20,14 +21,8 @@ export default function LoginPage() {
           <h2>Welcome back.</h2>
           <p>Use your COSTERA account to access your restaurant workspace.</p>
           <form action="/dashboard" className="auth-form">
-            <label>
-              Work email
-              <input type="email" placeholder="name@restaurant.com" required />
-            </label>
-            <label>
-              Password
-              <input type="password" placeholder="••••••••" required />
-            </label>
+            <label>Work email<input type="email" placeholder="name@restaurant.com" required /></label>
+            <label>Password<input type="password" placeholder="••••••••" required /></label>
             <div className="auth-meta">
               <label className="check-label"><input type="checkbox" /> Remember me</label>
               <a href="#">Forgot password?</a>
