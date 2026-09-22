@@ -1,4 +1,6 @@
+import { cookies } from "next/headers";
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
+import { EmptyWorkspace } from "@/components/app/EmptyWorkspace";
 import { analyzeCost } from "@/lib/costera/engine";
 import { sampleInput } from "@/lib/costera/sample";
 
@@ -11,23 +13,41 @@ const channelRows = [
   ["Careem","$5,240","33.1%","10.8%"],
 ];
 
-export default function DashboardPage(){
+export default async function DashboardPage(){
+ const cookieStore = await cookies();
+ const demoConnected = cookieStore.get("costera_polaris_demo")?.value === "1";
+
+ if (!demoConnected) {
+   return (
+    <COSTERAAppShell active="/dashboard" title="Overview" eyebrow="NO LIVE SOURCE">
+      <div className="costera-metrics five">
+        <AppMetric label="Net Sales" value="$0" meta="No connected source" />
+        <AppMetric label="Target Food Cost" value="25.0%" meta="Configured target" tone="gold" />
+        <AppMetric label="Actual Food Cost" value="—" meta="Waiting for data" />
+        <AppMetric label="Unexplained Variance" value="$0" meta="Waiting for data" />
+        <AppMetric label="Theoretical Cost" value="$0" meta="Waiting for recipe sales data" />
+      </div>
+      <EmptyWorkspace />
+    </COSTERAAppShell>
+   );
+ }
+
  const analysis = analyzeCost(sampleInput);
  const t = analysis.totals;
  const varianceRows = analysis.ingredientVariance.slice(0,4);
 
  return (
-  <COSTERAAppShell active="/dashboard" title="Overview" eyebrow="LIVE ENGINE · SAMPLE SOURCE">
+  <COSTERAAppShell active="/dashboard" title="Overview" eyebrow="POLARIS DEMO · CONNECTED">
    <div className="costera-alert-strip">
     <div><i>!</i><p>
       <strong>{money(t.unexplainedCost)} unexplained cost requires review</strong>
-      <span>Calculated from current sales, recipe and inventory inputs.</span>
+      <span>Calculated from the connected Polaris demo feed.</span>
     </p></div>
     <a href="/dashboard/variance">Open Cost Control →</a>
    </div>
 
    <div className="costera-metrics five">
-    <AppMetric label="Net Sales" value={money(t.netSales)} meta={analysis.dataQuality.mappedSalesCount + "/" + analysis.dataQuality.salesCount + " sales records mapped"} tone="good" />
+    <AppMetric label="Net Sales" value={money(t.netSales)} meta={analysis.dataQuality.mappedSalesCount + "/" + analysis.dataQuality.salesCount + " sales rows mapped"} tone="good" />
     <AppMetric label="Target Food Cost" value={t.targetFoodCostPct.toFixed(1) + "%"} meta="Configured group target" tone="gold" />
     <AppMetric label="Actual Food Cost" value={t.actualFoodCostPct.toFixed(1) + "%"} meta={(t.targetGapPp >= 0 ? "+" : "") + t.targetGapPp.toFixed(1) + " pp vs target"} tone={t.targetGapPp > 0 ? "bad" : "good"} />
     <AppMetric label="Unexplained Variance" value={money(t.unexplainedCost)} meta={((t.unexplainedCost/t.netSales)*100).toFixed(1) + "% of net sales"} tone="bad" />
@@ -50,7 +70,7 @@ export default function DashboardPage(){
        <div><span>Sales mapping</span><b>{analysis.dataQuality.mappedSalesCount}/{analysis.dataQuality.salesCount}</b><em className="good">Ready</em></div>
        <div><span>Missing menu IDs</span><b>{analysis.dataQuality.missingMenuItems.length}</b><em className={analysis.dataQuality.missingMenuItems.length ? "bad" : "good"}>{analysis.dataQuality.missingMenuItems.length ? "Review" : "Clear"}</em></div>
        <div><span>Missing ingredient IDs</span><b>{analysis.dataQuality.missingIngredients.length}</b><em className={analysis.dataQuality.missingIngredients.length ? "bad" : "good"}>{analysis.dataQuality.missingIngredients.length ? "Review" : "Clear"}</em></div>
-       <a href="/api/engine/analyze" target="_blank">Open live engine response →</a>
+       <a href="/dashboard/integrations">Manage source →</a>
      </div>
     </article>
    </section>
