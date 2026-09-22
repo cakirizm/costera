@@ -14,7 +14,7 @@ const steps = [
 export default function HowItWorksPage() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader locale="en" path="/how-it-works" />
       <main>
         <section className="page-hero page-hero-photo">
           <div className="shell narrow">
@@ -73,7 +73,7 @@ export default function HowItWorksPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter locale="en" />
     </>
   );
 }
