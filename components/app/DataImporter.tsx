@@ -11,6 +11,7 @@ import {
   type SourceKind,
 } from "@/lib/costera/ingestion";
 import type { CosteraAnalysis } from "@/lib/costera/types";
+import type { AppLocale } from "@/lib/costera/i18n";
 
 type SourceState = {
   fileName: string;
@@ -98,13 +99,18 @@ function SourceCard({
   onFile,
   onMapping,
   onDemo,
+  locale,
 }: {
   kind: SourceKind;
   source: SourceState;
   onFile: (file: File) => void;
   onMapping: (field: string, header: string) => void;
   onDemo: () => void;
+  locale: AppLocale;
 }) {
+  const tr = locale === "tr";
+  const t = (en: string, turkish: string) => tr ? turkish : en;
+  const sourceLabel = kind === "pos" ? t("POS / Sales","POS / Satış") : kind === "recipes" ? t("Recipes / BOM","Reçeteler / BOM") : t("Inventory / Purchases","Stok / Satın Alma");
   const schema = schemas[kind];
   const required = new Set<string>(schema.required);
   const missing = schema.required.filter((field) => !source.mapping[field]);
@@ -116,11 +122,11 @@ function SourceCard({
           {kind === "pos" ? "01" : kind === "recipes" ? "02" : "03"}
         </div>
         <div>
-          <span>{source.table ? "DATA LOADED" : "REQUIRED SOURCE"}</span>
-          <h3>{schema.label}</h3>
+          <span>{source.table ? t("DATA LOADED","VERİ YÜKLENDİ") : t("REQUIRED SOURCE","GEREKLİ KAYNAK")}</span>
+          <h3>{sourceLabel}</h3>
         </div>
         <b className={source.table && missing.length === 0 ? "ok" : ""}>
-          {source.table ? (missing.length ? missing.length + " mapping missing" : "Ready") : "Waiting"}
+          {source.table ? (missing.length ? missing.length + " " + t("mapping missing","eşleştirme eksik") : t("Ready","Hazır")) : t("Waiting","Bekliyor")}
         </b>
       </div>
 
@@ -134,12 +140,12 @@ function SourceCard({
           }}
         />
         <i>{kind === "pos" ? "▤" : kind === "recipes" ? "≋" : "▣"}</i>
-        <strong>{source.fileName || "Choose CSV or Excel file"}</strong>
-        <span>{source.table ? source.table.rows.length + " data rows detected" : "CSV, TXT, XLSX or XLS"}</span>
+        <strong>{source.fileName || t("Choose CSV or Excel file","CSV veya Excel dosyası seç")}</strong>
+        <span>{source.table ? source.table.rows.length + " " + t("data rows detected","veri satırı bulundu") : "CSV, TXT, XLSX or XLS"}</span>
       </label>
 
       <button type="button" className="import-demo-button" onClick={onDemo}>
-        Load demo file
+        {t("Load demo file","Demo dosyasını yükle")}
       </button>
 
       {source.error && <div className="import-error">{source.error}</div>}
@@ -147,15 +153,15 @@ function SourceCard({
       {source.table && (
         <>
           <div className="import-detected">
-            <span>{source.table.headers.length} columns</span>
-            <span>{source.table.rows.length} rows</span>
-            <span>{source.table.delimiter === "excel" ? "Excel" : "CSV detected"}</span>
+            <span>{source.table.headers.length} {t("columns","kolon")}</span>
+            <span>{source.table.rows.length} {t("rows","satır")}</span>
+            <span>{source.table.delimiter === "excel" ? "Excel" : t("CSV detected","CSV algılandı")}</span>
           </div>
 
           <div className="import-mapping">
             <div className="import-mapping-title">
-              <strong>Column mapping</strong>
-              <span>Auto-detected · change anything that is wrong</span>
+              <strong>{t("Column mapping","Kolon eşleştirme")}</strong>
+              <span>{t("Auto-detected · change anything that is wrong","Otomatik algılandı · yanlış olanı değiştir")}</span>
             </div>
 
             {schema.fields.map(([field, label]) => (
@@ -168,7 +174,7 @@ function SourceCard({
                   value={source.mapping[field] || ""}
                   onChange={(event) => onMapping(field, event.target.value)}
                 >
-                  <option value="">Not mapped</option>
+                  <option value="">{t("Not mapped","Eşleşmedi")}</option>
                   {source.table?.headers.map((header) => (
                     <option key={header} value={header}>{header}</option>
                   ))}
@@ -178,7 +184,7 @@ function SourceCard({
           </div>
 
           <div className="import-preview">
-            <strong>Preview</strong>
+            <strong>{t("Preview","Önizleme")}</strong>
             <div>
               {source.table.headers.slice(0, 4).map((header) => <span key={header}>{header}</span>)}
             </div>
@@ -194,7 +200,9 @@ function SourceCard({
   );
 }
 
-export function DataImporter() {
+export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
+  const tr = locale === "tr";
+  const t = (en: string, turkish: string) => tr ? turkish : en;
   const [sources, setSources] = useState<Record<SourceKind, SourceState>>({
     pos: blankSource(),
     recipes: blankSource(),
@@ -324,20 +332,19 @@ export function DataImporter() {
     <div className="import-studio">
       <section className="import-intro">
         <div>
-          <span>UNIVERSAL INGESTION ADAPTER</span>
-          <h2>Upload the restaurant&apos;s own files.</h2>
+          <span>{t("UNIVERSAL INGESTION ADAPTER","UNIVERSAL VERİ ADAPTERI")}</span>
+          <h2>{t("Upload the restaurant’s own files.","Restoranın kendi dosyalarını yükle.")}</h2>
           <p>
-            COSTERA detects the columns, converts different restaurant formats into one operating model,
-            then sends the normalized data to the live cost and leakage engine.
+            {t("COSTERA detects the columns, converts different restaurant formats into one operating model, then sends the normalized data to the live cost and leakage engine.","COSTERA kolonları algılar, farklı restoran formatlarını tek operasyon modeline dönüştürür ve normalize veriyi canlı maliyet ve kaçak motoruna gönderir.")}
           </p>
         </div>
 
         <div className="import-intro-actions">
           <label>
-            Target Food Cost
+            {t("Target Food Cost","Hedef Food Cost")}
             <div><input value={target} onChange={(e) => setTarget(e.target.value)} /><span>%</span></div>
           </label>
-          <button type="button" onClick={loadAllDemo}>Load complete demo</button>
+          <button type="button" onClick={loadAllDemo}>{t("Load complete demo","Tüm demoyu yükle")}</button>
         </div>
       </section>
 
@@ -348,7 +355,7 @@ export function DataImporter() {
             <span>{schemas[item.kind].label}</span>
           </div>
         ))}
-        <div className={result ? "ready" : ""}><i>{result ? "✓" : "4"}</i><span>Analysis</span></div>
+        <div className={result ? "ready" : ""}><i>{result ? "✓" : "4"}</i><span>{t("Analysis","Analiz")}</span></div>
       </div>
 
       <section className="import-source-grid">
@@ -360,22 +367,23 @@ export function DataImporter() {
             onFile={(file) => handleFile(kind, file)}
             onDemo={() => loadDemo(kind)}
             onMapping={(field, header) => setMapping(kind, field, header)}
+            locale={locale}
           />
         ))}
       </section>
 
       <section className="import-run-panel">
         <div>
-          <span>ENGINE STATUS</span>
-          <strong>{allReady ? "Ready to calculate" : "Complete the 3 source mappings"}</strong>
+          <span>{t("ENGINE STATUS","MOTOR DURUMU")}</span>
+          <strong>{allReady ? t("Ready to calculate","Hesaplamaya hazır") : t("Complete the 3 source mappings","3 kaynak eşleştirmesini tamamla")}</strong>
           <small>
             {allReady
-              ? "Files will be normalized in your browser and sent to the COSTERA analysis API."
-              : readiness.filter((x) => !x.ready).map((x) => schemas[x.kind].label).join(", ") + " needs attention."}
+              ? t("Files will be normalized in your browser and sent to the COSTERA analysis API.","Dosyalar tarayıcıda normalize edilip COSTERA analiz API'sine gönderilecek.")
+              : readiness.filter((x) => !x.ready).map((x) => schemas[x.kind].label).join(", ") + " " + t("needs attention.","kontrol edilmeli.")}
           </small>
         </div>
         <button type="button" disabled={!allReady || running} onClick={runAnalysis}>
-          {running ? "Calculating…" : "Run COSTERA Analysis →"}
+          {running ? t("Calculating…","Hesaplanıyor…") : t("Run COSTERA Analysis →","COSTERA Analizini Çalıştır →")}
         </button>
       </section>
 
@@ -385,22 +393,22 @@ export function DataImporter() {
         <section className="import-result">
           <div className="import-result-head">
             <div>
-              <span>CALCULATION COMPLETE</span>
-              <h2>Restaurant cost control result</h2>
+              <span>{t("CALCULATION COMPLETE","HESAPLAMA TAMAMLANDI")}</span>
+              <h2>{t("Restaurant cost control result","Restoran maliyet kontrol sonucu")}</h2>
             </div>
-            <button type="button" onClick={downloadResult}>Download JSON</button>
+            <button type="button" onClick={downloadResult}>{t("Download JSON","JSON İndir")}</button>
           </div>
 
           <div className="import-result-metrics">
-            <article><span>Net Sales</span><strong>{"$"}{result.totals.netSales.toLocaleString()}</strong><small>{result.dataQuality.mappedSalesCount}/{result.dataQuality.salesCount} sales rows mapped</small></article>
-            <article><span>Target Food Cost</span><strong>{result.totals.targetFoodCostPct}%</strong><small>Configured target</small></article>
-            <article className="bad"><span>Actual Food Cost</span><strong>{result.totals.actualFoodCostPct}%</strong><small>{result.totals.targetGapPp > 0 ? "+" : ""}{result.totals.targetGapPp} pp vs target</small></article>
-            <article className="bad"><span>Unexplained Cost</span><strong>{"$"}{result.totals.unexplainedCost.toLocaleString()}</strong><small>Requires root-cause review</small></article>
+            <article><span>{t("Net Sales","Net Satış")}</span><strong>{"$"}{result.totals.netSales.toLocaleString()}</strong><small>{result.dataQuality.mappedSalesCount}/{result.dataQuality.salesCount} sales rows mapped</small></article>
+            <article><span>{t("Target Food Cost","Hedef Food Cost")}</span><strong>{result.totals.targetFoodCostPct}%</strong><small>Configured target</small></article>
+            <article className="bad"><span>{t("Actual Food Cost","Gerçek Food Cost")}</span><strong>{result.totals.actualFoodCostPct}%</strong><small>{result.totals.targetGapPp > 0 ? "+" : ""}{result.totals.targetGapPp} pp vs target</small></article>
+            <article className="bad"><span>{t("Unexplained Cost","Açıklanamayan Maliyet")}</span><strong>{"$"}{result.totals.unexplainedCost.toLocaleString()}</strong><small>Requires root-cause review</small></article>
           </div>
 
           <div className="import-result-grid">
             <div className="import-result-table">
-              <div className="head"><span>Ingredient</span><span>Actual</span><span>Theoretical</span><span>Gap</span><span>Impact</span></div>
+              <div className="head"><span>{t("Ingredient","Malzeme")}</span><span>{t("Actual","Gerçek")}</span><span>{t("Theoretical","Teorik")}</span><span>{t("Gap","Fark")}</span><span>{t("Impact","Etki")}</span></div>
               {result.ingredientVariance.slice(0, 8).map((row) => (
                 <div key={row.ingredientId}>
                   <span><b>{row.ingredient}</b><small>{row.risk} risk</small></span>
@@ -413,17 +421,17 @@ export function DataImporter() {
             </div>
 
             <aside className="import-result-side">
-              <strong>Data quality</strong>
-              <div><span>Missing POS menu items</span><b>{result.dataQuality.missingMenuItems.length}</b></div>
-              <div><span>Missing recipe ingredients</span><b>{result.dataQuality.missingIngredients.length}</b></div>
-              <div><span>Known waste cost</span><b>{"$"}{result.totals.knownWasteCost.toLocaleString()}</b></div>
-              <div><span>Theoretical cost</span><b>{"$"}{result.totals.theoreticalCost.toLocaleString()}</b></div>
+              <strong>{t("Data quality","Veri kalitesi")}</strong>
+              <div><span>{t("Missing POS menu items","Eksik POS menü ürünleri")}</span><b>{result.dataQuality.missingMenuItems.length}</b></div>
+              <div><span>{t("Missing recipe ingredients","Eksik reçete malzemeleri")}</span><b>{result.dataQuality.missingIngredients.length}</b></div>
+              <div><span>{t("Known waste cost","Bilinen fire maliyeti")}</span><b>{"$"}{result.totals.knownWasteCost.toLocaleString()}</b></div>
+              <div><span>{t("Theoretical cost","Teorik maliyet")}</span><b>{"$"}{result.totals.theoreticalCost.toLocaleString()}</b></div>
             </aside>
           </div>
 
           {warnings.length > 0 && (
             <div className="import-warnings">
-              <strong>Importer warnings</strong>
+              <strong>{t("Importer warnings","Aktarım uyarıları")}</strong>
               {warnings.slice(0, 10).map((warning) => <span key={warning}>• {warning}</span>)}
             </div>
           )}
