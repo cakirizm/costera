@@ -1,5 +1,7 @@
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
 const recipes = [
   ["Truffle Pasta","$4.21","28.0%","34.5%","+6.5 pp","Above target"],
   ["Chicken Caesar","$3.06","25.0%","27.2%","+2.2 pp","Watch"],
@@ -8,8 +10,9 @@ const recipes = [
   ["Steak Frites","$8.64","31.0%","35.8%","+4.8 pp","Above target"],
 ];
 
-export default function RecipesPage(){
- return <COSTERAAppShell active="/dashboard/recipes" title="Recipes & Food Cost">
+export default async function RecipesPage(){
+ const locale = await getAppLocale();
+ return <COSTERAAppShell active="/dashboard/recipes" locale={locale} title={tx(locale,"Recipes & Food Cost","Reçeteler & Food Cost")}>
   <div className="costera-metrics five">
    <AppMetric label="Menu Items" value="84" meta="78 mapped to recipes" />
    <AppMetric label="Missing Recipes" value="6" meta="Needs mapping" tone="bad" />
