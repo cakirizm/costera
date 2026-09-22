@@ -2785,3 +2785,207 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     font-size: 13.5px;
   }
 }
+
+
+/* =========================================================
+   HOW IT WORKS — REALISTIC VISUAL PASS
+   ========================================================= */
+.how-pro-card {
+  min-height: 500px;
+}
+
+.how-pro-card:not(:last-child)::after {
+  content: "→";
+  top: 166px;
+  right: -18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  color: #b9792b;
+  box-shadow: 0 2px 8px rgba(9,40,66,.08);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.how-pro-visual {
+  height: 194px;
+  padding: 0;
+  background: #f3f5f5;
+}
+
+.how-photo-visual {
+  position: relative;
+  overflow: hidden;
+  background: #e9eeef;
+}
+
+.how-real-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.how-pos-photo {
+  object-position: 60% center;
+  transform: scale(1.05);
+}
+
+.how-food-real-photo {
+  object-position: center;
+  transform: scale(1.03);
+}
+
+.how-photo-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8,37,61,.12), transparent 36%),
+    linear-gradient(180deg, rgba(5,25,42,.03), rgba(5,25,42,.11));
+}
+
+.how-food-shade {
+  background:
+    linear-gradient(90deg, transparent 0 44%, rgba(250,248,244,.30) 70%, rgba(250,248,244,.88) 100%);
+}
+
+.how-pos-source-overlay {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 76px;
+  z-index: 4;
+}
+
+.how-pos-source-overlay span {
+  min-height: 31px;
+  backdrop-filter: blur(5px);
+  background: rgba(255,255,255,.93);
+}
+
+.how-flow-dots {
+  position: absolute;
+  left: 84px;
+  top: 50%;
+  width: 40px;
+  transform: translateY(-50%);
+  z-index: 3;
+  border-top: 1.5px dashed rgba(255,255,255,.9);
+}
+
+.how-flow-dots::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: -4px;
+  width: 7px;
+  height: 7px;
+  border-top: 1.5px solid #fff;
+  border-right: 1.5px solid #fff;
+  transform: rotate(45deg);
+}
+
+.how-recipe-overlay {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 96px;
+  transform: translateY(-50%);
+  z-index: 4;
+}
+
+.how-recipe-overlay span {
+  min-height: 29px;
+  padding-inline: 7px;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 5px 15px rgba(9,40,66,.07);
+}
+
+.how-stock-visual {
+  padding: 11px;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(205,145,61,.09), transparent 25%),
+    linear-gradient(145deg,#f9faf9,#eef2f2);
+}
+
+.stock-emoji {
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  font-style: normal;
+  font-size: 14px;
+}
+
+.how-stock-row {
+  min-height: 33px;
+  border-radius: 9px;
+}
+
+.how-compare-visual {
+  padding: 14px;
+  background: linear-gradient(145deg,#f8f9f9,#eef2f2);
+}
+
+.how-compare-box {
+  box-shadow: 0 6px 14px rgba(9,40,66,.04);
+}
+
+.how-variance-visual {
+  padding: 12px;
+}
+
+.how-variance-row {
+  min-height: 29px;
+  font-size: 7.2px;
+}
+
+.how-mobile-visual {
+  padding: 12px;
+}
+
+.how-phone {
+  position: relative;
+  width: 88px;
+  height: 154px;
+  border-width: 4px;
+  border-radius: 19px;
+}
+
+.how-phone-notch {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 30px;
+  height: 5px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: #102d40;
+}
+
+.how-mobile-actions span {
+  min-height: 36px;
+  font-size: 6.6px;
+}
+
+/* more like the approved reference: airy, elegant and visual-first */
+.how-pro-card h3 {
+  font-size: 15.5px;
+  line-height: 1.17;
+}
+
+.how-pro-card > p {
+  font-size: 12px;
+  line-height: 1.52;
+}
+
+@media (min-width: 1281px) {
+  .how-pro-grid {
+    gap: 16px;
+  }
+}
