@@ -1921,3 +1921,21 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     font-size: 15px;
   }
 }
+
+
+/* Real SVG flags */
+.language-flag {
+  width: 24px;
+  height: 16px;
+  flex: 0 0 24px;
+  display: block;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(9,40,66,.08);
+}
+
+.mobile-language .language-flag {
+  width: 24px;
+  height: 16px;
+  flex-basis: 24px;
+}
