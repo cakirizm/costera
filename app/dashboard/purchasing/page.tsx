@@ -1,5 +1,7 @@
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
 const rows = [
   ["Metro","Beef Tenderloin","$18.40","$19.90","+8.2%","Review"],
   ["Bidfood","Chicken Breast","$4.82","$5.12","+6.2%","Watch"],
@@ -7,9 +9,10 @@ const rows = [
   ["Gulf Foods","Olive Oil","$12.20","$13.00","+6.6%","Watch"],
 ];
 
-export default function PurchasingPage(){
+export default async function PurchasingPage(){
+ const locale = await getAppLocale();
  return (
-  <COSTERAAppShell active="/dashboard/purchasing" title="Purchasing">
+  <COSTERAAppShell active="/dashboard/purchasing" locale={locale} title={tx(locale,"Purchasing","Satın Alma")}>
    <div className="costera-metrics four">
     <AppMetric label="Purchases MTD" value="$14,720" meta="+5.4% vs previous period" />
     <AppMetric label="Supplier Price Increases" value="9" meta="Affecting 21 recipes" tone="bad" />
