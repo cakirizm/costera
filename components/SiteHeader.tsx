@@ -36,6 +36,33 @@ function ChevronDown() {
   );
 }
 
+function TurkeyFlag() {
+  return (
+    <svg className="language-flag" viewBox="0 0 30 20" aria-hidden="true">
+      <rect width="30" height="20" rx="2" fill="#E30A17" />
+      <circle cx="12" cy="10" r="5.2" fill="#fff" />
+      <circle cx="13.8" cy="10" r="4.15" fill="#E30A17" />
+      <path d="m18.2 10 1.45.47-.9-1.23v1.52l.9-1.23-1.45.47.9 1.23V9.71l-.9 1.23Z" fill="#fff" />
+    </svg>
+  );
+}
+
+function UKFlag() {
+  return (
+    <svg className="language-flag" viewBox="0 0 30 20" aria-hidden="true">
+      <rect width="30" height="20" rx="2" fill="#012169" />
+      <path d="M0 0 30 20M30 0 0 20" stroke="#fff" strokeWidth="4" />
+      <path d="M0 0 30 20M30 0 0 20" stroke="#C8102E" strokeWidth="1.8" />
+      <path d="M15 0v20M0 10h30" stroke="#fff" strokeWidth="6" />
+      <path d="M15 0v20M0 10h30" stroke="#C8102E" strokeWidth="3.2" />
+    </svg>
+  );
+}
+
+function SwitchFlag({ locale }: { locale: Locale }) {
+  return locale === "tr" ? <UKFlag /> : <TurkeyFlag />;
+}
+
 export function SiteHeader({
   locale = "en",
   path = "/",
@@ -78,7 +105,7 @@ export function SiteHeader({
             {t.demo}<span>→</span>
           </Link>
           <Link href={otherLocaleHref} className="language-switch language-switch-flag" aria-label="Change language">
-            <span className="language-flag" aria-hidden="true">{locale === "tr" ? "🇬🇧" : "🇹🇷"}</span>
+            <SwitchFlag locale={locale} />
             <span>{locale === "tr" ? "EN" : "TR"}</span>
           </Link>
 
@@ -90,7 +117,7 @@ export function SiteHeader({
               <Link href={`${prefix}/pricing`}>{t.pricing}</Link>
               <Link href={`${prefix}/login`}>{t.login}</Link>
               <Link href={otherLocaleHref} className="mobile-language">
-                <span>{locale === "tr" ? "🇬🇧" : "🇹🇷"}</span>
+                <SwitchFlag locale={locale} />
                 {locale === "tr" ? "English" : "Türkçe"}
               </Link>
               <Link className="button button-gold full-button" href={`${prefix}/demo`}>{t.demo}</Link>
