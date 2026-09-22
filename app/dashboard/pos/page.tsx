@@ -18,7 +18,7 @@ export default async function POSPage(){
     <AppMetric label={tx(locale,"Mapped Items","Eşleşen Ürünler")} value="97.8%" meta={tx(locale,"6 items need mapping","6 ürün eşleştirme bekliyor")} tone="gold" />
     <AppMetric label={tx(locale,"Voids & Discounts","İptal & İndirim")} value="$1,920" meta={tx(locale,"3.3% of gross sales","Brüt satışın %3.3'ü")} tone="bad" />
    </div>
-   <section className="costera-grid">
+   <section className="costera-grid pos-grid">
     <article className="costera-panel span-3">
      <div className="costera-panel-head"><div><span>{tx(locale,"SALES FEED","SATIŞ AKIŞI")}</span><h2>{tx(locale,"Channel mapping & completeness","Kanal eşleştirme & veri bütünlüğü")}</h2></div><button>{tx(locale,"Sync now","Şimdi senkronla")}</button></div>
      <div className="costera-table">
