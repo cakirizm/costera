@@ -1977,3 +1977,29 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   border-bottom-color: #b47a2f;
   opacity: .95;
 }
+
+
+/* Final readability pass for the handwritten laptop note */
+.reference-hand-note {
+  top: 0;
+  right: -22px;
+  width: 188px;
+  padding: 7px 10px 9px;
+  border-radius: 10px;
+  color: #0a2943;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(180,122,47,.24);
+  box-shadow: 0 6px 18px rgba(9,40,66,.10);
+  backdrop-filter: blur(2px);
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.34;
+  text-shadow: none;
+}
+
+.reference-hand-note::after {
+  left: 28px;
+  top: 54px;
+  width: 78px;
+  border-bottom-color: #b47a2f;
+}
