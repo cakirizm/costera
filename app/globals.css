@@ -2989,3 +2989,998 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     gap: 16px;
   }
 }
+
+
+/* =========================================================
+   COSTERA INTERNAL APP V1
+   ========================================================= */
+.costera-app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 248px minmax(0,1fr);
+  background: #f3f5f5;
+  color: #102a43;
+}
+
+.costera-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 20px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(202,153,76,.08), transparent 24%),
+    #08263e;
+  color: #fff;
+  border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.costera-sidebar-brand {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 0 8px;
+}
+
+.costera-sidebar .brand {
+  color: #fff;
+}
+
+.costera-sidebar .brand-approved-image {
+  width: 140px;
+  height: 38px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: .98;
+}
+
+.costera-workspace {
+  margin: 20px 4px 14px;
+  padding: 14px 13px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  background: rgba(255,255,255,.045);
+}
+
+.costera-workspace span {
+  display: block;
+  color: rgba(255,255,255,.42);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+
+.costera-workspace strong {
+  display: block;
+  margin-top: 6px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.costera-workspace small {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255,255,255,.50);
+  font-size: 9px;
+}
+
+.costera-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px 0;
+  overflow-y: auto;
+}
+
+.costera-nav a {
+  min-height: 40px;
+  padding: 0 10px;
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9px;
+  color: rgba(255,255,255,.68);
+  font-size: 11.5px;
+  font-weight: 650;
+  transition: .16s ease;
+}
+
+.costera-nav a:hover {
+  color: #fff;
+  background: rgba(255,255,255,.07);
+}
+
+.costera-nav a.active {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(255,255,255,.13), rgba(255,255,255,.07));
+  box-shadow: inset 3px 0 0 #c88a35;
+}
+
+.costera-nav i {
+  width: 23px;
+  height: 23px;
+  display: grid;
+  place-items: center;
+  color: #d5a65f;
+  font-style: normal;
+  font-size: 13px;
+}
+
+.costera-nav b {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: #c44739;
+  font-size: 8px;
+}
+
+.costera-sidebar-bottom {
+  margin-top: auto;
+  padding: 14px 6px 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.costera-data-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255,255,255,.54);
+  font-size: 9px;
+}
+
+.costera-data-status span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2ab17e;
+  box-shadow: 0 0 0 4px rgba(42,177,126,.11);
+}
+
+.costera-sidebar-bottom > a {
+  display: inline-block;
+  margin-top: 12px;
+  color: rgba(255,255,255,.58);
+  font-size: 10px;
+}
+
+.costera-app-main {
+  min-width: 0;
+}
+
+.costera-topbar {
+  min-height: 82px;
+  padding: 0 28px;
+  border-bottom: 1px solid #e0e5e7;
+  background: rgba(255,255,255,.96);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(15px);
+}
+
+.costera-topbar > div:first-child small {
+  display: block;
+  color: #9a6a28;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+
+.costera-topbar h1 {
+  margin: 3px 0 0;
+  color: #082842;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.costera-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.costera-location-select {
+  min-width: 145px;
+  height: 42px;
+  padding: 5px 10px 4px;
+  border: 1px solid #dbe1e4;
+  border-radius: 9px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.costera-location-select span {
+  color: #8b969e;
+  font-size: 7px;
+  line-height: 1;
+}
+
+.costera-location-select select {
+  margin-top: 3px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #16384f;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.costera-period {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dbe1e4;
+  border-radius: 9px;
+  color: #4d6576;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.costera-period span {
+  margin-right: 5px;
+  color: #b8792b;
+}
+
+.costera-live {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #146c4d;
+  background: #e9f6f0;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.costera-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1c9a6b;
+  box-shadow: 0 0 0 4px rgba(28,154,107,.10);
+}
+
+.costera-user {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(145deg,#173f5c,#0b2a43);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.costera-page {
+  padding: 24px 28px 40px;
+}
+
+.costera-alert-strip {
+  min-height: 62px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 1px solid #ecd9d4;
+  border-left: 4px solid #c94a3d;
+  border-radius: 11px;
+  background: linear-gradient(90deg,#fff8f5,#fff);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.costera-alert-strip > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.costera-alert-strip i {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #c94a3d;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.costera-alert-strip p {
+  margin: 0;
+}
+
+.costera-alert-strip strong {
+  display: block;
+  color: #682c24;
+  font-size: 11px;
+}
+
+.costera-alert-strip span {
+  display: block;
+  margin-top: 3px;
+  color: #8a6d68;
+  font-size: 9px;
+}
+
+.costera-alert-strip > a {
+  color: #9c392e;
+  font-size: 9px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.costera-metrics {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.costera-metrics.five {
+  grid-template-columns: repeat(5,minmax(0,1fr));
+}
+
+.costera-metrics.four {
+  grid-template-columns: repeat(4,minmax(0,1fr));
+}
+
+.costera-metric {
+  min-height: 104px;
+  padding: 16px 16px 13px;
+  border: 1px solid #e0e5e7;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(8,39,63,.035);
+}
+
+.costera-metric > span {
+  display: block;
+  color: #7c8a94;
+  font-size: 9px;
+}
+
+.costera-metric > strong {
+  display: block;
+  margin: 8px 0 6px;
+  color: #0a2a43;
+  font-size: 25px;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.costera-metric > small {
+  color: #8b969d;
+  font-size: 8.5px;
+}
+
+.costera-metric.good > small { color: #17805c; }
+.costera-metric.bad > small { color: #bf4337; }
+.costera-metric.gold > small { color: #a66d28; }
+
+.costera-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.costera-grid .span-2 { grid-column: span 2; }
+.costera-grid .span-3 { grid-column: span 3; }
+
+.costera-panel {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid #dfe4e7;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(8,39,63,.03);
+}
+
+.costera-panel-head {
+  min-height: 43px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.costera-panel-head > div > span {
+  display: block;
+  color: #a36e2c;
+  font-size: 7.5px;
+  font-weight: 850;
+  letter-spacing: .13em;
+}
+
+.costera-panel-head h2 {
+  margin: 4px 0 0;
+  color: #0a2943;
+  font-size: 16px;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+
+.costera-panel-head button,
+.costera-panel-head a {
+  min-height: 31px;
+  padding: 0 10px;
+  border: 1px solid #dce2e5;
+  border-radius: 8px;
+  color: #4f6777;
+  background: #fff;
+  font-size: 8.5px;
+  font-weight: 700;
+}
+
+.costera-legend {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #7f8d96;
+  font-size: 7px;
+}
+
+.costera-legend i {
+  width: 16px;
+  height: 2px;
+  display: inline-block;
+  margin-left: 7px;
+}
+
+.costera-legend i.actual { background: #0a2b45; }
+.costera-legend i.target { border-top: 2px dashed #42a579; }
+
+.costera-line-chart {
+  position: relative;
+  height: 240px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    linear-gradient(#edf1f3 1px, transparent 1px) 0 0 / 100% 48px;
+}
+
+.costera-line-chart svg {
+  position: absolute;
+  inset: 9px 0 25px;
+  width: 100%;
+  height: 205px;
+}
+
+.costera-target-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 142px;
+  border-top: 2px dashed #4aac7f;
+}
+
+.costera-chart-labels {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  color: #a0a9af;
+  font-size: 7px;
+}
+
+.costera-donut-wrap {
+  min-height: 230px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  gap: 16px;
+}
+
+.costera-donut {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background: conic-gradient(#0e3858 0 53%,#b57a2d 53% 70%,#d3a45c 70% 82%,#d9dfe2 82% 100%);
+}
+
+.costera-donut::after {
+  content:"";
+  position:absolute;
+  inset: 28px;
+  border-radius: 50%;
+  background:#fff;
+}
+
+.costera-donut > div {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.costera-donut strong {
+  display: block;
+  color: #0a2943;
+  font-size: 18px;
+}
+
+.costera-donut small {
+  display: block;
+  margin-top: 2px;
+  color: #8b969d;
+  font-size: 7px;
+}
+
+.costera-donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.costera-donut-legend span {
+  display: grid;
+  grid-template-columns: 8px 1fr auto;
+  gap: 7px;
+  align-items: center;
+  color: #657887;
+  font-size: 8.5px;
+}
+
+.costera-donut-legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.costera-donut-legend b {
+  color: #17364d;
+  font-size: 8px;
+}
+.v1{background:#0e3858}.v2{background:#b57a2d}.v3{background:#d3a45c}.v4{background:#d9dfe2}
+
+.costera-table {
+  margin-top: 11px;
+}
+
+.costera-table-row {
+  min-height: 44px;
+  padding: 0 8px;
+  border-bottom: 1px solid #edf0f2;
+  display: grid;
+  grid-template-columns: 1.25fr repeat(5,minmax(0,.9fr));
+  gap: 8px;
+  align-items: center;
+  color: #536d7e;
+  font-size: 9px;
+}
+
+.costera-table-row.head {
+  min-height: 34px;
+  color: #909ba3;
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.overview-table .costera-table-row {
+  grid-template-columns: 1.3fr .8fr .8fr .9fr .7fr;
+}
+
+.recipe-table .costera-table-row {
+  grid-template-columns: 1.3fr .8fr .7fr .7fr .7fr .9fr;
+}
+
+.delivery-table .costera-table-row {
+  grid-template-columns: 1fr .8fr .8fr .8fr 1fr .8fr .8fr;
+}
+
+.costera-table-row .negative {
+  color: #be4337;
+  font-weight: 750;
+}
+
+.costera-status {
+  min-width: 58px;
+  width: max-content;
+  padding: 4px 7px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.costera-status.good { color:#15734f;background:#e9f6f0; }
+.costera-status.bad { color:#b23d32;background:#fff0ed; }
+.costera-status.warning { color:#9c6a21;background:#fff7e7; }
+.costera-status.neutral { color:#5e7180;background:#eef2f4; }
+
+.costera-channel-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.costera-channel-list > div {
+  min-height: 51px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf0f2;
+  display: grid;
+  grid-template-columns: 1.15fr .8fr .8fr;
+  gap: 9px;
+  align-items: center;
+}
+
+.costera-channel-list p {
+  margin: 0;
+}
+
+.costera-channel-list strong,
+.costera-channel-list span,
+.costera-channel-list b,
+.costera-channel-list small {
+  display: block;
+}
+
+.costera-channel-list strong { color:#18384f;font-size:9px; }
+.costera-channel-list span { margin-top:2px;color:#8c979e;font-size:7.5px; }
+.costera-channel-list small { color:#8c979e;font-size:6.5px; }
+.costera-channel-list b { margin-top:2px;color:#17384f;font-size:8px; }
+.costera-channel-list .positive { color:#157b58; }
+
+.costera-action-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.costera-action-list > div {
+  min-height: 58px;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf0f2;
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 9px;
+  align-items: center;
+}
+
+.costera-action-list i {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.costera-action-list i.red { color:#fff;background:#c74739; }
+.costera-action-list i.gold { color:#fff;background:#bc7e2d; }
+.costera-action-list i.green { color:#fff;background:#1d9066; }
+
+.costera-action-list p { margin:0; }
+.costera-action-list strong { display:block;color:#18384f;font-size:9px; }
+.costera-action-list span { display:block;margin-top:3px;color:#87939b;font-size:7.5px; }
+.costera-action-list b { color:#18384f;font-size:9px; }
+
+.costera-recommendations {
+  margin-top: 8px;
+}
+
+.costera-recommendations > div {
+  min-height: 72px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf0f2;
+  display: grid;
+  grid-template-columns: 31px 1fr;
+  gap: 10px;
+}
+
+.costera-recommendations > div > b {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #a16c2b;
+  background: #faf3e8;
+  font-size: 8px;
+}
+
+.costera-recommendations p { margin:0; }
+.costera-recommendations strong { display:block;color:#17364d;font-size:9px; }
+.costera-recommendations span { display:block;margin-top:4px;color:#7b8992;font-size:7.8px;line-height:1.45; }
+
+.costera-control-banner {
+  min-height: 95px;
+  margin-bottom: 14px;
+  padding: 15px 18px;
+  border-radius: 13px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(210,164,91,.18), transparent 34%),
+    linear-gradient(135deg,#092a44,#103b5c);
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.costera-control-banner > div:first-child span {
+  display:block;color:#d3b27d;font-size:7px;font-weight:850;letter-spacing:.12em;
+}
+.costera-control-banner > div:first-child strong {
+  display:block;margin:6px 0 3px;font-size:30px;line-height:1;
+}
+.costera-control-banner > div:first-child small {
+  color:rgba(255,255,255,.62);font-size:8px;
+}
+
+.costera-control-flow {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:11px;
+}
+
+.costera-control-flow > span {
+  min-width: 145px;
+  padding: 10px 12px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+}
+
+.costera-control-flow b { display:block;font-size:15px; }
+.costera-control-flow small { display:block;margin-top:3px;color:rgba(255,255,255,.55);font-size:6.8px; }
+.costera-control-flow > i { color:#d5b47e;font-style:normal;font-size:16px; }
+.costera-control-flow .danger { background:rgba(190,67,55,.18);border-color:rgba(222,109,93,.22); }
+
+.costera-pnl {
+  margin-top: 11px;
+  border:1px solid #e8ecee;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.costera-pnl > div {
+  min-height: 39px;
+  padding: 0 12px;
+  border-bottom:1px solid #edf0f2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:#617585;
+  font-size:8.5px;
+}
+
+.costera-pnl > div:last-child { border-bottom:0; }
+.costera-pnl b { color:#18384f; }
+.costera-pnl .total { background:#f7f9fa;font-weight:800; }
+.costera-pnl .subtotal { background:#f9f6f0;font-weight:800; }
+.costera-pnl .profit { background:#eaf6f0;color:#126c4c;font-weight:850; }
+.costera-pnl .profit b { color:#126c4c; }
+
+.costera-expense-bars {
+  margin-top: 10px;
+}
+
+.costera-expense-bars > div {
+  margin-bottom: 13px;
+}
+
+.costera-expense-bars p {
+  margin: 0 0 5px;
+  display:flex;
+  justify-content:space-between;
+  color:#667a88;
+  font-size:8px;
+}
+
+.costera-expense-bars p b { color:#18384f; }
+
+.costera-expense-bars > div > i {
+  height: 7px;
+  border-radius:999px;
+  display:block;
+  overflow:hidden;
+  background:#eef1f2;
+}
+
+.costera-expense-bars em {
+  height:100%;
+  display:block;
+  border-radius:999px;
+  background:linear-gradient(90deg,#b87a2d,#d2a45b);
+}
+
+.bar-87{width:87%}.bar-58{width:58%}.bar-31{width:31%}.bar-13{width:13%}.bar-22{width:22%}
+
+.costera-report-grid {
+  margin-top: 12px;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+
+.costera-report-card {
+  min-height: 170px;
+  padding: 15px;
+  border:1px solid #e1e6e8;
+  border-radius:11px;
+  background:linear-gradient(180deg,#fff,#fbfbfa);
+}
+
+.costera-report-card > span {
+  width:35px;height:35px;display:grid;place-items:center;border-radius:9px;
+  color:#ab742d;background:#faf2e6;font-size:16px;
+}
+
+.costera-report-card h3 {
+  margin:14px 0 6px;color:#17364d;font-size:11px;line-height:1.25;
+}
+
+.costera-report-card p {
+  min-height:34px;margin:0;color:#7b8992;font-size:8px;line-height:1.45;
+}
+
+.costera-report-card > div {
+  margin-top:18px;display:flex;align-items:center;justify-content:space-between;
+}
+
+.costera-report-card small { color:#8b969e;font-size:7px; }
+
+.costera-integration-banner {
+  min-height: 64px;
+  padding: 12px 15px;
+  margin-bottom:14px;
+  border:1px solid #d8e9e1;
+  border-radius:11px;
+  background:#f0f8f4;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:16px;
+  align-items:center;
+}
+
+.costera-integration-banner > div {
+  display:flex;align-items:center;gap:8px;color:#146f50;font-size:10px;font-weight:800;
+}
+.costera-integration-banner i {
+  width:8px;height:8px;border-radius:50%;background:#20966b;box-shadow:0 0 0 4px rgba(32,150,107,.1);
+}
+.costera-integration-banner p { margin:0;color:#5f7b6e;font-size:8px; }
+.costera-integration-banner button {
+  min-height:32px;padding:0 10px;border:1px solid #c9ded4;border-radius:8px;background:#fff;color:#346957;font-size:8px;font-weight:700;
+}
+
+.costera-integration-grid {
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.costera-integration-card {
+  min-height:100px;
+  padding:13px;
+  border:1px solid #e1e6e8;
+  border-radius:11px;
+  display:grid;
+  grid-template-columns:42px 1fr auto;
+  gap:10px;
+  align-items:center;
+}
+
+.costera-integration-icon {
+  width:42px;height:42px;border-radius:10px;display:grid;place-items:center;
+  color:#fff;background:linear-gradient(145deg,#0d3451,#1d587f);font-size:10px;font-weight:850;
+}
+
+.costera-integration-card h3 { margin:0;color:#17364d;font-size:10px; }
+.costera-integration-card p { margin:3px 0 0;color:#7d8a93;font-size:7.5px; }
+.costera-integration-card small { display:block;margin-top:5px;color:#98a1a8;font-size:6.5px; }
+
+.costera-form-stack {
+  margin-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.costera-form-stack label {
+  color:#526a7b;font-size:8px;font-weight:700;
+}
+
+.costera-form-stack input,
+.costera-form-stack select {
+  width:100%;
+  height:39px;
+  margin-top:5px;
+  padding:0 10px;
+  border:1px solid #dce2e5;
+  border-radius:8px;
+  background:#fff;
+  color:#18384f;
+  outline:none;
+  font-size:9px;
+}
+
+.costera-role-list {
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+}
+
+.costera-role-list span {
+  min-height:48px;
+  padding:8px 0;
+  border-bottom:1px solid #edf0f2;
+}
+
+.costera-role-list b { display:block;color:#17364d;font-size:9px; }
+.costera-role-list small { display:block;margin-top:3px;color:#89949c;font-size:7.5px; }
+
+@media (max-width: 1180px) {
+  .costera-app { grid-template-columns: 82px minmax(0,1fr); }
+  .costera-sidebar { padding-inline:10px; }
+  .costera-sidebar-brand { justify-content:center;padding:0; }
+  .costera-sidebar .brand-approved-image { width:46px;height:38px;object-fit:cover;object-position:left; }
+  .costera-workspace { display:none; }
+  .costera-nav a { grid-template-columns:1fr;justify-items:center;padding:0; }
+  .costera-nav a span,.costera-nav a b,.costera-sidebar-bottom > a,.costera-data-status { display:none; }
+  .costera-nav i { font-size:15px; }
+  .costera-metrics.five { grid-template-columns:repeat(3,1fr); }
+  .costera-report-grid { grid-template-columns:repeat(2,1fr); }
+}
+
+@media (max-width: 880px) {
+  .costera-topbar { padding:14px 18px;align-items:flex-start; }
+  .costera-topbar-actions { flex-wrap:wrap;justify-content:flex-end; }
+  .costera-location-select,.costera-period { display:none; }
+  .costera-page { padding:18px; }
+  .costera-metrics.five,.costera-metrics.four { grid-template-columns:repeat(2,1fr); }
+  .costera-grid { grid-template-columns:1fr; }
+  .costera-grid .span-2,.costera-grid .span-3 { grid-column:span 1; }
+  .costera-donut-wrap { grid-template-columns:1fr;justify-items:center; }
+  .costera-control-banner { grid-template-columns:1fr; }
+  .costera-control-flow { justify-content:flex-start;flex-wrap:wrap; }
+  .costera-report-grid,.costera-integration-grid { grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width: 620px) {
+  .costera-app { display:block; }
+  .costera-sidebar { position:static;width:100%;height:auto;min-height:0;padding:10px 12px;display:block; }
+  .costera-sidebar-brand,.costera-workspace,.costera-sidebar-bottom { display:none; }
+  .costera-nav { flex-direction:row;overflow-x:auto;gap:6px; }
+  .costera-nav a { flex:0 0 auto;width:40px;height:40px; }
+  .costera-topbar { position:static; }
+  .costera-topbar h1 { font-size:22px; }
+  .costera-live { display:none; }
+  .costera-page { padding:14px; }
+  .costera-metrics.five,.costera-metrics.four { grid-template-columns:1fr 1fr; }
+  .costera-metric { min-height:92px;padding:13px; }
+  .costera-metric > strong { font-size:21px; }
+  .costera-table { overflow-x:auto; }
+  .costera-table-row { min-width:680px; }
+  .costera-report-grid,.costera-integration-grid { grid-template-columns:1fr; }
+}
