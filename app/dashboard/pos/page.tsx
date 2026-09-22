@@ -1,5 +1,7 @@
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
 const rows = [
  ["Dine-in","1,840","$26,820","98.6%","Mapped"],
  ["Talabat","714","$12,640","97.2%","Mapped"],
@@ -7,9 +9,10 @@ const rows = [
  ["Careem","276","$5,240","100%","Mapped"],
 ];
 
-export default function POSPage(){
+export default async function POSPage(){
+ const locale = await getAppLocale();
  return (
-  <COSTERAAppShell active="/dashboard/pos" title="Sales & POS">
+  <COSTERAAppShell active="/dashboard/pos" locale={locale} title={tx(locale,"Sales & POS","Satış & POS")}>
    <div className="costera-metrics four">
     <AppMetric label="Orders" value="3,338" meta="+9.1% vs prior period" tone="good" />
     <AppMetric label="Net Sales" value="$58,240" meta="Across all channels" />
