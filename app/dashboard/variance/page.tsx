@@ -1,4 +1,6 @@
+import { cookies } from "next/headers";
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
+import { EmptyWorkspace } from "@/components/app/EmptyWorkspace";
 import { analyzeCost } from "@/lib/costera/engine";
 import { sampleInput } from "@/lib/costera/sample";
 
@@ -6,14 +8,34 @@ const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximum
 const qty = (n: number, unit: string) =>
   (n > 0 ? "+" : "") + n.toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + unit;
 
-export default function VariancePage(){
+export default async function VariancePage(){
+ const cookieStore = await cookies();
+ const demoConnected = cookieStore.get("costera_polaris_demo")?.value === "1";
+
+ if (!demoConnected) {
+   return (
+    <COSTERAAppShell active="/dashboard/variance" title="Cost Control" eyebrow="NO LIVE SOURCE">
+      <div className="costera-metrics four">
+        <AppMetric label="Target Food Cost" value="25.0%" meta="Configured target" tone="gold" />
+        <AppMetric label="Actual Food Cost" value="—" meta="Waiting for live data" />
+        <AppMetric label="Approved Waste" value="$0" meta="Waiting for live data" />
+        <AppMetric label="Unexplained" value="$0" meta="Waiting for live data" />
+      </div>
+      <EmptyWorkspace
+        title="Cost Control is waiting for a data source."
+        text="Connect the Polaris demo or a real POS source. COSTERA will then calculate Expected → Actual → Approved Waste → Unexplained automatically."
+      />
+    </COSTERAAppShell>
+   );
+ }
+
  const analysis = analyzeCost(sampleInput);
  const t = analysis.totals;
  const top = analysis.ingredientVariance.slice(0, 5);
  const focus = top[0];
 
  return (
-  <COSTERAAppShell active="/dashboard/variance" title="Cost Control" eyebrow="THEORETICAL vs ACTUAL CONTROL">
+  <COSTERAAppShell active="/dashboard/variance" title="Cost Control" eyebrow="POLARIS DEMO · CONNECTED">
    <div className="control-hero-v2">
     <div className="control-hero-copy">
       <span>UNEXPLAINED COST THIS PERIOD</span>
@@ -116,7 +138,7 @@ export default function VariancePage(){
     <article className="costera-panel span-2">
      <div className="costera-panel-head">
       <div><span>VARIANCE EXPLORER</span><h2>Expected → Actual → Waste → Unexplained</h2></div>
-      <a href="/api/engine/analyze" target="_blank">Engine JSON</a>
+      <a href="/dashboard/integrations">Manage source</a>
      </div>
 
      <div className="control-table-v3">
@@ -151,7 +173,7 @@ export default function VariancePage(){
    </section>
 
    <div className="costera-engine-foot">
-    Cause labels are evidence-based hints, not definitive accusations. Higher-confidence causes require more granular feeds such as shift-level stock counts, waste events, receiving and user activity.
+    Demo connection uses the same COSTERA calculation engine as a future real Polaris connector. Disconnect Polaris Demo from Integrations to return this page to zero data.
    </div>
   </COSTERAAppShell>
  )
