@@ -9440,9 +9440,9 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 }
 
 .inventory-layout .costera-table-row {
-  min-width: 760px;
+  min-width: 0;
   grid-template-columns: 1.35fr .72fr .82fr .82fr .78fr .92fr;
-  column-gap: 14px;
+  column-gap: 12px;
 }
 
 .inventory-layout .costera-table-row > span {
@@ -9555,9 +9555,9 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 }
 
 .recipes-layout .recipe-table .costera-table-row {
-  min-width: 820px;
+  min-width: 0;
   grid-template-columns: 1.45fr .9fr .82fr .82fr .82fr 1.05fr;
-  column-gap: 14px;
+  column-gap: 12px;
 }
 
 .recipes-layout .recipe-table .costera-table-row > span {
