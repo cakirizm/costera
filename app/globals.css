@@ -2095,3 +2095,38 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     right: 10px;
   }
 }
+
+
+/* =========================================================
+   HERO OVERLAP FIX — move laptop right without clipping.
+   Targets common 1270–1440 desktop widths.
+   ========================================================= */
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .reference-hero-grid {
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    gap: 34px;
+    padding-right: 34px;
+  }
+
+  .reference-hero-copy {
+    position: relative;
+    z-index: 3;
+    max-width: 600px;
+  }
+
+  .reference-product {
+    position: relative;
+    z-index: 2;
+    transform: translate(6px, 10px);
+  }
+
+  .reference-product .product-laptop {
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .reference-hand-note {
+    right: 8px;
+  }
+}
