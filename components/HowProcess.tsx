@@ -1,43 +1,180 @@
 type Locale = "en" | "tr";
 
-const text = {
-  en: [
-    ["1", "POS & delivery data is collected", "Sales and order activity flows automatically from connected sources.", "POS", "DELIVERY"],
-    ["2", "Menu and recipes are matched", "Each sold item is connected to the ingredients and quantities it should consume.", "Chicken 120 g", "Sauce 30 g"],
-    ["3", "Stock movement is read", "Purchases, transfers, waste and counts are interpreted in the same operating model.", "Stock In", "Purchase"],
-    ["4", "Expected vs. actual is compared", "Recipe-driven usage is compared with what inventory actually consumed.", "$8,420", "$9,680"],
-    ["5", "Unexplained variance is isolated", "Known adjustments are removed so the remaining quantity and value can be reviewed.", "$1,260", "+4.1%"],
-    ["6", "Management sees the result", "A mobile-ready view shows the cost, stock and recipe areas that need attention.", "$8,320", "28.9%"],
-  ],
-  tr: [
-    ["1", "POS ve delivery verileri toplanır", "Satış ve sipariş hareketleri bağlı kaynaklardan otomatik olarak alınır.", "POS", "DELIVERY"],
-    ["2", "Menü ve reçeteler eşleşir", "Satılan her ürün, tüketmesi gereken malzeme ve miktarlarla ilişkilendirilir.", "Tavuk 120 g", "Sos 30 g"],
-    ["3", "Stok hareketleri okunur", "Satın alma, transfer, fire ve sayımlar aynı operasyon modelinde anlamlandırılır.", "Stok Girişi", "Satın Alma"],
-    ["4", "Teorik ve gerçek karşılaştırılır", "Reçeteye göre beklenen kullanım ile stoğun gerçekten tükettiği miktar karşılaştırılır.", "$8,420", "$9,680"],
-    ["5", "Açıklanamayan fark ayrıştırılır", "Bilinen düzeltmeler düşülür; geriye kalan miktar ve değer incelemeye alınır.", "$1,260", "+4.1%"],
-    ["6", "Yönetim sonucu net görür", "Mobil uyumlu ekran cost, stok ve reçete tarafında dikkat gerektiren alanları öne çıkarır.", "$8,320", "28.9%"],
-  ],
+const copy = {
+  en: {
+    steps: [
+      ["POS & delivery data is collected", "Sales and order activity flows automatically from connected sources."],
+      ["Menu and recipes are matched", "Each sold item is connected to the ingredients and quantities it should consume."],
+      ["Stock movement is read", "Purchases, transfers, waste and counts are interpreted in the same operating model."],
+      ["Expected vs. actual is compared", "Recipe-driven usage is compared with what inventory actually consumed."],
+      ["Unexplained variance is isolated", "Known adjustments are removed so the remaining quantity and value can be reviewed."],
+      ["Management sees the result", "A mobile-ready view shows the cost, stock and recipe areas that need attention."],
+    ],
+    ctas: ["Connect systems", "Link recipes", "Track inventory", "See variances", "Find root cause", "Take action"],
+    expected: "Expected",
+    actual: "Actual",
+    difference: "Difference",
+    variance: "Unexplained Variance",
+    today: "Today",
+    alerts: "Live alerts",
+    reports: "Reports",
+    mobile: "Mobile access",
+    stockIn: "Stock In",
+    purchase: "Purchase",
+    transfer: "Transfer",
+    waste: "Waste",
+  },
+  tr: {
+    steps: [
+      ["POS ve delivery verileri toplanır", "Satış ve sipariş hareketleri bağlı kaynaklardan otomatik olarak alınır."],
+      ["Menü ve reçeteler eşleşir", "Satılan her ürün, tüketmesi gereken malzeme ve miktarlarla ilişkilendirilir."],
+      ["Stok hareketleri okunur", "Satın alma, transfer, fire ve sayımlar aynı operasyon modelinde anlamlandırılır."],
+      ["Teorik ve gerçek karşılaştırılır", "Reçeteye göre beklenen kullanım, stoğun gerçek tüketimiyle karşılaştırılır."],
+      ["Açıklanamayan fark ayrıştırılır", "Bilinen düzeltmeler düşülür; geriye kalan miktar ve parasal etki incelenir."],
+      ["Yönetim sonucu net görür", "Mobil uyumlu ekran cost, stok ve reçete tarafındaki kritik alanları öne çıkarır."],
+    ],
+    ctas: ["Sistemleri bağla", "Reçeteleri eşleştir", "Stoğu takip et", "Sapmayı gör", "Kök nedeni bul", "Aksiyon al"],
+    expected: "Teorik",
+    actual: "Gerçek",
+    difference: "Fark",
+    variance: "Açıklanamayan Fark",
+    today: "Bugün",
+    alerts: "Canlı uyarılar",
+    reports: "Raporlar",
+    mobile: "Mobil erişim",
+    stockIn: "Stok Girişi",
+    purchase: "Satın Alma",
+    transfer: "Transfer",
+    waste: "Fire / Zayi",
+  },
 };
 
-export function HowProcess({ locale = "en" }: { locale?: Locale }) {
-  const rows = text[locale];
+function StepNumber({ n }: { n: number }) {
+  return <span className="how-pro-number">{n}</span>;
+}
+
+function CardFooter({ label }: { label: string }) {
   return (
-    <div className="how-six-grid">
-      {rows.map(([no, title, copy, value1, value2], i) => (
-        <article className="how-step-card" key={no}>
-          <span className="how-step-no">{no}</span>
-          <div className={`how-step-graphic graphic-${i + 1}`}>
-            {i === 0 && <><span>POS</span><span>DELIVERY</span><span>API</span></>}
-            {i === 1 && <><div className="graphic-food">◎</div><div><b>{value1}</b><b>{value2}</b><b>{locale === "tr" ? "Parmesan 10 g" : "Parmesan 10 g"}</b></div></>}
-            {i === 2 && <><b>{value1}</b><b>{value2}</b><b>{locale === "tr" ? "Fire / Zayi" : "Waste"}</b></>}
-            {i === 3 && <><div><small>{locale === "tr" ? "Teorik" : "Expected"}</small><strong>{value1}</strong></div><div><small>{locale === "tr" ? "Gerçek" : "Actual"}</small><strong>{value2}</strong></div></>}
-            {i === 4 && <><small>{locale === "tr" ? "Açıklanamayan Fark" : "Unexplained Variance"}</small><strong>{value1}</strong><em>{value2}</em><b>{locale === "tr" ? "Tavuk +18%" : "Chicken +18%"}</b><b>{locale === "tr" ? "Zeytinyağı +22%" : "Olive Oil +22%"}</b></>}
-            {i === 5 && <div className="graphic-phone"><small>{locale === "tr" ? "Bugün" : "Today"}</small><strong>{value1}</strong><b>Food Cost {value2}</b></div>}
+    <div className="how-pro-cta">
+      <span>→</span>
+      <b>{label}</b>
+    </div>
+  );
+}
+
+export function HowProcess({ locale = "en" }: { locale?: Locale }) {
+  const t = copy[locale];
+
+  return (
+    <div className="how-pro-grid">
+      <article className="how-pro-card">
+        <StepNumber n={1} />
+        <div className="how-pro-visual how-pos-visual">
+          <div className="how-pos-source-list">
+            <span><i>▣</i>POS</span>
+            <span><i>◈</i>Delivery</span>
+            <span><i>⌁</i>API</span>
           </div>
-          <h3>{title}</h3>
-          <p>{copy}</p>
-        </article>
-      ))}
+          <div className="how-pos-lines" />
+          <div className="how-pos-screen">
+            <div className="how-pos-screen-top"><span /><span /><span /></div>
+            <div className="how-pos-screen-grid">
+              <i /><i /><i /><i />
+            </div>
+          </div>
+        </div>
+        <h3>{t.steps[0][0]}</h3>
+        <p>{t.steps[0][1]}</p>
+        <CardFooter label={t.ctas[0]} />
+      </article>
+
+      <article className="how-pro-card">
+        <StepNumber n={2} />
+        <div className="how-pro-visual how-recipe-visual">
+          <div className="how-food-photo" />
+          <div className="how-recipe-list">
+            <span><i>✓</i>Chicken 120 g</span>
+            <span><i>✓</i>Sauce 30 g</span>
+            <span><i>✓</i>Parmesan 10 g</span>
+            <span><i>✓</i>Basil 5 g</span>
+          </div>
+        </div>
+        <h3>{t.steps[1][0]}</h3>
+        <p>{t.steps[1][1]}</p>
+        <CardFooter label={t.ctas[1]} />
+      </article>
+
+      <article className="how-pro-card">
+        <StepNumber n={3} />
+        <div className="how-pro-visual how-stock-visual">
+          <div className="how-stock-heading">Stock Movement</div>
+          <div className="how-stock-row"><span><i className="item tomato">●</i>{t.stockIn}</span><b>50 kg</b></div>
+          <div className="how-stock-row"><span><i className="item chicken">●</i>{t.purchase}</span><b>30 kg</b></div>
+          <div className="how-stock-row"><span><i className="item green">●</i>{t.transfer}</span><b>5 kg</b></div>
+          <div className="how-stock-row"><span><i className="item waste">●</i>{t.waste}</span><b>2 kg</b></div>
+        </div>
+        <h3>{t.steps[2][0]}</h3>
+        <p>{t.steps[2][1]}</p>
+        <CardFooter label={t.ctas[2]} />
+      </article>
+
+      <article className="how-pro-card">
+        <StepNumber n={4} />
+        <div className="how-pro-visual how-compare-visual">
+          <div className="how-compare-box">
+            <small>{t.expected}</small>
+            <strong>$8,420</strong>
+            <span className="how-bars blue"><i /><i /><i /><i /><i /></span>
+          </div>
+          <div className="how-compare-box">
+            <small>{t.actual}</small>
+            <strong>$9,680</strong>
+            <span className="how-bars gold"><i /><i /><i /><i /><i /></span>
+          </div>
+          <div className="how-difference"><span>{t.difference}</span><b>+$1,260</b></div>
+        </div>
+        <h3>{t.steps[3][0]}</h3>
+        <p>{t.steps[3][1]}</p>
+        <CardFooter label={t.ctas[3]} />
+      </article>
+
+      <article className="how-pro-card">
+        <StepNumber n={5} />
+        <div className="how-pro-visual how-variance-visual">
+          <div className="how-variance-top">
+            <span className="how-alert-icon">!</span>
+            <div><small>{t.variance}</small><strong>$1,260</strong><em>+14.1%</em></div>
+          </div>
+          <div className="how-variance-row"><span>Chicken</span><b>+18%</b><em>$480</em></div>
+          <div className="how-variance-row"><span>Olive Oil</span><b>+22%</b><em>$320</em></div>
+          <div className="how-variance-row"><span>Tomato</span><b>+12%</b><em>$280</em></div>
+        </div>
+        <h3>{t.steps[4][0]}</h3>
+        <p>{t.steps[4][1]}</p>
+        <CardFooter label={t.ctas[4]} />
+      </article>
+
+      <article className="how-pro-card">
+        <StepNumber n={6} />
+        <div className="how-pro-visual how-mobile-visual">
+          <div className="how-phone">
+            <div className="how-phone-brand">COSTERA</div>
+            <small>{t.today}</small>
+            <strong>$8,320</strong>
+            <span>↗ 12%</span>
+            <div className="how-phone-chart"><i /><i /><i /><i /><i /><i /></div>
+            <b>Food Cost 28.5%</b>
+          </div>
+          <div className="how-mobile-actions">
+            <span>◌ {t.alerts}</span>
+            <span>▥ {t.reports}</span>
+            <span>▣ {t.mobile}</span>
+          </div>
+        </div>
+        <h3>{t.steps[5][0]}</h3>
+        <p>{t.steps[5][1]}</p>
+        <CardFooter label={t.ctas[5]} />
+      </article>
     </div>
   );
 }
