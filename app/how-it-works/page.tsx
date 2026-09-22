@@ -1,14 +1,15 @@
 import Link from "next/link";
+import { DashboardMock } from "@/components/DashboardMock";
+import { HowProcess } from "@/components/HowProcess";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
-const steps = [
-  ["Connect your operational data", "COSTERA connects to POS and, where available, inventory, purchasing and delivery sources. Existing systems remain the operational source of truth."],
-  ["Synchronize menu and recipes", "Menu items are matched to recipes so each sale can be translated into expected ingredient consumption."],
-  ["Read stock movement", "Opening stock, purchases, transfers, approved waste and closing counts form the actual usage picture."],
-  ["Calculate theoretical usage", "Sales volume is multiplied by recipe quantities to calculate what each ingredient should have consumed."],
-  ["Compare actual and expected", "COSTERA identifies the gap between real stock usage and theoretical consumption, after approved adjustments."],
-  ["Show the value of the gap", "Variance is converted into quantity and money so managers can review the ingredients and periods that need attention."],
+const benefits = [
+  ["Time Saved", "Reduce manual consolidation and spreadsheet work."],
+  ["Lower Cost Leakage", "Spot unusual usage before it becomes normal."],
+  ["Clearer Operations", "Bring stock, recipes and sales into one consistent view."],
+  ["Faster Decisions", "See the issue and its financial impact without digging through reports."],
+  ["Stronger Margins", "Protect profitability with better cost visibility."],
 ];
 
 export default function HowItWorksPage() {
@@ -16,60 +17,64 @@ export default function HowItWorksPage() {
     <>
       <SiteHeader locale="en" path="/how-it-works" />
       <main>
-        <section className="page-hero page-hero-photo">
-          <div className="shell narrow">
-            <div className="eyebrow">HOW IT WORKS</div>
-            <h1>Simple integration. Clear cost control.</h1>
-            <p>
-              COSTERA does not replace the way your restaurant operates. It reads,
-              validates and interprets operational data to give you a cleaner view
-              of cost and stock performance.
-            </p>
+        <section className="inner-hero visual-hero">
+          <div className="inner-hero-photo" />
+          <div className="shell visual-hero-grid">
+            <div className="inner-hero-copy">
+              <div className="eyebrow">SIMPLE INTEGRATION. STRONGER RESULTS.</div>
+              <h1>How COSTERA keeps restaurant cost under control.</h1>
+              <p>
+                Your systems keep running as usual. COSTERA collects the operational data,
+                validates it and turns the differences into a clear management view.
+              </p>
+              <div className="hero-actions">
+                <Link className="button button-gold" href="/demo">Request Demo <span>→</span></Link>
+                <Link className="button button-outline" href="/features">Explore Features</Link>
+              </div>
+            </div>
+            <div className="inner-dashboard"><DashboardMock locale="en" /></div>
           </div>
         </section>
 
         <section className="section">
-          <div className="shell process-list">
-            {steps.map(([title, copy], i) => (
-              <article className="process-item" key={title}>
-                <span>{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <h2>{title}</h2>
-                  <p>{copy}</p>
-                </div>
-              </article>
+          <div className="shell how-title-row">
+            <div>
+              <div className="eyebrow">6 STEPS TO CLEARER COST CONTROL</div>
+              <h2>From POS data to a management-ready result.</h2>
+            </div>
+            <p>Fast setup. Real data. Clear exceptions.</p>
+          </div>
+          <div className="shell"><HowProcess locale="en" /></div>
+        </section>
+
+        <section className="section soft-section">
+          <div className="shell benefits-feature-row">
+            <div className="benefits-heading">
+              <div className="eyebrow">MORE THAN ANALYSIS</div>
+              <h2>Practical value for daily operations.</h2>
+            </div>
+            {benefits.map(([title, text]) => (
+              <div className="benefit-feature" key={title}>
+                <span>✓</span><strong>{title}</strong><p>{text}</p>
+              </div>
             ))}
           </div>
         </section>
 
-        <section className="section soft-section">
-          <div className="shell two-col">
+        <section className="how-bottom-cta">
+          <div className="how-bottom-photo" />
+          <div className="shell how-bottom-inner">
             <div>
-              <div className="eyebrow">CONTROL WITHOUT DUPLICATION</div>
-              <h2>Your team keeps working in the systems they already know.</h2>
+              <div className="eyebrow eyebrow-light">START TODAY</div>
+              <h2>More visibility in the kitchen.<br/><span>More control in the business.</span></h2>
             </div>
-            <div className="copy-stack">
-              <p>
-                Sales continue to be entered in the POS. Purchases continue to be
-                recorded in the restaurant&apos;s existing purchasing or inventory
-                system where available.
-              </p>
-              <p>
-                COSTERA sits above those systems, normalizes their data and focuses
-                attention on exceptions instead of asking teams to re-enter the same
-                information.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="shell action-banner">
             <div>
-              <h2>See the workflow with your own restaurant data.</h2>
-              <p>Start with one branch, validate the data, then scale.</p>
+              <p>Connect one location, validate the data and expand with confidence.</p>
+              <div className="hero-actions">
+                <Link className="button button-gold" href="/demo">Request Demo</Link>
+                <Link className="button button-ghost" href="/pricing">View Pricing</Link>
+              </div>
             </div>
-            <Link className="button button-gold" href="/demo">Request Demo</Link>
           </div>
         </section>
       </main>
