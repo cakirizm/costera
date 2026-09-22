@@ -10,7 +10,7 @@ const qty = (n: number, unit: string) =>
 
 export default async function VariancePage(){
  const cookieStore = await cookies();
- const demoConnected = cookieStore.get("costera_polaris_demo")?.value === "1";
+ const demoConnected = cookieStore.get("costera_pos_demo")?.value === "1";
 
  if (!demoConnected) {
    return (
@@ -23,7 +23,7 @@ export default async function VariancePage(){
       </div>
       <EmptyWorkspace
         title="Cost Control is waiting for a data source."
-        text="Connect the Polaris demo or a real POS source. COSTERA will then calculate Expected → Actual → Approved Waste → Unexplained automatically."
+        text="Connect the Universal POS Demo or any real POS source. COSTERA will then calculate Expected → Actual → Approved Waste → Unexplained automatically."
       />
     </COSTERAAppShell>
    );
@@ -35,7 +35,7 @@ export default async function VariancePage(){
  const focus = top[0];
 
  return (
-  <COSTERAAppShell active="/dashboard/variance" title="Cost Control" eyebrow="POLARIS DEMO · CONNECTED">
+  <COSTERAAppShell active="/dashboard/variance" title="Cost Control" eyebrow="UNIVERSAL POS DEMO · CONNECTED">
    <div className="control-hero-v2">
     <div className="control-hero-copy">
       <span>UNEXPLAINED COST THIS PERIOD</span>
@@ -173,7 +173,7 @@ export default async function VariancePage(){
    </section>
 
    <div className="costera-engine-foot">
-    Demo connection uses the same COSTERA calculation engine as a future real Polaris connector. Disconnect Polaris Demo from Integrations to return this page to zero data.
+    The demo uses the same COSTERA calculation engine as future POS and delivery connectors. Disconnect the demo source from Integrations to return this page to zero data.
    </div>
   </COSTERAAppShell>
  )
