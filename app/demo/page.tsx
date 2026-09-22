@@ -6,7 +6,10 @@ export default function DemoPage() {
     <main className="demo-page">
       <div className="shell demo-topbar">
         <Link href="/"><Brand /></Link>
-        <Link href="/" className="text-link">Back to website</Link>
+        <div className="demo-top-actions">
+          <Link href="/tr/demo" className="language-switch">TR</Link>
+          <Link href="/" className="text-link">Back to website</Link>
+        </div>
       </div>
       <div className="shell demo-grid">
         <section>
