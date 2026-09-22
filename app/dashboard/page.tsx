@@ -6,12 +6,13 @@ import { sampleInput } from "@/lib/costera/sample";
 
 const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
-const channelRows = [
-  ["Dine-in","$26,820","28.1%","22.4%"],
-  ["Talabat","$12,640","31.9%","14.2%"],
-  ["Deliveroo","$9,450","35.8%","8.1%"],
-  ["Careem","$5,240","33.1%","10.8%"],
-];
+function discoveredChannels() {
+  const map = new Map<string, number>();
+  for (const sale of sampleInput.sales) {
+    map.set(sale.channel, (map.get(sale.channel) || 0) + (sale.netSales || 0));
+  }
+  return [...map.entries()].map(([channel, sales]) => ({ channel, sales }));
+}
 
 export default async function DashboardPage(){
  const cookieStore = await cookies();
@@ -35,6 +36,7 @@ export default async function DashboardPage(){
  const analysis = analyzeCost(sampleInput);
  const t = analysis.totals;
  const varianceRows = analysis.ingredientVariance.slice(0,4);
+ const channelRows = discoveredChannels();
 
  return (
   <COSTERAAppShell active="/dashboard" title="Overview" eyebrow="UNIVERSAL POS DEMO · CONNECTED">
@@ -91,9 +93,13 @@ export default async function DashboardPage(){
     </article>
 
     <article className="costera-panel">
-     <div className="costera-panel-head"><div><span>CHANNEL PROFITABILITY</span><h2>Sales channel economics</h2></div><a href="/dashboard/delivery">Open delivery</a></div>
+     <div className="costera-panel-head"><div><span>CHANNEL DISCOVERY</span><h2>Channels found in the POS feed</h2></div><a href="/dashboard/delivery">Open channels</a></div>
      <div className="costera-channel-list">
-      {channelRows.map(r=><div key={r[0]}><p><strong>{r[0]}</strong><span>{r[1]}</span></p><p><small>Food Cost</small><b>{r[2]}</b></p><p><small>Net Margin</small><b className="positive">{r[3]}</b></p></div>)}
+      {channelRows.map((r)=><div key={r.channel}>
+        <p><strong>{r.channel}</strong><span>{"$" + r.sales.toLocaleString()}</span></p>
+        <p><small>Source</small><b>POS</b></p>
+        <p><small>Financial data</small><b className={r.channel.toLowerCase()==="dine-in"?"positive":""}>{r.channel.toLowerCase()==="dine-in"?"Not required":"Check fees"}</b></p>
+      </div>)}
      </div>
     </article>
    </section>
