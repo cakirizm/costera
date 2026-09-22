@@ -1,6 +1,7 @@
 import { COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
 const integrations = [
+ ["COSTERA Engine","Normalized calculation API","Connected","Live"],
  ["POS","Generic POS / API","Connected","2 min ago"],
  ["Inventory","CSV + API","Connected","8 min ago"],
  ["Talabat","Orders & settlements","Connected","4 min ago"],
@@ -13,9 +14,9 @@ export default function IntegrationsPage(){
  return (
   <COSTERAAppShell active="/dashboard/integrations" title="Integrations">
    <div className="costera-integration-banner">
-    <div><i/>5 connections healthy</div>
-    <p>All critical sales and operational data sources are syncing normally.</p>
-    <button>Run health check</button>
+    <div><i/>Core calculation engine is live</div>
+    <p>POST normalized sales, recipes and inventory data to the analysis endpoint. COSTERA returns theoretical usage, actual usage and unexplained variance.</p>
+    <a href="/api/engine/analyze" target="_blank">Test API</a>
    </div>
    <section className="costera-grid">
     <article className="costera-panel span-3">
