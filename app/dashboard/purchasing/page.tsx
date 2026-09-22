@@ -19,7 +19,7 @@ export default async function PurchasingPage(){
     <AppMetric label={tx(locale,"Largest Increase","En Büyük Artış")} value="+8.2%" meta={tx(locale,"Beef Tenderloin","Dana Bonfile")} tone="bad" />
     <AppMetric label={tx(locale,"Potential Savings","Tasarruf Potansiyeli")} value="$690" meta={tx(locale,"Based on alternate pricing","Alternatif fiyatlara göre")} tone="good" />
    </div>
-   <section className="costera-grid">
+   <section className="costera-grid purchasing-grid">
     <article className="costera-panel span-3">
       <div className="costera-panel-head"><div><span>{tx(locale,"SUPPLIER PRICE MOVEMENT","TEDARİKÇİ FİYAT HAREKETİ")}</span><h2>{tx(locale,"Cost changes affecting recipes","Reçeteleri etkileyen maliyet değişimleri")}</h2></div><button>{tx(locale,"Import purchase file","Satın alma dosyası aktar")}</button></div>
       <div className="costera-table">
