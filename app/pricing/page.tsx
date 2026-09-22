@@ -27,7 +27,7 @@ const plans = [
 export default function PricingPage() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader locale="en" path="/pricing" />
       <main>
         <section className="pricing-hero">
           <div className="shell narrow">
@@ -63,7 +63,7 @@ export default function PricingPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter locale="en" />
     </>
   );
 }
