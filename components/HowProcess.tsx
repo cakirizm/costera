@@ -69,19 +69,19 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
     <div className="how-pro-grid">
       <article className="how-pro-card">
         <StepNumber n={1} />
-        <div className="how-pro-visual how-pos-visual">
-          <div className="how-pos-source-list">
+        <div className="how-pro-visual how-pos-visual how-photo-visual">
+          <img
+            src="https://images.unsplash.com/photo-1778792447408-b22ad88daa37?auto=format&fit=crop&w=900&q=85"
+            alt=""
+            className="how-real-photo how-pos-photo"
+          />
+          <div className="how-photo-shade" />
+          <div className="how-pos-source-list how-pos-source-overlay">
             <span><i>▣</i>POS</span>
             <span><i>◈</i>Delivery</span>
             <span><i>⌁</i>API</span>
           </div>
-          <div className="how-pos-lines" />
-          <div className="how-pos-screen">
-            <div className="how-pos-screen-top"><span /><span /><span /></div>
-            <div className="how-pos-screen-grid">
-              <i /><i /><i /><i />
-            </div>
-          </div>
+          <div className="how-flow-dots"><i /><i /><i /><i /></div>
         </div>
         <h3>{t.steps[0][0]}</h3>
         <p>{t.steps[0][1]}</p>
@@ -90,9 +90,14 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
 
       <article className="how-pro-card">
         <StepNumber n={2} />
-        <div className="how-pro-visual how-recipe-visual">
-          <div className="how-food-photo" />
-          <div className="how-recipe-list">
+        <div className="how-pro-visual how-recipe-visual how-photo-visual">
+          <img
+            src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=900&q=86"
+            alt=""
+            className="how-real-photo how-food-real-photo"
+          />
+          <div className="how-photo-shade how-food-shade" />
+          <div className="how-recipe-list how-recipe-overlay">
             <span><i>✓</i>Chicken 120 g</span>
             <span><i>✓</i>Sauce 30 g</span>
             <span><i>✓</i>Parmesan 10 g</span>
@@ -108,10 +113,10 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
         <StepNumber n={3} />
         <div className="how-pro-visual how-stock-visual">
           <div className="how-stock-heading">Stock Movement</div>
-          <div className="how-stock-row"><span><i className="item tomato">●</i>{t.stockIn}</span><b>50 kg</b></div>
-          <div className="how-stock-row"><span><i className="item chicken">●</i>{t.purchase}</span><b>30 kg</b></div>
-          <div className="how-stock-row"><span><i className="item green">●</i>{t.transfer}</span><b>5 kg</b></div>
-          <div className="how-stock-row"><span><i className="item waste">●</i>{t.waste}</span><b>2 kg</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🍅</i>{t.stockIn}</span><b>50 kg</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🍗</i>{t.purchase}</span><b>30 kg</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🥬</i>{t.transfer}</span><b>5 kg</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🗑️</i>{t.waste}</span><b>2 kg</b></div>
         </div>
         <h3>{t.steps[2][0]}</h3>
         <p>{t.steps[2][1]}</p>
@@ -145,9 +150,9 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
             <span className="how-alert-icon">!</span>
             <div><small>{t.variance}</small><strong>$1,260</strong><em>+14.1%</em></div>
           </div>
-          <div className="how-variance-row"><span>Chicken</span><b>+18%</b><em>$480</em></div>
-          <div className="how-variance-row"><span>Olive Oil</span><b>+22%</b><em>$320</em></div>
-          <div className="how-variance-row"><span>Tomato</span><b>+12%</b><em>$280</em></div>
+          <div className="how-variance-row"><span>🍗 Chicken</span><b>+18%</b><em>$480</em></div>
+          <div className="how-variance-row"><span>🫒 Olive Oil</span><b>+22%</b><em>$320</em></div>
+          <div className="how-variance-row"><span>🍅 Tomato</span><b>+12%</b><em>$280</em></div>
         </div>
         <h3>{t.steps[4][0]}</h3>
         <p>{t.steps[4][1]}</p>
@@ -158,6 +163,7 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
         <StepNumber n={6} />
         <div className="how-pro-visual how-mobile-visual">
           <div className="how-phone">
+            <div className="how-phone-notch" />
             <div className="how-phone-brand">COSTERA</div>
             <small>{t.today}</small>
             <strong>$8,320</strong>
@@ -166,7 +172,7 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
             <b>Food Cost 28.5%</b>
           </div>
           <div className="how-mobile-actions">
-            <span>◌ {t.alerts}</span>
+            <span>🔔 {t.alerts}</span>
             <span>▥ {t.reports}</span>
             <span>▣ {t.mobile}</span>
           </div>
