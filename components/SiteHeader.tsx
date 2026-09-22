@@ -68,9 +68,19 @@ export function SiteHeader({
             {locale === "tr" ? "EN" : "TR"}
           </Link>
           <Link className="text-link" href={`${prefix}/login`}>{t.login}</Link>
-          <Link className="button button-gold button-small" href={`${prefix}/demo`}>
+          <Link className="button button-gold button-small desktop-demo" href={`${prefix}/demo`}>
             {t.demo}<span>→</span>
           </Link>
+          <details className="mobile-menu">
+            <summary aria-label="Open menu"><span></span><span></span><span></span></summary>
+            <div className="mobile-menu-panel">
+              <Link href={`${prefix}/how-it-works`}>{t.how}</Link>
+              <Link href={`${prefix}/features`}>{t.features}</Link>
+              <Link href={`${prefix}/pricing`}>{t.pricing}</Link>
+              <Link href={`${prefix}/login`}>{t.login}</Link>
+              <Link className="button button-gold full-button" href={`${prefix}/demo`}>{t.demo}</Link>
+            </div>
+          </details>
         </div>
       </div>
     </header>
