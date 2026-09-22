@@ -1733,3 +1733,191 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     letter-spacing: .15em;
   }
 }
+
+
+/* =========================================================
+   COSTERA HEADER — BRAND-ACCURATE NAVIGATION
+   ========================================================= */
+.site-header {
+  height: 84px;
+  background: rgba(255,255,255,.985);
+  border-bottom: 1px solid #e9ecee;
+}
+
+.header-inner {
+  grid-template-columns: minmax(390px, 430px) 1fr auto;
+  gap: 28px;
+}
+
+.brand {
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  color: var(--navy);
+  font-size: 23px;
+  line-height: 1;
+  font-weight: 590;
+  letter-spacing: .225em;
+}
+
+.brand-divider {
+  height: 32px;
+  margin: 0 17px 0 15px;
+  background: #d8c39f;
+}
+
+.brand-tagline {
+  color: #b17428;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 500;
+  transform: rotate(-2deg) translateY(1px);
+}
+
+.nav-links {
+  gap: 31px;
+  font-size: 13.5px;
+  font-weight: 690;
+}
+
+.nav-dropdown-trigger {
+  gap: 8px;
+}
+
+.nav-chevron {
+  width: 10px;
+  height: 7px;
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #365166;
+  transition: transform .18s ease;
+}
+
+.nav-dropdown:hover .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.header-actions {
+  gap: 15px;
+  justify-self: end;
+}
+
+.header-actions .text-link {
+  white-space: nowrap;
+}
+
+.header-actions .desktop-demo {
+  min-height: 46px;
+  padding-inline: 20px;
+  white-space: nowrap;
+}
+
+.language-switch-flag {
+  min-width: 68px;
+  height: 40px;
+  padding: 0 11px;
+  gap: 7px;
+  border: 1px solid #dce2e6;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  box-shadow: 0 2px 8px rgba(9,40,66,.03);
+  font-size: 11px;
+  font-weight: 820;
+  letter-spacing: .04em;
+}
+
+.language-switch-flag:hover {
+  border-color: #c8d0d6;
+  background: #f8f9f9;
+}
+
+.language-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.mobile-language {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 1180px) {
+  .header-inner {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .brand-tagline,
+  .brand-divider {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .brand-name {
+    font-size: 21px;
+  }
+
+  .nav-links {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .language-switch-flag {
+    min-width: 60px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    height: 72px;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+    letter-spacing: .18em;
+  }
+
+  .language-switch-flag {
+    min-width: 54px;
+    height: 36px;
+    padding-inline: 8px;
+    gap: 5px;
+  }
+
+  .language-flag {
+    font-size: 15px;
+  }
+}
