@@ -740,6 +740,15 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 .check-label { flex-direction:row !important; align-items:center; gap:7px !important; }
 .check-label input { width:15px; height:15px; }
 .auth-foot { margin-top:19px !important; font-size:12px; }
+.auth-foot a { color:var(--gold); font-weight:750; }
+.auth-form-error {
+  padding:11px 13px; border:1px solid #eccdc8; border-left:3px solid #c9483b;
+  border-radius:9px; background:#fdf5f4; color:#9c3529; font-size:12.5px; font-weight:600;
+}
+.auth-form-notice {
+  padding:11px 13px; border:1px solid #cfe3d8; border-left:3px solid #1c8a5f;
+  border-radius:9px; background:#f2fbf6; color:#186043; font-size:12.5px; font-weight:600;
+}
 
 .demo-page { min-height:100vh; padding-bottom:80px; background:#f6f7f7; }
 .demo-topbar { height:94px; display:flex; align-items:center; justify-content:space-between; }
@@ -6939,15 +6948,35 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 .costera-user-block {
   min-width: 104px;
   height: 44px;
-  padding: 4px 9px 4px 4px;
+  padding: 4px 7px 4px 4px;
   border: 1px solid #dfe6ea;
   border-radius: 12px;
   display: grid;
-  grid-template-columns: 36px 1fr;
+  grid-template-columns: 36px 1fr auto;
   gap: 8px;
   align-items: center;
   background: #fff;
   box-shadow: 0 3px 10px rgba(8,39,63,.025);
+}
+
+.costera-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e2e8ec;
+  border-radius: 8px;
+  background: #f7f9fa;
+  color: #7c8b95;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.costera-logout:hover {
+  color: #c44a3e;
+  border-color: #eccdc8;
+  background: #fdf5f4;
 }
 
 .costera-user {

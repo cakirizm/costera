@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Brand } from "@/components/Brand";
 import { AppLanguageSwitcher } from "@/components/app/AppLanguageSwitcher";
+import { getSessionContext, initials, roleLabel } from "@/lib/session";
+import { signOutAction } from "@/lib/auth-actions";
 import type { AppLocale } from "@/lib/costera/i18n";
 
 const navGroups = [
@@ -86,7 +88,7 @@ function MetricIcon({ label, tone }: { label: string; tone: string }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7"/></svg>;
 }
 
-export function COSTERAAppShell({
+export async function COSTERAAppShell({
   active,
   title,
   eyebrow,
@@ -100,6 +102,14 @@ export function COSTERAAppShell({
   children: React.ReactNode;
 }) {
   const tr = locale === "tr";
+  const ctx = await getSessionContext();
+  const workspaceName = ctx?.restaurant?.name ?? (tr ? "Çalışma alanı" : "Workspace");
+  const workspaceMeta = ctx?.restaurant?.city
+    ? ctx.restaurant.city + " · " + ctx.locationCount + " " + (tr ? "şube" : ctx.locationCount === 1 ? "location" : "locations")
+    : ctx?.locationCount + " " + (tr ? "şube" : ctx && ctx.locationCount === 1 ? "location" : "locations");
+  const userName = ctx?.user.name ?? ctx?.user.email ?? (tr ? "Kullanıcı" : "User");
+  const userInitials = initials(ctx?.user.name ?? null, ctx?.user.email ?? null);
+  const workspaceInitials = initials(ctx?.restaurant?.name ?? null, null);
 
   return (
     <main className="costera-app premium-shell">
@@ -112,11 +122,11 @@ export function COSTERAAppShell({
         </div>
 
         <div className="costera-workspace">
-          <div className="workspace-avatar">DR</div>
+          <div className="workspace-avatar">{workspaceInitials}</div>
           <div>
             <span>{tr ? "ÇALIŞMA ALANI" : "WORKSPACE"}</span>
-            <strong>Demo Restaurant Group</strong>
-            <small>Dubai · 3 {tr ? "şube" : "locations"}</small>
+            <strong>{workspaceName}</strong>
+            <small>{workspaceMeta}</small>
           </div>
           <button aria-label="Switch workspace">⌄</button>
         </div>
@@ -181,11 +191,16 @@ export function COSTERAAppShell({
             <AppLanguageSwitcher locale={locale} />
 
             <div className="costera-user-block">
-              <div className="costera-user">MC</div>
+              <div className="costera-user">{userInitials}</div>
               <div>
-                <strong>Mehmet</strong>
-                <small>{tr ? "Yönetici" : "Admin"}</small>
+                <strong>{userName}</strong>
+                <small>{roleLabel(ctx?.role ?? null, tr)}</small>
               </div>
+              <form action={signOutAction}>
+                <button type="submit" className="costera-logout" aria-label={tr ? "Çıkış yap" : "Sign out"} title={tr ? "Çıkış yap" : "Sign out"}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                </button>
+              </form>
             </div>
           </div>
         </header>

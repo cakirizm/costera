@@ -21,3 +21,7 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+        env:
+          DATABASE_URL: postgresql://costera:costera@localhost:5432/costera?schema=public
+          AUTH_SECRET: ci-build-placeholder-secret-not-used-at-runtime
+          AUTH_TRUST_HOST: "true"
