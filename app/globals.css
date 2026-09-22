@@ -6489,3 +6489,60 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     min-width: 760px;
   }
 }
+
+
+/* COSTERA app language toggle */
+.costera-language-toggle {
+  height: 36px;
+  padding: 3px;
+  border: 1px solid #dce2e5;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f7f9f9;
+}
+
+.costera-language-toggle button {
+  min-width: 44px;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #74848f;
+  background: transparent;
+  font-size: 7.5px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: .16s ease;
+}
+
+.costera-language-toggle button.active {
+  color: #fff;
+  background: #0b2b45;
+  box-shadow: 0 2px 7px rgba(8,39,63,.14);
+}
+
+.costera-language-toggle.loading {
+  opacity: .55;
+  pointer-events: none;
+}
+
+.costera-flag {
+  font-size: 12px;
+  line-height: 1;
+}
+
+@media (max-width: 760px) {
+  .costera-language-toggle button {
+    min-width: 38px;
+    padding-inline: 6px;
+  }
+  .costera-flag {
+    display: none;
+  }
+}
