@@ -2,6 +2,7 @@ import type {
   CosteraAnalysis,
   CosteraInput,
   IngredientVariance,
+  RootCauseHint,
 } from "./types";
 
 const round = (value: number, decimals = 2) => {
@@ -13,6 +14,69 @@ const riskFromValue = (value: number, pct: number | null): IngredientVariance["r
   if (value >= 150 || (pct !== null && pct >= 10)) return "High";
   if (value >= 40 || (pct !== null && pct >= 5)) return "Medium";
   return "Low";
+};
+
+const rootCauseHint = (args: {
+  theoretical: number;
+  actualUsage: number;
+  knownWaste: number;
+  unexplained: number;
+  variancePct: number | null;
+}): RootCauseHint => {
+  const { theoretical, actualUsage, knownWaste, unexplained, variancePct } = args;
+  const absPct = variancePct === null ? null : Math.abs(variancePct);
+
+  if (theoretical === 0 && actualUsage > 0) {
+    return {
+      label: "Missing recipe / mapping",
+      confidence: "High",
+      reason: "Inventory usage exists but COSTERA has no theoretical recipe consumption for this ingredient.",
+      action: "Check recipe mapping and confirm that every sold menu item using this ingredient is linked.",
+    };
+  }
+
+  if (unexplained < 0) {
+    return {
+      label: "Count timing / transfer mismatch",
+      confidence: absPct !== null && absPct >= 10 ? "Medium" : "Low",
+      reason: "Recorded stock usage is lower than recipe-driven theoretical usage.",
+      action: "Review stock count timing, transfers, purchase receipts and recipe quantity assumptions.",
+    };
+  }
+
+  if (unexplained > 0 && knownWaste === 0 && absPct !== null && absPct >= 15) {
+    return {
+      label: "Portioning, unrecorded waste or stock-count issue",
+      confidence: "Medium",
+      reason: "Actual usage materially exceeds theoretical usage and no approved waste explains the difference.",
+      action: "Perform a physical count, review portioning standards and check whether waste was recorded.",
+    };
+  }
+
+  if (unexplained > 0 && knownWaste > 0 && absPct !== null && absPct >= 10) {
+    return {
+      label: "Excess usage beyond approved waste",
+      confidence: "Medium",
+      reason: "Approved waste exists, but a material unexplained balance still remains after removing it.",
+      action: "Review receiving, transfers, portion sizes and kitchen handling for this ingredient.",
+    };
+  }
+
+  if (unexplained > 0) {
+    return {
+      label: "Small unexplained usage",
+      confidence: "Low",
+      reason: "Actual usage is above theoretical usage, but the variance is not large enough to isolate a cause from aggregate data alone.",
+      action: "Monitor the next count cycle and compare by shift, branch and menu item when detailed feeds are available.",
+    };
+  }
+
+  return {
+    label: "Within expected range",
+    confidence: "High",
+    reason: "Actual usage is aligned with theoretical usage after approved waste.",
+    action: "No immediate action required.",
+  };
 };
 
 export function analyzeCost(input: CosteraInput): CosteraAnalysis {
@@ -99,12 +163,30 @@ export function analyzeCost(input: CosteraInput): CosteraAnalysis {
       actualValue: round(actualValue),
       variancePct: variancePct === null ? null : round(variancePct, 1),
       risk: riskFromValue(Math.abs(unexplainedValue), variancePct === null ? null : Math.abs(variancePct)),
+      shareOfGapPct: 0,
+      rootCause: rootCauseHint({
+        theoretical,
+        actualUsage,
+        knownWaste,
+        unexplained,
+        variancePct,
+      }),
     });
   }
 
   ingredientVariance.sort(
     (a, b) => Math.abs(b.unexplainedValue) - Math.abs(a.unexplainedValue),
   );
+
+  const absoluteGap = ingredientVariance.reduce(
+    (sum, item) => sum + Math.max(0, item.unexplainedValue),
+    0,
+  );
+
+  for (const item of ingredientVariance) {
+    item.shareOfGapPct =
+      absoluteGap > 0 ? round((Math.max(0, item.unexplainedValue) / absoluteGap) * 100, 1) : 0;
+  }
 
   const theoreticalFoodCostPct = netSales > 0 ? (theoreticalCost / netSales) * 100 : 0;
   const actualFoodCostPct = netSales > 0 ? (actualCost / netSales) * 100 : 0;
