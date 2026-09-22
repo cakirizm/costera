@@ -28,6 +28,14 @@ const copy = {
   },
 };
 
+function ChevronDown() {
+  return (
+    <svg className="nav-chevron" viewBox="0 0 12 8" aria-hidden="true">
+      <path d="M1.5 1.5 6 6l4.5-4.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function SiteHeader({
   locale = "en",
   path = "/",
@@ -50,7 +58,8 @@ export function SiteHeader({
         <nav className="nav-links" aria-label="Primary navigation">
           <div className="nav-dropdown">
             <Link href={`${prefix}/features`} className={`nav-dropdown-trigger ${path === "/features" ? "active" : ""}`}>
-              {t.product}<span aria-hidden="true">⌄</span>
+              <span>{t.product}</span>
+              <ChevronDown />
             </Link>
             <div className="nav-dropdown-menu">
               <Link href={prefix || "/"}>{t.overview}</Link>
@@ -64,13 +73,15 @@ export function SiteHeader({
         </nav>
 
         <div className="header-actions">
-          <Link href={otherLocaleHref} className="language-switch" aria-label="Change language">
-            {locale === "tr" ? "EN" : "TR"}
-          </Link>
           <Link className="text-link" href={`${prefix}/login`}>{t.login}</Link>
           <Link className="button button-gold button-small desktop-demo" href={`${prefix}/demo`}>
             {t.demo}<span>→</span>
           </Link>
+          <Link href={otherLocaleHref} className="language-switch language-switch-flag" aria-label="Change language">
+            <span className="language-flag" aria-hidden="true">{locale === "tr" ? "🇬🇧" : "🇹🇷"}</span>
+            <span>{locale === "tr" ? "EN" : "TR"}</span>
+          </Link>
+
           <details className="mobile-menu">
             <summary aria-label="Open menu"><span></span><span></span><span></span></summary>
             <div className="mobile-menu-panel">
@@ -78,6 +89,10 @@ export function SiteHeader({
               <Link href={`${prefix}/features`}>{t.features}</Link>
               <Link href={`${prefix}/pricing`}>{t.pricing}</Link>
               <Link href={`${prefix}/login`}>{t.login}</Link>
+              <Link href={otherLocaleHref} className="mobile-language">
+                <span>{locale === "tr" ? "🇬🇧" : "🇹🇷"}</span>
+                {locale === "tr" ? "English" : "Türkçe"}
+              </Link>
               <Link className="button button-gold full-button" href={`${prefix}/demo`}>{t.demo}</Link>
             </div>
           </details>
