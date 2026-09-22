@@ -2003,3 +2003,34 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   width: 78px;
   border-bottom-color: #b47a2f;
 }
+
+
+/* Desktop fit correction: keep the compact 90% homepage feel
+   but stop the laptop/header from drifting beyond the viewport. */
+@media (min-width: 1200px) {
+  .site-header {
+    zoom: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .reference-home {
+    zoom: .90;
+    width: 111.111111%;
+  }
+
+  .reference-product {
+    transform: translate(-34px, 10px);
+  }
+
+  .reference-product .product-laptop {
+    max-width: 660px;
+    margin-left: auto;
+    margin-right: 42px;
+  }
+
+  .reference-hand-note {
+    top: 4px;
+    right: 20px;
+  }
+}
