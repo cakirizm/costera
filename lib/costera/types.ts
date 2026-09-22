@@ -51,6 +51,13 @@ export type CosteraInput = {
   inventory: InventoryPosition[];
 };
 
+export type RootCauseHint = {
+  label: string;
+  confidence: "Low" | "Medium" | "High";
+  reason: string;
+  action: string;
+};
+
 export type IngredientVariance = {
   ingredientId: string;
   ingredient: string;
@@ -65,6 +72,8 @@ export type IngredientVariance = {
   actualValue: number;
   variancePct: number | null;
   risk: "Low" | "Medium" | "High";
+  shareOfGapPct: number;
+  rootCause: RootCauseHint;
 };
 
 export type CosteraAnalysis = {
