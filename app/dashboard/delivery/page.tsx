@@ -21,6 +21,7 @@ export default async function DeliveryPage(){
         <AppMetric label={tx(locale,"Connector Need","Connector İhtiyacı")} value={tx(locale,"Unknown","Bilinmiyor")} meta={tx(locale,"Check POS coverage first","Önce POS kapsamını kontrol et")} tone="gold" />
       </div>
       <EmptyWorkspace
+        locale={locale}
         title={tx(locale,"No delivery-channel data yet.","Henüz delivery kanal verisi yok.")}
         text={tx(locale,"Connect a POS first. If the POS already provides channel orders, fees and settlements, COSTERA does not need separate delivery integrations.","Önce POS bağlayın. POS kanal siparişleri, ücretler ve settlement verisini zaten sağlıyorsa COSTERA'nın ayrı delivery entegrasyonuna ihtiyacı yoktur.")}
       />
