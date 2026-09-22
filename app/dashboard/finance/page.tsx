@@ -1,5 +1,7 @@
 import { AppMetric, COSTERAAppShell } from "@/components/app/COSTERAAppShell";
 
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
 const expenses = [
  ["Payroll","$12,800","87"],
  ["Rent","$8,500","58"],
@@ -8,9 +10,10 @@ const expenses = [
  ["Other operating","$3,260","22"],
 ];
 
-export default function FinancePage(){
+export default async function FinancePage(){
+ const locale = await getAppLocale();
  return (
-  <COSTERAAppShell active="/dashboard/finance" title="Finance">
+  <COSTERAAppShell active="/dashboard/finance" locale={locale} title={tx(locale,"Finance","Finans")}>
    <div className="costera-metrics five">
     <AppMetric label="Net Sales" value="$58,240" meta="Sep 1–22" tone="good" />
     <AppMetric label="COGS" value="$17,124" meta="29.4% of sales" tone="bad" />
