@@ -1,83 +1,93 @@
-import Link from "next/link";
-import { Brand } from "@/components/Brand";
+import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
-const ingredients = [
-  ["Minced Beef", "148 kg", "131 kg", "+17 kg", "$561"],
-  ["Chicken Breast", "201 kg", "190 kg", "+11 kg", "$176"],
-  ["Olive Oil", "44 L", "40 L", "+4 L", "$52"],
-  ["Mozzarella", "76 kg", "73 kg", "+3 kg", "$39"],
+const varianceRows = [
+  ["Minced Beef","+17 kg","$561","22.6%","High"],
+  ["Chicken Breast","+11 kg","$176","7.1%","High"],
+  ["Olive Oil","+4 L","$52","2.1%","Medium"],
+  ["Mozzarella","+3 kg","$39","1.6%","Medium"],
 ];
 
-export default function DashboardPage() {
-  return (
-    <main className="app-shell">
-      <aside className="app-sidebar">
-        <Brand compact />
-        <nav>
-          <a className="active" href="#">Overview</a>
-          <a href="#">Inventory</a>
-          <a href="#">Recipes & Cost</a>
-          <a href="#">Purchasing</a>
-          <a href="#">POS & Sales</a>
-          <a href="#">Delivery</a>
-          <a href="#">Reports</a>
-          <a href="#">Settings</a>
-        </nav>
-        <Link href="/" className="sidebar-exit">← Website</Link>
-      </aside>
-      <section className="app-main">
-        <header className="app-topbar">
-          <div>
-            <small>Demo Restaurant Group</small>
-            <h1>Overview</h1>
-          </div>
-          <div className="topbar-controls">
-            <select defaultValue="all"><option value="all">All locations</option></select>
-            <button>May 1–31</button>
-            <div className="avatar">JD</div>
-          </div>
-        </header>
+const channelRows = [
+  ["Dine-in","$26,820","28.1%","22.4%"],
+  ["Talabat","$12,640","31.9%","14.2%"],
+  ["Deliveroo","$9,450","35.8%","8.1%"],
+  ["Careem","$5,240","33.1%","10.8%"],
+];
 
-        <div className="app-kpis">
-          <article><span>Sales</span><strong>$58,240</strong><small className="success-text">+8.3%</small></article>
-          <article><span>Target Food Cost</span><strong>25.0%</strong><small>Configured target</small></article>
-          <article><span>Actual Food Cost</span><strong>29.4%</strong><small className="danger-text">+4.4 pp</small></article>
-          <article className="alert-kpi"><span>Unexplained Variance</span><strong>$2,480</strong><small className="danger-text">Review required</small></article>
+export default function DashboardPage(){
+ return (
+  <COSTERAAppShell active="/dashboard" title="Overview">
+   <div className="costera-alert-strip">
+    <div>
+      <i>!</i>
+      <p>
+        <strong>$2,480 unexplained cost requires review</strong>
+        <span>Minced Beef, Chicken Breast and Olive Oil account for 31.8% of the current gap.</span>
+      </p>
+    </div>
+    <a href="/dashboard/variance">Open Cost Control →</a>
+   </div>
+
+   <div className="costera-metrics five">
+    <AppMetric label="Net Sales" value="$58,240" meta="+8.3% vs previous period" tone="good" />
+    <AppMetric label="Target Food Cost" value="25.0%" meta="Configured group target" tone="gold" />
+    <AppMetric label="Actual Food Cost" value="29.4%" meta="+4.4 pp above target" tone="bad" />
+    <AppMetric label="Unexplained Variance" value="$2,480" meta="4.3% of net sales" tone="bad" />
+    <AppMetric label="Gross Margin" value="62.1%" meta="+3.2 pp vs prior period" tone="good" />
+   </div>
+
+   <section className="costera-grid overview-grid">
+    <article className="costera-panel span-2">
+      <div className="costera-panel-head">
+        <div><span>FOOD COST TREND</span><h2>Actual vs target</h2></div>
+        <div className="costera-legend"><i className="actual"/>Actual<i className="target"/>Target</div>
+      </div>
+      <div className="costera-line-chart">
+        <div className="costera-target-line" />
+        <svg viewBox="0 0 700 250" preserveAspectRatio="none">
+          <path d="M0 192 C66 135,115 166,172 118 S285 150,350 98 S465 139,535 85 S632 98,700 58" fill="none" stroke="#0a2b45" strokeWidth="7" strokeLinecap="round"/>
+        </svg>
+        <div className="costera-chart-labels"><span>Sep 1</span><span>Sep 7</span><span>Sep 14</span><span>Sep 21</span></div>
+      </div>
+    </article>
+
+    <article className="costera-panel">
+      <div className="costera-panel-head"><div><span>UNEXPLAINED COST</span><h2>Variance mix</h2></div></div>
+      <div className="costera-donut-wrap">
+        <div className="costera-donut"><div><strong>$2.48k</strong><small>Total gap</small></div></div>
+        <div className="costera-donut-legend">
+          <span><i className="v1"/>Meat & Poultry<b>$1,320</b></span>
+          <span><i className="v2"/>Dairy<b>$420</b></span>
+          <span><i className="v3"/>Oils<b>$310</b></span>
+          <span><i className="v4"/>Other<b>$430</b></span>
         </div>
+      </div>
+    </article>
+   </section>
 
-        <div className="app-grid">
-          <article className="app-card chart-large">
-            <div className="card-heading"><div><strong>Food Cost Trend</strong><small>Actual vs target</small></div><span>May</span></div>
-            <div className="big-chart">
-              <div className="chart-target" />
-              <svg viewBox="0 0 700 250" preserveAspectRatio="none"><path d="M0 190 C70 130,120 177,190 108 S330 160,390 98 S520 145,700 55" fill="none" stroke="#0a2740" strokeWidth="7" strokeLinecap="round"/></svg>
-            </div>
-          </article>
-          <article className="app-card">
-            <div className="card-heading"><div><strong>Variance by Category</strong><small>Unexplained value</small></div></div>
-            <div className="donut-wrap">
-              <div className="donut"><span>$2.48k<small>Total</small></span></div>
-              <div className="legend">
-                <span><i className="dot d1"/>Meat & Poultry <b>$1,320</b></span>
-                <span><i className="dot d2"/>Dairy <b>$420</b></span>
-                <span><i className="dot d3"/>Oils <b>$310</b></span>
-                <span><i className="dot d4"/>Other <b>$430</b></span>
-              </div>
-            </div>
-          </article>
-        </div>
+   <section className="costera-grid overview-bottom-grid">
+    <article className="costera-panel span-2">
+      <div className="costera-panel-head">
+        <div><span>TOP VARIANCES</span><h2>Ingredients requiring attention</h2></div>
+        <a href="/dashboard/variance">View analysis</a>
+      </div>
+      <div className="costera-table overview-table">
+        <div className="costera-table-row head"><span>Ingredient</span><span>Difference</span><span>Impact</span><span>Share of gap</span><span>Risk</span></div>
+        {varianceRows.map(r=><div className="costera-table-row" key={r[0]}>{r.map((c,i)=><span key={i} className={i===1||i===2?"negative":""}>{i===4?<StatusPill tone={c==="High"?"bad":"warning"}>{c}</StatusPill>:c}</span>)}</div>)}
+      </div>
+    </article>
 
-        <article className="app-card table-card">
-          <div className="card-heading">
-            <div><strong>Largest Ingredient Variances</strong><small>Actual usage compared with recipe-driven theoretical usage</small></div>
-            <button className="table-action">View full analysis</button>
-          </div>
-          <div className="data-table">
-            <div className="data-row table-head"><span>Ingredient</span><span>Actual Usage</span><span>Theoretical</span><span>Difference</span><span>Value</span></div>
-            {ingredients.map((row) => <div className="data-row" key={row[0]}>{row.map((cell, i) => <span className={i > 2 ? "danger-text" : ""} key={i}>{cell}</span>)}</div>)}
-          </div>
-        </article>
-      </section>
-    </main>
-  );
+    <article className="costera-panel">
+      <div className="costera-panel-head"><div><span>CHANNEL PROFITABILITY</span><h2>Sales channel economics</h2></div><a href="/dashboard/delivery">Open delivery</a></div>
+      <div className="costera-channel-list">
+        {channelRows.map(r=><div key={r[0]}>
+          <p><strong>{r[0]}</strong><span>{r[1]}</span></p>
+          <p><small>Food Cost</small><b>{r[2]}</b></p>
+          <p><small>Net Margin</small><b className="positive">{r[3]}</b></p>
+        </div>)}
+      </div>
+    </article>
+   </section>
+  </COSTERAAppShell>
+ )
 }
