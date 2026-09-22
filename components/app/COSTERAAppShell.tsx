@@ -11,6 +11,7 @@ const nav = [
   ["/dashboard/delivery", "⇄", "Delivery"],
   ["/dashboard/finance", "$", "Finance"],
   ["/dashboard/reports", "▦", "Reports"],
+  ["/dashboard/import", "⇩", "Data Import"],
   ["/dashboard/integrations", "⌁", "Integrations"],
   ["/dashboard/settings", "⚙", "Settings"],
 ] as const;
