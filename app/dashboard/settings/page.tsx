@@ -1,8 +1,11 @@
 import { COSTERAAppShell } from "@/components/app/COSTERAAppShell";
 
-export default function SettingsPage(){
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
+export default async function SettingsPage(){
+ const locale = await getAppLocale();
  return (
-  <COSTERAAppShell active="/dashboard/settings" title="Settings">
+  <COSTERAAppShell active="/dashboard/settings" locale={locale} title={tx(locale,"Settings","Ayarlar")}>
    <section className="costera-grid settings-layout">
     <article className="costera-panel">
      <div className="costera-panel-head"><div><span>COST CONTROL</span><h2>Targets</h2></div></div>
