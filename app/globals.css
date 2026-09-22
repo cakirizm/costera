@@ -2034,3 +2034,64 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     right: 20px;
   }
 }
+
+
+/* =========================================================
+   DESKTOP FIRST-SCREEN HARD FIT
+   Grounded against 1343px user screenshot:
+   keep all four WHY COSTERA cards fully inside viewport.
+   ========================================================= */
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .reference-why-grid {
+    box-sizing: border-box;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 34px;
+    padding-right: 105px;
+  }
+
+  .reference-pillar-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .reference-pillar {
+    min-width: 0;
+  }
+
+  .reference-pillar h3 {
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .reference-pillar p {
+    font-size: 12px;
+    line-height: 1.48;
+  }
+
+  .reference-pillar-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .reference-signature {
+    transform: translateX(-38px);
+  }
+
+  .reference-hero-grid {
+    box-sizing: border-box;
+    padding-right: 72px;
+  }
+
+  .reference-product {
+    transform: translate(-54px, 10px);
+  }
+
+  .reference-product .product-laptop {
+    max-width: 635px;
+    margin-right: 28px;
+  }
+
+  .reference-hand-note {
+    right: 10px;
+  }
+}
