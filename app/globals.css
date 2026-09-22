@@ -2483,3 +2483,42 @@ h1, h2, h3, p { overflow-wrap: break-word; }
     width: 25px;
   }
 }
+
+
+/* Approved COSTERA logo artwork */
+.brand-approved-image {
+  width: 230px;
+  height: 55px;
+  display: block;
+  object-fit: contain;
+  object-position: left center;
+  flex: 0 0 auto;
+}
+
+.brand > .brand-divider {
+  height: 33px;
+  margin: 0 17px 0 15px;
+}
+
+.brand > .brand-tagline {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.brand-light .brand-approved-image {
+  border-radius: 6px;
+}
+
+@media (max-width: 1180px) {
+  .brand-approved-image {
+    width: 205px;
+    height: 49px;
+  }
+}
+
+@media (max-width: 720px) {
+  .brand-approved-image {
+    width: 176px;
+    height: 42px;
+  }
+}
