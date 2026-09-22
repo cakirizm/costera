@@ -3984,3 +3984,86 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   .costera-table-row { min-width:680px; }
   .costera-report-grid,.costera-integration-grid { grid-template-columns:1fr; }
 }
+
+
+/* COSTERA live engine status */
+.costera-quality-block {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.costera-quality-block > div {
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid #e5e9eb;
+  border-radius: 9px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 9px;
+  align-items: center;
+  background: #fbfcfc;
+}
+
+.costera-quality-block span {
+  color: #667988;
+  font-size: 8px;
+}
+
+.costera-quality-block b {
+  color: #17364d;
+  font-size: 10px;
+}
+
+.costera-quality-block em {
+  min-width: 44px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.costera-quality-block em.good {
+  color: #15734f;
+  background: #e9f6f0;
+}
+
+.costera-quality-block em.bad {
+  color: #b23d32;
+  background: #fff0ed;
+}
+
+.costera-quality-block > a {
+  margin-top: 2px;
+  color: #9a6829;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.costera-engine-foot {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px dashed #d8dee2;
+  border-radius: 9px;
+  color: #778691;
+  background: #fafbfb;
+  font-size: 8px;
+}
+
+.costera-integration-banner > a {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid #c9ded4;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #346957;
+  background: #fff;
+  font-size: 8px;
+  font-weight: 750;
+  white-space: nowrap;
+}
