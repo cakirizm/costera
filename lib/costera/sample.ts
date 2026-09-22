@@ -49,10 +49,10 @@ export const sampleInput: CosteraInput = {
     { id: "s5", menuItemId: "pizza", quantity: 500, channel: "Dine-in", locationId: "jumeirah" },
   ],
   inventory: [
-    { ingredientId: "beef", openingQty: 210, purchasesQty: 160, closingQty: 111, knownWasteQty: 13 },
-    { ingredientId: "chicken", openingQty: 250, purchasesQty: 180, closingQty: 218, knownWasteQty: 11 },
-    { ingredientId: "oil", openingQty: 52, purchasesQty: 45, closingQty: 59, knownWasteQty: 2 },
-    { ingredientId: "mozzarella", openingQty: 88, purchasesQty: 80, closingQty: 94, knownWasteQty: 3 },
-    { ingredientId: "tomato", openingQty: 110, purchasesQty: 120, closingQty: 86, knownWasteQty: 5 },
+    { ingredientId: "beef", openingQty: 210, purchasesQty: 160, closingQty: 55.76, knownWasteQty: 13 },
+    { ingredientId: "chicken", openingQty: 250, purchasesQty: 180, closingQty: 193.92, knownWasteQty: 11 },
+    { ingredientId: "oil", openingQty: 52, purchasesQty: 45, closingQty: 54.664, knownWasteQty: 2 },
+    { ingredientId: "mozzarella", openingQty: 88, purchasesQty: 80, closingQty: 15.04, knownWasteQty: 3 },
+    { ingredientId: "tomato", openingQty: 110, purchasesQty: 120, closingQty: 72.64, knownWasteQty: 5 },
   ],
 };
