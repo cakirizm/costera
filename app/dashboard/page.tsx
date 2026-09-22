@@ -30,6 +30,7 @@ export default async function DashboardPage(){
         <AppMetric label={tx(locale,"Theoretical Cost","Teorik Maliyet")} value="$0" meta={tx(locale,"Waiting for recipe sales data","Reçete ve satış verisi bekleniyor")} />
       </div>
       <EmptyWorkspace
+        locale={locale}
         title={tx(locale,"No live data connected yet.","Henüz canlı veri bağlantısı yok.")}
         text={tx(locale,"Connect a POS source or start the Universal POS Demo to populate this workspace.","Bu ekranı doldurmak için bir POS bağlayın veya Universal POS Demo'yu başlatın.")}
       />
