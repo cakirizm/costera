@@ -883,3 +883,7 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   .data-row { grid-template-columns:1.4fr 1fr 1fr; }
   .data-row span:nth-child(2), .data-row span:nth-child(3) { display:none; }
 }
+
+.auth-brand-row,
+.demo-top-actions { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.auth-language { color:#fff; border-color:rgba(255,255,255,.45); background:rgba(7,31,53,.25); }
