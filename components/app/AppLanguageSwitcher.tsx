@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { TurkeyFlag, UKFlag } from "@/components/Flags";
 import type { AppLocale } from "@/lib/costera/i18n";
 
 export function AppLanguageSwitcher({ locale }: { locale: AppLocale }) {
@@ -30,7 +31,7 @@ export function AppLanguageSwitcher({ locale }: { locale: AppLocale }) {
         className={locale === "en" ? "active" : ""}
         onClick={() => setLocale("en")}
       >
-        <span className="costera-flag">🇬🇧</span>
+        <UKFlag className="costera-flag" />
         EN
       </button>
       <button
@@ -38,7 +39,7 @@ export function AppLanguageSwitcher({ locale }: { locale: AppLocale }) {
         className={locale === "tr" ? "active" : ""}
         onClick={() => setLocale("tr")}
       >
-        <span className="costera-flag">🇹🇷</span>
+        <TurkeyFlag className="costera-flag" />
         TR
       </button>
     </div>

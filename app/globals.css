@@ -1573,8 +1573,12 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   border-radius: 13px;
   background: #fff;
   color: #ad762d;
-  font-size: 25px;
   box-shadow: 0 7px 20px rgba(9,40,66,.05);
+}
+
+.reference-pillar-icon svg {
+  width: 24px;
+  height: 24px;
 }
 
 .reference-pillar h3 {
@@ -6533,8 +6537,11 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 }
 
 .costera-flag {
-  font-size: 12px;
-  line-height: 1;
+  width: 16px;
+  height: auto;
+  border-radius: 2px;
+  display: block;
+  flex: 0 0 auto;
 }
 
 @media (max-width: 760px) {

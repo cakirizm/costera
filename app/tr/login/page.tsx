@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Brand } from "@/components/Brand";
+import { UKFlag } from "@/components/Flags";
 
 export default function TurkishLoginPage() {
   return (
@@ -7,7 +8,7 @@ export default function TurkishLoginPage() {
       <div className="auth-visual">
         <div className="auth-brand-row">
           <Link href="/tr" className="auth-brand"><Brand light /></Link>
-          <Link href="/login" className="language-switch auth-language">EN</Link>
+          <Link href="/login" className="language-switch language-switch-flag auth-language"><UKFlag /><span>EN</span></Link>
         </div>
         <div className="auth-visual-copy">
           <div className="eyebrow eyebrow-light">RESTORAN MALİYET ZEKÂSI</div>

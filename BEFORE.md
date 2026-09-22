@@ -1,0 +1,82 @@
+# COSTERA — Mevcut Durum Tespit Raporu (BEFORE)
+
+> Bu dosya, iyileştirme çalışmalarına **başlamadan önceki** durumu belgeler.
+> Amaç: her tespitin hangi fazda çözüleceğini kayıt altına almak ve
+> hiçbir eksikliğin gözden kaçmamasını garanti etmek.
+>
+> Tarih: 2026-09-23
+> İnceleme kapsamı: `app/`, `components/`, `lib/costera/`, `app/api/*`,
+> `app/globals.css` (10.834 satır), `package.json`, `tsconfig.json`,
+> `.github/workflows/ci.yml`, son 20 commit.
+
+---
+
+## Projenin Mevcut Teknik Durumu
+
+| Kategori | Durum |
+|---|---|
+| Stack | Next.js 16 + React 19 + TypeScript |
+| Stil | Tek dosyada 10.834 satır ham CSS (`app/globals.css`). Tailwind/CSS modülü yok. |
+| i18n | Sadece `tx(locale, en, tr)` fonksiyonu + cookie. Gerçek i18n kütüphanesi yok. |
+| Veri | Hesaplama motoru (`lib/costera/engine.ts`) gerçek ve çalışıyor; girdisi hep statik `sampleInput`. |
+| Backend | **Veritabanı / ORM / kalıcı depolama YOK.** API route'ları cookie flag + sample data döndürüyor. |
+| Auth | **Gerçek kimlik doğrulama YOK.** |
+| Mobil | **Mobil uygulama repoda hiç YOK.** |
+| Test | Test framework yok, lint script yok. CI sadece `npm run build`. |
+
+---
+
+## Tespit Edilen Eksiklikler ve Faz Eşlemesi
+
+Aşağıdaki tablo **sözleşme niteliğindedir**: her tespit bir faza bağlıdır ve
+o faz tamamlanmadan tespit "çözülmüş" sayılmaz.
+
+| # | Tespit | Kanıt (dosya) | Çözüleceği Faz | Durum |
+|---|---|---|---|---|
+| 1 | Gerçek giriş yok — form `action="/dashboard"` ile doğrulama olmadan yönlendiriyor; "şifremi unuttum" linki `href="#"`; farklı giriş kanalları yok | `app/login/page.tsx` | **Faz 2** | ⬜ Bekliyor |
+| 2 | Kalıcı veri katmanı yok — tüm veriler statik `sampleInput`, ayarlar/entegrasyonlar cookie'de | `app/api/**/route.ts`, `lib/costera/sample.ts` | **Faz 2** | ⬜ Bekliyor |
+| 3 | Entegrasyonlar gerçek değil — "Connect" sadece demo cookie açıyor; connector builder sadece `localStorage`'a brief kaydediyor; gerçek OAuth/API/webhook yok | `components/app/IntegrationStudio.tsx` | **Faz 3** | ⬜ Bekliyor |
+| 4 | Import edilen veri dashboard'a kalıcı yansımıyor — `DataImporter` çalışıyor ama sonuç sadece o sayfada kalıyor | `components/app/DataImporter.tsx` | **Faz 3** | ⬜ Bekliyor |
+| 5 | Finance'te gider ekleme çalışmıyor — "Add accounting expense" butonu `onClick` içermiyor; kira/elektrik kalemleri hardcoded | `app/dashboard/finance/page.tsx` | **Faz 4** | ⬜ Bekliyor |
+| 6 | Dil bayrağı tutarsız — dashboard'da emoji bayrak (Windows'ta render olmaz), marketing'te SVG, login'de düz "TR" metni (üç farklı yaklaşım) | `components/app/AppLanguageSwitcher.tsx`, `components/SiteHeader.tsx`, `app/login/page.tsx` | **Faz 1** | ✅ Çözüldü — ortak `components/Flags.tsx` SVG bayraklarına birleştirildi, tarayıcıda doğrulandı |
+| 7 | CSS teknik borcu — `.costera-sidebar-brand` iki kez çakışan tanımla (satır 3019 ve 6594); taşan kartlar, "saçma oklar", "dümdüz logo" bunun sonucu | `app/globals.css` | **Faz 1** | 🟡 Devam ediyor — sidebar logosu 1440px'de düzgün; entegrasyon sayfasında scroll/sticky düzen sorunu ve source-kartı okları hâlâ inceleniyor |
+| 8 | Landing "premium" değil — ikonlar unicode karakter (`◫ ≋ ▥ ▣`); sosyal kanıt / testimonial / illüstrasyon yok | `components/LandingPage.tsx` | **Faz 1 + Faz 6** | 🟡 Kısmen — unicode ikonlar SVG'ye çevrildi ve doğrulandı; sosyal kanıt/testimonial Faz 6'da |
+| 9 | Mobil uygulama yok — read-only yönetici izleme uygulaması gerekiyor (web ile aynı auth/backend) | (repoda yok) | **Faz 5** | ⬜ Bekliyor |
+| 10 | Kalite altyapısı yok — lint/test yok, CI sadece build | `.github/workflows/ci.yml`, `package.json` | **Faz 7** | ⬜ Bekliyor |
+
+---
+
+## Ekip Arkadaşı Notlarının Eşlemesi
+
+Ekip arkadaşının serbest metin notları ve karşılık gelen tespit/faz:
+
+| Not | Tespit # | Faz |
+|---|---|---|
+| "Ana sayfada premium bir şeyler / tanıtım sayfası" | 8 | Faz 1 + Faz 6 |
+| "Gerçek giriş, şifre, şifre unuttum, farklı giriş kanalları" | 1 | Faz 2 |
+| "İçeri girdikten sonraki ekranın görünüşünü düzelt" | 7 | Faz 1 |
+| "POS/delivery entegrasyonlarını anlaşılır yap" | 3 | Faz 3 |
+| "Ana sayfayı düzgünleştir, sığmayan kısımlar, saçma oklar" | 7 | Faz 1 |
+| "Dillerde bayrak istiyorum yapamıyor" | 6 | Faz 1 |
+| "Dashboard girişte costera'yı dümdüz koymuş" | 7 | Faz 1 |
+| "Entegrasyon kurulunca tak diye her şey gelmeli" | 3, 4 | Faz 3 |
+| "Mobil sadece kontrol, login web'e entegre, yönetici izleme" | 9 | Faz 5 |
+| "POS sistemlerine entegre etmek" | 3 | Faz 3 |
+| "Yalandan excel oluşturt, geliyor mu dene" | 4 | Faz 3 (temeli Faz 1'de çalışıyor) |
+| "Muhasebe / kira / elektrik faturası / cost hesaplama" | 5 | Faz 4 |
+
+---
+
+## Faz Haritası (Özet)
+
+- **Faz 1 — Görsel/UX düzeltmeleri** (backend gerektirmez): Tespit 6, 7, 8(kısmi)
+- **Faz 2 — Backend temeli** (DB + auth): Tespit 1, 2
+- **Faz 3 — Gerçek entegrasyon altyapısı**: Tespit 3, 4
+- **Faz 4 — Finans / gider yönetimi**: Tespit 5
+- **Faz 5 — Mobil izleme uygulaması**: Tespit 9
+- **Faz 6 — Pazarlama premium yükseltme**: Tespit 8 (tamamı)
+- **Faz 7 — Kalite altyapısı**: Tespit 10
+
+**Garanti:** Tüm 10 tespit bir faza bağlıdır. Faz 1 hepsini çözmez; ama
+hiçbir tespit haritanın dışında bırakılmamıştır. Her faz bittiğinde bu
+dosyadaki "Durum" sütunu güncellenecektir.

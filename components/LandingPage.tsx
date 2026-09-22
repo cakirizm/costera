@@ -18,10 +18,10 @@ const copy = {
     whyTitleB: "more profit.",
     whyBody: "See your restaurant operation from end to end and keep control where it matters.",
     pillars: [
-      ["◫", "Smart Inventory Control", "Track stock movement in real time and identify unexplained differences."],
-      ["≋", "Theoretical vs. Actual Usage", "Compare recipe-driven expected consumption with actual usage."],
-      ["▥", "Delivery Channel Visibility", "See revenue, cost and profitability across every delivery channel."],
-      ["▣", "Access Anywhere", "Keep the operation visible from desktop, tablet or mobile."],
+      ["inventory", "Smart Inventory Control", "Track stock movement in real time and identify unexplained differences."],
+      ["usage", "Theoretical vs. Actual Usage", "Compare recipe-driven expected consumption with actual usage."],
+      ["delivery", "Delivery Channel Visibility", "See revenue, cost and profitability across every delivery channel."],
+      ["access", "Access Anywhere", "Keep the operation visible from desktop, tablet or mobile."],
     ],
   },
   tr: {
@@ -37,13 +37,29 @@ const copy = {
     whyTitleB: "daha fazla kâr.",
     whyBody: "Restoran operasyonlarınızı uçtan uca görün, kontrolü elinizde tutun.",
     pillars: [
-      ["◫", "Akıllı Stok Yönetimi", "Stok hareketlerini anlık izleyin, açıklanamayan farkları tespit edin."],
-      ["≋", "Teorik vs. Gerçek Kullanım", "Reçetelere göre beklenen kullanımı gerçek tüketimle karşılaştırın."],
-      ["▥", "Delivery Kanal Görünürlüğü", "Tüm delivery kanallarının maliyet ve kârlılık performansını tek ekranda görün."],
-      ["▣", "Her Yerden Erişim", "Mobil uyumlu panel ile işletmenizi dilediğiniz yerden takip edin."],
+      ["inventory", "Akıllı Stok Yönetimi", "Stok hareketlerini anlık izleyin, açıklanamayan farkları tespit edin."],
+      ["usage", "Teorik vs. Gerçek Kullanım", "Reçetelere göre beklenen kullanımı gerçek tüketimle karşılaştırın."],
+      ["delivery", "Delivery Kanal Görünürlüğü", "Tüm delivery kanallarının maliyet ve kârlılık performansını tek ekranda görün."],
+      ["access", "Her Yerden Erişim", "Mobil uyumlu panel ile işletmenizi dilediğiniz yerden takip edin."],
     ],
   },
 };
+
+function PillarIcon({ name }: { name: string }) {
+  const common = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+  if (name === "inventory") return <svg {...common}><path d="M4 7l8-4 8 4-8 4-8-4Z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>;
+  if (name === "usage") return <svg {...common}><path d="M4 17l4-5 4 3 6-8"/><path d="M17 7h3v3"/><circle cx="6" cy="18" r="1.4"/></svg>;
+  if (name === "delivery") return <svg {...common}><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7 15.3 7.3M8.7 13.3l6.6 3.4"/></svg>;
+  return <svg {...common}><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg>;
+}
 
 export function LandingPage({ locale = "en" }: { locale?: Locale }) {
   const t = copy[locale];
@@ -107,7 +123,7 @@ export function LandingPage({ locale = "en" }: { locale?: Locale }) {
             <div className="reference-pillar-grid">
               {t.pillars.map(([icon,title,text]) => (
                 <article className="reference-pillar" key={title}>
-                  <span className="reference-pillar-icon">{icon}</span>
+                  <span className="reference-pillar-icon"><PillarIcon name={icon} /></span>
                   <h3>{title}</h3>
                   <p>{text}</p>
                 </article>
