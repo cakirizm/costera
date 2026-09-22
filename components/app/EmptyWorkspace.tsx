@@ -13,33 +13,54 @@ export function EmptyWorkspace({
   const tr = locale === "tr";
 
   return (
-    <section className="costera-empty-workspace">
-      <div className="costera-empty-visual" aria-hidden="true">
-        <div className="empty-source source-pos"><i>POS</i><span>{tr ? "Satış" : "Sales"}</span></div>
-        <div className="empty-source source-recipe"><i>R</i><span>{tr ? "Reçete" : "Recipes"}</span></div>
-        <div className="empty-source source-stock"><i>S</i><span>{tr ? "Stok" : "Inventory"}</span></div>
-        <svg viewBox="0 0 360 130" preserveAspectRatio="none">
-          <path d="M58 30 C115 30,118 65,160 65"/>
-          <path d="M58 100 C115 100,118 65,160 65"/>
-          <path d="M300 65 C250 65,246 65,202 65"/>
-        </svg>
-        <div className="empty-costera-core">
-          <b>C</b>
-          <span>COSTERA</span>
-          <small>{tr ? "Normalize et · Analiz et" : "Normalize · Analyze"}</small>
+    <section className="costera-empty-workspace premium-empty-state">
+      <div className="premium-empty-copy">
+        <span>{tr ? "CANLI KONTROL İÇİN HAZIR" : "READY FOR LIVE CONTROL"}</span>
+        <h2>{title}</h2>
+        <p>{text}</p>
+
+        <div className="premium-empty-steps">
+          <div><i>01</i><span><b>{tr ? "Kaynağı bağla" : "Connect a source"}</b><small>{tr ? "POS, delivery veya dosya" : "POS, delivery or file"}</small></span></div>
+          <div><i>02</i><span><b>{tr ? "COSTERA eşleştirsin" : "Let COSTERA normalize"}</b><small>{tr ? "Tek operasyon modeline" : "Into one operating model"}</small></span></div>
+          <div><i>03</i><span><b>{tr ? "Kontrolü canlı izle" : "See live control"}</b><small>{tr ? "Maliyet, fark ve aksiyon" : "Cost, variance and action"}</small></span></div>
         </div>
-        <div className="empty-result">
-          <i />
-          <span>{tr ? "Canlı kontrol" : "Live control"}</span>
+
+        <div className="costera-empty-actions">
+          <Link href="/dashboard/integrations">{tr ? "Entegrasyonları Aç" : "Open Integrations"} <b>→</b></Link>
+          <Link href="/dashboard/import" className="secondary">{tr ? "Dosya yükle" : "Upload files instead"}</Link>
         </div>
       </div>
 
-      <span>{tr ? "VERİ KAYNAĞI GEREKLİ" : "DATA SOURCE REQUIRED"}</span>
-      <h2>{title}</h2>
-      <p>{text}</p>
-      <div className="costera-empty-actions">
-        <Link href="/dashboard/integrations">{tr ? "Entegrasyonları Aç" : "Open Integrations"}</Link>
-        <Link href="/dashboard/import" className="secondary">{tr ? "Dosya yükle" : "Upload files instead"}</Link>
+      <div className="premium-empty-visual" aria-hidden="true">
+        <div className="empty-visual-glow glow-one"/>
+        <div className="empty-visual-glow glow-two"/>
+
+        <svg className="empty-network-lines" viewBox="0 0 520 330" preserveAspectRatio="none">
+          <path d="M78 74 C164 74 175 148 246 160"/>
+          <path d="M78 165 C164 165 177 165 246 165"/>
+          <path d="M78 256 C164 256 175 182 246 170"/>
+          <path d="M326 165 C390 165 404 165 454 165"/>
+        </svg>
+
+        <div className="empty-visual-source source-one"><i>POS</i><span>{tr ? "Satış" : "Sales"}</span></div>
+        <div className="empty-visual-source source-two"><i>R</i><span>{tr ? "Reçete" : "Recipes"}</span></div>
+        <div className="empty-visual-source source-three"><i>S</i><span>{tr ? "Stok" : "Inventory"}</span></div>
+
+        <div className="empty-visual-core">
+          <div className="empty-core-ring ring-a"/>
+          <div className="empty-core-ring ring-b"/>
+          <b>C</b>
+          <span>COSTERA</span>
+          <small>{tr ? "Normalize · Analiz" : "Normalize · Analyze"}</small>
+        </div>
+
+        <div className="empty-visual-output">
+          <div className="empty-output-head"><span>{tr ? "CANLI KONTROL" : "LIVE CONTROL"}</span><i /></div>
+          <strong>28.2%</strong>
+          <small>{tr ? "Gerçek Food Cost" : "Actual Food Cost"}</small>
+          <div className="empty-output-bars"><i style={{height:"62%"}}/><i style={{height:"78%"}}/><i style={{height:"55%"}}/><i style={{height:"86%"}}/><i style={{height:"71%"}}/></div>
+          <em>+3.2 pp</em>
+        </div>
       </div>
     </section>
   );
