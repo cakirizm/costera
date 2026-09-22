@@ -1,5 +1,7 @@
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
 const rows = [
   ["Minced Beef","148 kg","$8.42","$1,246","+17 kg","Review"],
   ["Chicken Breast","201 kg","$5.12","$1,029","+11 kg","Review"],
@@ -8,9 +10,10 @@ const rows = [
   ["Tomatoes","94 kg","$2.10","$197","-2 kg","Normal"],
 ];
 
-export default function InventoryPage() {
+export default async function InventoryPage() {
+  const locale = await getAppLocale();
   return (
-    <COSTERAAppShell active="/dashboard/inventory" title="Inventory">
+    <COSTERAAppShell active="/dashboard/inventory" locale={locale} title={tx(locale,"Inventory","Stok")}>
       <div className="costera-metrics five">
         <AppMetric label="Stock Value" value="$18,420" meta="+2.4% vs last count" />
         <AppMetric label="Unexplained Qty" value="$1,128" meta="6.1% of stock value" tone="bad" />
