@@ -1,5 +1,7 @@
 import { COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 
+import { getAppLocale, tx } from "@/lib/costera/i18n";
+
 const reports = [
  ["Daily Cost Pulse","Today","Food cost, sales, variance","Ready"],
  ["Weekly Leakage Review","Sep 16–22","Root causes & actions","Ready"],
@@ -7,9 +9,10 @@ const reports = [
  ["Delivery Settlement Reconciliation","September","Talabat / Deliveroo / Careem","Review"],
 ];
 
-export default function ReportsPage(){
+export default async function ReportsPage(){
+ const locale = await getAppLocale();
  return (
-  <COSTERAAppShell active="/dashboard/reports" title="Reports">
+  <COSTERAAppShell active="/dashboard/reports" locale={locale} title={tx(locale,"Reports","Raporlar")}>
    <section className="costera-grid">
     <article className="costera-panel span-3">
      <div className="costera-panel-head"><div><span>REPORT LIBRARY</span><h2>Management reports</h2></div><button>+ Build report</button></div>
