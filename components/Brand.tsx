@@ -7,21 +7,36 @@ export function Brand({
 }) {
   return (
     <div className={`brand ${light ? "brand-light" : ""}`} aria-label="COSTERA">
-      <svg className="brand-mark" viewBox="0 0 70 70" role="img" aria-hidden="true">
+      <svg className="brand-mark" viewBox="0 0 72 72" role="img" aria-hidden="true">
         <defs>
-          <linearGradient id="costeraGold" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#D6B070" />
-            <stop offset="55%" stopColor="#B98539" />
-            <stop offset="100%" stopColor="#8E6128" />
+          <linearGradient id="costeraNavyTop" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#0A2238" />
+            <stop offset="55%" stopColor="#102E48" />
+            <stop offset="100%" stopColor="#183E5D" />
+          </linearGradient>
+          <linearGradient id="costeraNavyBottom" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#061C2E" />
+            <stop offset="100%" stopColor="#1A5277" />
+          </linearGradient>
+          <linearGradient id="costeraGoldBar" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#E3BB73" />
+            <stop offset="48%" stopColor="#C38A34" />
+            <stop offset="100%" stopColor="#8A5A1E" />
           </linearGradient>
         </defs>
+
         <path
-          d="M56.8 17.4 43.9 9.9a17.7 17.7 0 0 0-17.8 0l-12.9 7.5A17.8 17.8 0 0 0 4.3 32.8v4.4a17.8 17.8 0 0 0 8.9 15.4l12.9 7.5a17.7 17.7 0 0 0 17.8 0l12.9-7.5-9.7-9.4-8.7 5a6.8 6.8 0 0 1-6.8 0l-9.2-5.3a6.8 6.8 0 0 1-3.4-5.9v-3.9c0-2.4 1.3-4.7 3.4-5.9l9.2-5.3a6.8 6.8 0 0 1 6.8 0l8.7 5 9.7-9.5Z"
-          fill="currentColor"
+          d="M11 26.4c0-4.8 2.5-9.2 6.6-11.7L35.2 4.2c4.2-2.5 9.5-2.6 13.8-.2l12 6.8-11.4 7.3c-2.5 1.6-5.7 1.6-8.2.1l-5.6-3.4a7 7 0 0 0-7.2 0L11 25.7v.7Z"
+          fill="url(#costeraNavyTop)"
         />
-        <path d="M24.2 35.2h6.2v14.2l-6.2-3.6V35.2Z" fill="url(#costeraGold)" />
-        <path d="M32.8 28.7H39v25.1a13.8 13.8 0 0 1-6.2-1.4V28.7Z" fill="url(#costeraGold)" />
-        <path d="M41.4 23.3h6.2v21.8l-6.2 3.6V23.3Z" fill="url(#costeraGold)" />
+        <path
+          d="M10.9 45.4c.6 4.4 3.1 8.2 6.9 10.4l17.6 10.4c4.2 2.5 9.5 2.5 13.8.1l11.9-6.9-11.5-7.2c-2.5-1.6-5.7-1.6-8.2-.1l-5.5 3.3a7 7 0 0 1-7.2 0L10.9 44.7v.7Z"
+          fill="url(#costeraNavyBottom)"
+        />
+
+        <path d="M18 35.7 25.2 31v19.6c-4.4-2.1-7.2-5.4-7.2-10.2v-4.7Z" fill="url(#costeraGoldBar)" />
+        <path d="M28.7 29.1 36 24.5v29.7c-2.4.5-4.9.2-7.3-.9V29.1Z" fill="url(#costeraGoldBar)" />
+        <path d="M39.4 22.5 46.8 18v31.1l-7.4 4.4v-31Z" fill="url(#costeraGoldBar)" />
       </svg>
 
       <div className="brand-lockup">
