@@ -8851,3 +8851,549 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 /* premium-ui-production */
 
 /* production-redeploy-after-rate-window */
+
+
+/* =========================================================
+   COSTERA PRODUCT TYPOGRAPHY + FIT PASS
+   Readability baseline: no production UI copy below 11px
+   ========================================================= */
+.costera-app,
+.costera-app button,
+.costera-app input,
+.costera-app select,
+.costera-app textarea {
+  font-family: var(--font-costera), "Segoe UI", Arial, sans-serif;
+  font-optical-sizing: auto;
+  font-feature-settings: "kern" 1, "liga" 1, "tnum" 1;
+}
+
+.costera-app {
+  letter-spacing: -.005em;
+}
+
+.costera-page-heading > small,
+.costera-topbar > div:first-child small,
+.costera-panel-head > div > span,
+.integration-architecture > div:first-child > span,
+.integration-source-types article > div:nth-child(2) > span,
+.integration-demo-card > div:first-child > span,
+.integration-delivery-head span,
+.connector-builder-head span,
+.connector-request-head span,
+.import-intro > div:first-child > span,
+.import-run-panel > div > span,
+.import-result-head > div > span,
+.overview-welcome > div:first-child > span,
+.control-hero-copy > span,
+.control-focus-head > div > span,
+.control-cause > span,
+.control-action > span {
+  font-size: 10px;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.costera-topbar h1 {
+  font-size: 30px;
+  font-weight: 760;
+}
+
+.costera-nav a {
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.costera-nav-group > small {
+  font-size: 9px;
+}
+
+.costera-workspace span,
+.costera-workspace small,
+.costera-sync-card small,
+.costera-sidebar-bottom > a {
+  font-size: 10px;
+}
+
+.costera-workspace strong,
+.costera-sync-card strong {
+  font-size: 11.5px;
+}
+
+.costera-location-select span,
+.costera-user-block small,
+.costera-language-toggle button {
+  font-size: 10px;
+}
+
+.costera-location-select select,
+.costera-period,
+.costera-live,
+.costera-user-block strong {
+  font-size: 11.5px;
+}
+
+.costera-metric-head > span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.costera-metric > small {
+  font-size: 11px;
+}
+
+.costera-panel-head h2 {
+  font-size: 20px;
+  font-weight: 740;
+}
+
+.costera-panel-head button,
+.costera-panel-head a,
+.costera-alert-strip > a,
+.overview-primary-action {
+  font-size: 11px;
+}
+
+.costera-alert-strip strong {
+  font-size: 13px;
+}
+
+.costera-alert-strip span {
+  font-size: 11.5px;
+}
+
+.costera-legend,
+.costera-chart-labels,
+.overview-y-labels,
+.overview-x-labels {
+  font-size: 10px;
+}
+
+.costera-table-row,
+.control-table-v3 > div,
+.delivery-generic-table > div,
+.overview-driver-table > div {
+  font-size: 11.5px;
+}
+
+.costera-table-row.head,
+.control-table-v3 > div.head,
+.delivery-generic-table > div.head,
+.overview-driver-table > div.head {
+  font-size: 10px;
+}
+
+.costera-status {
+  min-width: 72px;
+  font-size: 10px;
+}
+
+.costera-channel-list strong,
+.costera-action-list strong,
+.costera-recommendations strong,
+.control-action-list strong,
+.delivery-generic-table b,
+.delivery-decision-card b {
+  font-size: 11.5px;
+}
+
+.costera-channel-list span,
+.costera-channel-list small,
+.costera-channel-list b,
+.costera-action-list span,
+.costera-recommendations span,
+.control-action-list span,
+.delivery-generic-table small,
+.delivery-decision-card span {
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+
+.costera-quality-block span,
+.costera-quality-block > a,
+.costera-expense-bars p,
+.costera-report-card p,
+.costera-report-card small,
+.costera-role-list small,
+.costera-engine-foot {
+  font-size: 10.5px;
+}
+
+.costera-quality-block em,
+.confidence {
+  font-size: 9.5px;
+}
+
+.costera-report-card h3,
+.costera-role-list b {
+  font-size: 12px;
+}
+
+/* Overview readability */
+.overview-welcome > div:first-child > span,
+.overview-welcome-status small,
+.overview-chart-summary small,
+.overview-chart-tooltip small,
+.overview-chart-tooltip span,
+.overview-gauge small,
+.overview-gauge-copy > span,
+.overview-channel-total span,
+.overview-channel-bars small {
+  font-size: 10px;
+}
+
+.overview-welcome p,
+.overview-welcome-status strong,
+.overview-gauge-copy > p,
+.overview-pulse-list span,
+.overview-channel-bars span,
+.overview-channel-bars b {
+  font-size: 11px;
+}
+
+.overview-chart-tooltip strong {
+  font-size: 17px;
+}
+
+/* Cost Control readability */
+.control-hero-copy > small,
+.control-equation-v2 small,
+.control-equation-v2 span,
+.control-flow-row small,
+.control-flow-row span,
+.control-focus-head p,
+.control-cause p,
+.control-action p,
+.control-table-v3 .row > span small,
+.cause-label,
+.control-action button {
+  font-size: 10.5px;
+}
+
+.control-equation-v2 b {
+  font-size: 18px;
+}
+
+/* Import Studio readability */
+.import-intro p,
+.import-intro-actions > label,
+.import-progress > div,
+.import-dropzone strong,
+.import-dropzone span,
+.import-mapping-title strong,
+.import-mapping-title span,
+.import-mapping > label > span,
+.import-mapping select,
+.import-preview > strong,
+.import-preview > div:first-of-type,
+.import-preview > div:not(:first-of-type),
+.import-run-panel > div > small,
+.import-result-metrics article > span,
+.import-result-metrics article > small,
+.import-result-table > div,
+.import-result-table > div.head,
+.import-result-table b,
+.import-result-table small,
+.import-result-side > strong,
+.import-result-side span,
+.import-result-side b,
+.import-warnings > strong,
+.import-warnings > span {
+  font-size: 10.5px;
+}
+
+.import-source-head > div:nth-child(2) > span,
+.import-source-head > b,
+.import-detected span {
+  font-size: 9.5px;
+}
+
+.import-demo-button,
+.import-intro-actions > button,
+.import-run-panel > button,
+.import-result-head > button {
+  font-size: 11px;
+}
+
+/* Integrations: rebuild the architecture flow so every card actually fits */
+.integration-architecture {
+  grid-template-columns: minmax(320px,.78fr) minmax(620px,1.45fr);
+  gap: 28px;
+  padding: 26px;
+  align-items: center;
+}
+
+.integration-architecture h2 {
+  max-width: 520px;
+  font-size: 26px;
+  line-height: 1.18;
+  font-weight: 760;
+  letter-spacing: -.035em;
+}
+
+.integration-architecture p {
+  max-width: 560px;
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.integration-architecture-flow {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns:
+    minmax(125px,1fr) 30px
+    minmax(125px,1fr) 30px
+    minmax(125px,1fr) 30px
+    minmax(125px,1fr);
+  gap: 8px;
+  align-items: stretch;
+}
+
+.integration-architecture-flow > div {
+  min-width: 0;
+  min-height: 106px;
+  padding: 16px 14px 13px;
+  border: 1px solid #dce5ea;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(183,128,48,.08),transparent 35%),
+    linear-gradient(180deg,#fff,#f8fafb);
+  box-shadow: 0 8px 20px rgba(8,39,63,.035);
+}
+
+.integration-architecture-flow > div::before {
+  content: "01";
+  width: 27px;
+  height: 27px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #9e6928;
+  background: #f8eee0;
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.integration-architecture-flow > div:nth-of-type(2)::before { content:"02"; }
+.integration-architecture-flow > div:nth-of-type(3)::before { content:"03"; }
+.integration-architecture-flow > div:nth-of-type(4)::before { content:"04"; }
+
+.integration-architecture-flow > div.active {
+  border-color: #c7ded5;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(30,143,102,.11),transparent 36%),
+    linear-gradient(180deg,#f8fdfb,#f1f9f6);
+}
+
+.integration-architecture-flow > div.active::before {
+  color: #176e50;
+  background: #e5f4ed;
+}
+
+.integration-architecture-flow b {
+  display: block;
+  color: #15364e;
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 760;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.integration-architecture-flow small {
+  display: block;
+  margin-top: 6px;
+  color: #758792;
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.integration-architecture-flow > i {
+  width: 30px;
+  min-width: 30px;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  color: #aa712b;
+  font-size: 18px;
+  font-style: normal;
+}
+
+.integration-architecture-flow > div::after {
+  left: 14px;
+  right: 14px;
+}
+
+/* Fix the same broken arrow-grid pattern everywhere */
+.integration-live-flow {
+  grid-template-columns:
+    minmax(130px,1fr) 28px
+    minmax(130px,1fr) 28px
+    minmax(130px,1fr) 28px
+    minmax(130px,1fr);
+  gap: 8px;
+}
+
+.integration-live-flow > div {
+  min-width: 0;
+  min-height: 76px;
+  padding: 13px;
+}
+
+.integration-live-flow b {
+  font-size: 11.5px;
+}
+
+.integration-live-flow small {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.integration-live-flow > i {
+  width: 28px;
+  min-width: 28px;
+}
+
+.polaris-real-flow {
+  grid-template-columns:
+    minmax(100px,1fr) 22px
+    minmax(100px,1fr) 22px
+    minmax(100px,1fr) 22px
+    minmax(100px,1fr) 22px
+    minmax(100px,1fr);
+}
+
+/* Integrations typography and fit */
+.integration-source-types h3 {
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.integration-source-types p,
+.integration-demo-card p,
+.integration-delivery-head p,
+.connector-builder-head p,
+.integration-delivery-verdict span,
+.integration-support-guide p {
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.integration-source-types button,
+.integration-demo-actions button,
+.connector-builder-actions button,
+.connector-request-actions button,
+.delivery-add-source {
+  font-size: 10.5px;
+  font-weight: 750;
+}
+
+.integration-coverage-grid b,
+.integration-delivery-verdict b,
+.connector-capabilities > strong,
+.integration-support-guide h3 {
+  font-size: 11.5px;
+}
+
+.integration-coverage-grid small,
+.connector-builder-grid label,
+.connector-notes,
+.connector-builder-grid input,
+.connector-builder-grid select,
+.connector-notes textarea,
+.connector-capabilities label,
+.connector-builder-actions span,
+.connector-request-grid p,
+.connector-request-grid small {
+  font-size: 10px;
+}
+
+.connector-request-grid article > div:nth-child(2) > span,
+.connector-request-head small {
+  font-size: 9px;
+}
+
+.connector-request-grid h3 {
+  font-size: 13px;
+}
+
+/* Forms should never look compressed */
+.connector-builder-grid input,
+.connector-builder-grid select {
+  height: 43px;
+}
+
+.connector-capabilities label {
+  min-height: 43px;
+  padding: 7px 9px;
+  line-height: 1.3;
+}
+
+/* Avoid long labels forcing horizontal overflow */
+.integration-source-types article,
+.integration-source-types article > div,
+.integration-coverage-grid label,
+.integration-coverage-grid label > span,
+.connector-request-grid article,
+.connector-request-grid article > div {
+  min-width: 0;
+}
+
+.integration-source-types h3,
+.integration-source-types p,
+.integration-coverage-grid b,
+.integration-coverage-grid small,
+.connector-request-grid h3,
+.connector-request-grid p,
+.connector-request-grid small {
+  overflow-wrap: anywhere;
+}
+
+/* Product-wide card text baseline */
+.costera-panel p,
+.costera-panel li,
+.costera-panel label,
+.integration-studio-v3 label {
+  line-height: 1.5;
+}
+
+/* The flow needs the full row before we attempt side-by-side copy */
+@media (max-width: 1500px) {
+  .integration-architecture {
+    grid-template-columns: 1fr;
+  }
+
+  .integration-architecture > div:first-child {
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 980px) {
+  .integration-architecture-flow,
+  .integration-live-flow,
+  .polaris-real-flow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .integration-architecture-flow > i,
+  .integration-live-flow > i,
+  .polaris-real-flow > em {
+    width: 100%;
+    min-width: 0;
+    height: 22px;
+    transform: rotate(90deg);
+  }
+
+  .integration-architecture-flow > div,
+  .integration-live-flow > div {
+    min-height: 84px;
+  }
+}
