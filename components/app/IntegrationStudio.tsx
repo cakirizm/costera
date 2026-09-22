@@ -210,37 +210,118 @@ export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
 
   return (
     <div className="integration-studio-v3">
-      <section className="integration-architecture">
-        <div>
+      <section className="integration-architecture premium-integration-hero">
+        <div className="integration-hero-copy">
           <span>{t("UNIVERSAL CONNECTOR ARCHITECTURE","UNIVERSAL CONNECTOR MİMARİSİ")}</span>
-          <h2>{t("Any POS. Any delivery platform. One COSTERA model.","Her POS. Her delivery platformu. Tek COSTERA modeli.")}</h2>
-          <p>{t("COSTERA is not tied to Polaris, Talabat, Deliveroo or any other vendor. A provider adapter only converts that vendor's data into COSTERA's standard sales, recipe, inventory, purchasing and settlement model.","COSTERA Polaris, Talabat, Deliveroo veya başka bir firmaya bağlı değildir. Sağlayıcı adapter'ı sadece o firmanın verisini COSTERA'nın standart satış, reçete, stok, satın alma ve settlement modeline dönüştürür.")}</p>
+          <h2>{t("Connect the restaurant stack. COSTERA turns it into one control layer.","Restoran sistemlerini bağlayın. COSTERA hepsini tek kontrol katmanına dönüştürsün.")}</h2>
+          <p>{t("POS, delivery, accounting and stock systems can all speak different languages. COSTERA adapters normalize them into one live operating model without locking you to a vendor.","POS, delivery, muhasebe ve stok sistemleri farklı diller konuşabilir. COSTERA adapter'ları bunları tek canlı operasyon modeline dönüştürür ve sizi tek bir firmaya bağımlı bırakmaz.")}</p>
+          <div className="integration-hero-pills">
+            <span><i />API</span>
+            <span><i />Webhook</span>
+            <span><i />SFTP / CSV</span>
+            <span><i />Read-only DB</span>
+          </div>
         </div>
-        <div className="integration-architecture-flow">
-          <div><b>{t("Any source","Her kaynak")}</b><small>POS · Delivery · ERP</small></div><i>→</i>
-          <div><b>{t("Provider adapter","Sağlayıcı adapter")}</b><small>API · Webhook · SFTP</small></div><i>→</i>
-          <div><b>{t("COSTERA model","COSTERA modeli")}</b><small>{t("Normalized data","Normalize veri")}</small></div><i>→</i>
-          <div className="active"><b>{t("Cost Control","Maliyet Kontrolü")}</b><small>{t("Same engine every time","Her zaman aynı motor")}</small></div>
+
+        <div className="integration-network" aria-label="Universal COSTERA integration network">
+          <svg className="integration-network-lines" viewBox="0 0 620 330" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="networkLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#d6a75f" stopOpacity=".25"/>
+                <stop offset="48%" stopColor="#e8c98d" stopOpacity=".95"/>
+                <stop offset="100%" stopColor="#68c5a2" stopOpacity=".65"/>
+              </linearGradient>
+            </defs>
+            <path d="M92 67 C190 67 206 148 284 160"/>
+            <path d="M92 165 C190 165 207 165 284 165"/>
+            <path d="M92 263 C190 263 206 182 284 170"/>
+            <path d="M360 165 C431 165 444 165 513 165"/>
+          </svg>
+
+          <div className="integration-network-source source-a">
+            <div className="network-icon">
+              <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 8h8M8 12h5M8 16h3"/></svg>
+            </div>
+            <div><b>POS</b><small>{t("Sales · Menu · Orders","Satış · Menü · Sipariş")}</small></div>
+          </div>
+
+          <div className="integration-network-source source-b">
+            <div className="network-icon delivery">
+              <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7 15.3 7.3M8.7 13.3l6.6 3.4"/></svg>
+            </div>
+            <div><b>Delivery</b><small>{t("Orders · Fees · Payouts","Sipariş · Ücret · Ödeme")}</small></div>
+          </div>
+
+          <div className="integration-network-source source-c">
+            <div className="network-icon finance">
+              <svg viewBox="0 0 24 24"><path d="M5 19V9M12 19V5M19 19v-7"/><path d="M3 19h18"/></svg>
+            </div>
+            <div><b>ERP / Stock</b><small>{t("Purchases · Inventory","Satın alma · Stok")}</small></div>
+          </div>
+
+          <div className="integration-network-core">
+            <div className="network-core-ring ring-one"/>
+            <div className="network-core-ring ring-two"/>
+            <div className="network-core-logo">C</div>
+            <strong>COSTERA</strong>
+            <small>{t("Normalize · Match · Calculate","Normalize · Eşleştir · Hesapla")}</small>
+            <span><i />{t("Live model","Canlı model")}</span>
+          </div>
+
+          <div className="integration-network-output">
+            <span>{t("CONTROL LAYER","KONTROL KATMANI")}</span>
+            <strong>{t("Cost Intelligence","Maliyet Zekâsı")}</strong>
+            <div>
+              <i><em style={{height:"74%"}}/></i>
+              <i><em style={{height:"48%"}}/></i>
+              <i><em style={{height:"88%"}}/></i>
+              <i><em style={{height:"62%"}}/></i>
+            </div>
+            <small>{t("One model · every source","Tek model · tüm kaynaklar")}</small>
+          </div>
         </div>
       </section>
 
-      <section className="integration-source-types">
-        <article>
-          <div className="integration-source-icon">POS</div>
-          <div><span>{t("PRIMARY SOURCE","ANA KAYNAK")}</span><h3>{t("Add any POS system","Herhangi bir POS ekle")}</h3><p>{t("Polaris, Foodics, Oracle, Toast, Lightspeed or any other vendor.","Polaris, Foodics, Oracle, Toast, Lightspeed veya başka herhangi bir POS.")}</p></div>
-          <button type="button" onClick={() => openBuilder("POS")}>+ {t("Add POS","POS Ekle")}</button>
+      <section className="integration-source-types premium-source-cards">
+        <article className="source-card-pos">
+          <div className="source-card-visual">
+            <div className="source-visual-icon">
+              <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h5M8 16h2M15 16h1"/></svg>
+            </div>
+            <div className="source-mini-chart">
+              <span style={{height:"42%"}}/><span style={{height:"67%"}}/><span style={{height:"54%"}}/><span style={{height:"82%"}}/><span style={{height:"72%"}}/>
+            </div>
+            <b>{t("Live sales feed","Canlı satış akışı")}</b>
+          </div>
+          <div className="source-card-copy"><span>{t("PRIMARY SOURCE","ANA KAYNAK")}</span><h3>{t("Any POS system","Herhangi bir POS sistemi")}</h3><p>{t("Sales, menu, order lines, recipes and stock references can enter through a provider adapter.","Satış, menü, sipariş satırları, reçete ve stok referansları sağlayıcı adapter üzerinden sisteme alınabilir.")}</p></div>
+          <div className="source-card-tags"><span>Sales</span><span>Menu</span><span>Orders</span></div>
+          <button type="button" onClick={() => openBuilder("POS")}>{t("Connect a POS","POS Bağla")} <i>→</i></button>
         </article>
 
-        <article>
-          <div className="integration-source-icon">DL</div>
-          <div><span>{t("OPTIONAL SOURCE","OPSİYONEL KAYNAK")}</span><h3>{t("Add any delivery platform","Herhangi bir delivery platformu ekle")}</h3><p>{t("Only needed when your POS does not already provide the required delivery data.","Sadece POS gerekli delivery verisini zaten vermiyorsa gerekir.")}</p></div>
-          <button type="button" onClick={() => openBuilder("Delivery")}>+ {t("Add Delivery","Delivery Ekle")}</button>
+        <article className="source-card-delivery">
+          <div className="source-card-visual">
+            <div className="source-visual-icon">
+              <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7 15.3 7.3M8.7 13.3l6.6 3.4"/></svg>
+            </div>
+            <div className="source-settlement-visual"><span>Orders</span><i>→</i><span>Fees</span><i>→</i><span>Payout</span></div>
+            <b>{t("Channel economics","Kanal ekonomisi")}</b>
+          </div>
+          <div className="source-card-copy"><span>{t("OPTIONAL SOURCE","OPSİYONEL KAYNAK")}</span><h3>{t("Any delivery platform","Herhangi bir delivery platformu")}</h3><p>{t("Add only what the POS cannot provide: channel fees, commissions, deductions or settlement payouts.","POS'un sağlayamadığı verileri ekleyin: kanal ücretleri, komisyonlar, kesintiler veya settlement ödemeleri.")}</p></div>
+          <div className="source-card-tags"><span>Fees</span><span>Commission</span><span>Payouts</span></div>
+          <button type="button" onClick={() => openBuilder("Delivery")}>{t("Connect delivery","Delivery Bağla")} <i>→</i></button>
         </article>
 
-        <article>
-          <div className="integration-source-icon">ERP</div>
-          <div><span>{t("OPTIONAL SOURCE","OPSİYONEL KAYNAK")}</span><h3>{t("Accounting / ERP","Muhasebe / ERP")}</h3><p>{t("Add expenses, purchasing or accounting data from any back-office system.","Herhangi bir back-office sisteminden gider, satın alma veya muhasebe verisi ekleyin.")}</p></div>
-          <button type="button" onClick={() => openBuilder("Accounting / ERP")}>+ {t("Add ERP","ERP Ekle")}</button>
+        <article className="source-card-erp">
+          <div className="source-card-visual">
+            <div className="source-visual-icon">
+              <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>
+            </div>
+            <div className="source-ledger-visual"><span/><span/><span/><span/></div>
+            <b>{t("Back-office layer","Back-office katmanı")}</b>
+          </div>
+          <div className="source-card-copy"><span>{t("OPTIONAL SOURCE","OPSİYONEL KAYNAK")}</span><h3>{t("Accounting / ERP / Stock","Muhasebe / ERP / Stok")}</h3><p>{t("Bring purchasing, receipts, supplier cost and inventory movements into the same profitability model.","Satın alma, mal kabul, tedarikçi maliyeti ve stok hareketlerini aynı kârlılık modeline alın.")}</p></div>
+          <div className="source-card-tags"><span>Purchases</span><span>COGS</span><span>Inventory</span></div>
+          <button type="button" onClick={() => openBuilder("Accounting / ERP")}>{t("Connect back office","Back-office Bağla")} <i>→</i></button>
         </article>
       </section>
 
