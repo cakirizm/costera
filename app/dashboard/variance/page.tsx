@@ -24,6 +24,7 @@ export default async function VariancePage(){
         <AppMetric label={tx(locale,"Unexplained","Açıklanamayan")} value="$0" meta={tx(locale,"Waiting for live data","Canlı veri bekleniyor")} />
       </div>
       <EmptyWorkspace
+        locale={locale}
         title={tx(locale,"Cost Control is waiting for a data source.","Maliyet Kontrolü bir veri kaynağı bekliyor.")}
         text={tx(locale,"Connect the Universal POS Demo or any real POS source. COSTERA will then calculate Expected → Actual → Approved Waste → Unexplained automatically.","Universal POS Demo'yu veya gerçek bir POS kaynağını bağlayın. COSTERA Beklenen → Gerçek → Onaylı Fire → Açıklanamayan farkı otomatik hesaplar.")}
       />
