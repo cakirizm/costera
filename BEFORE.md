@@ -33,8 +33,8 @@ o faz tamamlanmadan tespit "çözülmüş" sayılmaz.
 
 | # | Tespit | Kanıt (dosya) | Çözüleceği Faz | Durum |
 |---|---|---|---|---|
-| 1 | Gerçek giriş yok — form `action="/dashboard"` ile doğrulama olmadan yönlendiriyor; "şifremi unuttum" linki `href="#"`; farklı giriş kanalları yok | `app/login/page.tsx` | **Faz 2** | ⬜ Bekliyor |
-| 2 | Kalıcı veri katmanı yok — tüm veriler statik `sampleInput`, ayarlar/entegrasyonlar cookie'de | `app/api/**/route.ts`, `lib/costera/sample.ts` | **Faz 2** | ⬜ Bekliyor |
+| 1 | Gerçek giriş yok — form `action="/dashboard"` ile doğrulama olmadan yönlendiriyor; "şifremi unuttum" linki `href="#"`; farklı giriş kanalları yok | `app/login/page.tsx` | **Faz 2** | ✅ Çözüldü — Auth.js v5 (Credentials + JWT), gerçek kayıt/giriş/çıkış, şifremi-unuttum + token'lı sıfırlama, `middleware.ts` `/dashboard/*` koruması. Uçtan uca tarayıcıda doğrulandı |
+| 2 | Kalıcı veri katmanı yok — tüm veriler statik `sampleInput`, ayarlar/entegrasyonlar cookie'de | `app/api/**/route.ts`, `lib/costera/sample.ts` | **Faz 2 + Faz 3** | 🟡 Kısmen — kalıcı katman kuruldu (PostgreSQL + Prisma: User/Restaurant/Membership/PasswordResetToken); dashboard artık gerçek kullanıcı/restoran/rol gösteriyor. İş verisi (satış/stok/gider) hâlâ `sampleInput` — kalıcı iş verisi Faz 3'te |
 | 3 | Entegrasyonlar gerçek değil — "Connect" sadece demo cookie açıyor; connector builder sadece `localStorage`'a brief kaydediyor; gerçek OAuth/API/webhook yok | `components/app/IntegrationStudio.tsx` | **Faz 3** | ⬜ Bekliyor |
 | 4 | Import edilen veri dashboard'a kalıcı yansımıyor — `DataImporter` çalışıyor ama sonuç sadece o sayfada kalıyor | `components/app/DataImporter.tsx` | **Faz 3** | ⬜ Bekliyor |
 | 5 | Finance'te gider ekleme çalışmıyor — "Add accounting expense" butonu `onClick` içermiyor; kira/elektrik kalemleri hardcoded | `app/dashboard/finance/page.tsx` | **Faz 4** | ⬜ Bekliyor |
