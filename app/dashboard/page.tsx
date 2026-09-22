@@ -15,7 +15,7 @@ const channelRows = [
 
 export default async function DashboardPage(){
  const cookieStore = await cookies();
- const demoConnected = cookieStore.get("costera_polaris_demo")?.value === "1";
+ const demoConnected = cookieStore.get("costera_pos_demo")?.value === "1";
 
  if (!demoConnected) {
    return (
@@ -37,11 +37,11 @@ export default async function DashboardPage(){
  const varianceRows = analysis.ingredientVariance.slice(0,4);
 
  return (
-  <COSTERAAppShell active="/dashboard" title="Overview" eyebrow="POLARIS DEMO · CONNECTED">
+  <COSTERAAppShell active="/dashboard" title="Overview" eyebrow="UNIVERSAL POS DEMO · CONNECTED">
    <div className="costera-alert-strip">
     <div><i>!</i><p>
       <strong>{money(t.unexplainedCost)} unexplained cost requires review</strong>
-      <span>Calculated from the connected Polaris demo feed.</span>
+      <span>Calculated from the connected POS demo feed.</span>
     </p></div>
     <a href="/dashboard/variance">Open Cost Control →</a>
    </div>
