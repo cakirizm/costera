@@ -8,7 +8,7 @@ const nav = [
   ["/dashboard/recipes", "≋", "Recipes & Cost"],
   ["/dashboard/purchasing", "▥", "Purchasing"],
   ["/dashboard/pos", "▤", "Sales & POS"],
-  ["/dashboard/delivery", "⇄", "Delivery"],
+  ["/dashboard/delivery", "⇄", "Delivery & Channels"],
   ["/dashboard/finance", "$", "Finance"],
   ["/dashboard/reports", "▦", "Reports"],
   ["/dashboard/import", "⇩", "Data Import"],
