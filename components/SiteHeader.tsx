@@ -49,7 +49,7 @@ export function SiteHeader({
 
         <nav className="nav-links" aria-label="Primary navigation">
           <div className="nav-dropdown">
-            <Link href={`${prefix}/features`} className="nav-dropdown-trigger">
+            <Link href={`${prefix}/features`} className={`nav-dropdown-trigger ${path === "/features" ? "active" : ""}`}>
               {t.product}<span aria-hidden="true">⌄</span>
             </Link>
             <div className="nav-dropdown-menu">
@@ -58,9 +58,9 @@ export function SiteHeader({
               <Link href={`${prefix}/how-it-works`}>{t.integrations}</Link>
             </div>
           </div>
-          <Link href={`${prefix}/how-it-works`}>{t.how}</Link>
-          <Link href={`${prefix}/features`}>{t.features}</Link>
-          <Link href={`${prefix}/pricing`}>{t.pricing}</Link>
+          <Link className={path === "/how-it-works" ? "active" : ""} href={`${prefix}/how-it-works`}>{t.how}</Link>
+          <Link className={path === "/features" ? "active" : ""} href={`${prefix}/features`}>{t.features}</Link>
+          <Link className={path === "/pricing" ? "active" : ""} href={`${prefix}/pricing`}>{t.pricing}</Link>
         </nav>
 
         <div className="header-actions">
