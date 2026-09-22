@@ -1,14 +1,15 @@
 import Link from "next/link";
+import { DashboardMock } from "@/components/DashboardMock";
+import { HowProcess } from "@/components/HowProcess";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
-const steps = [
-  ["Mevcut sistemlerinizi bağlayın", "COSTERA POS'a ve mevcut olduğu yerde stok, satın alma ve delivery kaynaklarına bağlanır. Kullandığınız sistemler operasyonel kaynak olmaya devam eder."],
-  ["Menü ve reçeteleri eşleştirin", "Menü ürünleri reçetelerle eşleşir; böylece her satışın ne kadar malzeme tüketmesi gerektiği hesaplanabilir."],
-  ["Stok hareketlerini okuyun", "Açılış stoku, satın almalar, transferler, onaylı fire ve kapanış sayımları gerçek kullanım görünümünü oluşturur."],
-  ["Teorik tüketimi hesaplayın", "Satış adedi reçete miktarlarıyla çarpılarak her malzemenin ne kadar tüketilmesi gerektiği hesaplanır."],
-  ["Gerçek ve teorik kullanımı karşılaştırın", "Onaylı düzeltmeler sonrası gerçek stok kullanımı ile beklenen tüketim arasındaki fark bulunur."],
-  ["Farkın parasal etkisini görün", "Sapma miktar ve para değerine çevrilir; hangi malzeme ve dönemin incelenmesi gerektiği netleşir."],
+const benefits = [
+  ["Zaman Kazandırır", "Manuel veri toplama ve Excel işini azaltır."],
+  ["Kaçağı Azaltır", "Olağandışı tüketimi normalleşmeden önce fark edin."],
+  ["Şeffaflık Sağlar", "Stok, reçete ve satışları tek tutarlı görünümde birleştirir."],
+  ["Daha Hızlı Karar", "Sorunu ve parasal etkisini rapor aramadan görün."],
+  ["Marjı Korur", "Daha iyi cost görünürlüğüyle kârlılığı koruyun."],
 ];
 
 export default function TurkishHowItWorksPage() {
@@ -16,45 +17,64 @@ export default function TurkishHowItWorksPage() {
     <>
       <SiteHeader locale="tr" path="/how-it-works" />
       <main>
-        <section className="page-hero page-hero-photo">
-          <div className="shell narrow">
-            <div className="eyebrow">NASIL ÇALIŞIR?</div>
-            <h1>Basit entegrasyon. Net maliyet kontrolü.</h1>
-            <p>
-              COSTERA restoranınızın çalışma şeklini değiştirmez. Operasyon verisini okur,
-              doğrular ve anlamlandırır; cost ve stok performansını daha net görmenizi sağlar.
-            </p>
+        <section className="inner-hero visual-hero">
+          <div className="inner-hero-photo" />
+          <div className="shell visual-hero-grid">
+            <div className="inner-hero-copy">
+              <div className="eyebrow">BASİT ENTEGRASYON. GÜÇLÜ SONUÇLAR.</div>
+              <h1>COSTERA restoran maliyetini nasıl kontrol altında tutar?</h1>
+              <p>
+                Mevcut sistemleriniz çalışmaya devam eder. COSTERA operasyon verisini toplar,
+                doğrular ve farkları yöneticinin kolay anlayacağı bir görünüme dönüştürür.
+              </p>
+              <div className="hero-actions">
+                <Link className="button button-gold" href="/tr/demo">Demo İste <span>→</span></Link>
+                <Link className="button button-outline" href="/tr/features">Özellikleri Gör</Link>
+              </div>
+            </div>
+            <div className="inner-dashboard"><DashboardMock locale="tr" /></div>
           </div>
         </section>
 
         <section className="section">
-          <div className="shell process-list">
-            {steps.map(([title, copy], i) => (
-              <article className="process-item" key={title}>
-                <span>{String(i + 1).padStart(2, "0")}</span>
-                <div><h2>{title}</h2><p>{copy}</p></div>
-              </article>
+          <div className="shell how-title-row">
+            <div>
+              <div className="eyebrow">6 ADIMDA DAHA NET MALİYET KONTROLÜ</div>
+              <h2>POS verisinden yönetim sonucuna kadar.</h2>
+            </div>
+            <p>Hızlı kurulum. Gerçek veri. Net istisnalar.</p>
+          </div>
+          <div className="shell"><HowProcess locale="tr" /></div>
+        </section>
+
+        <section className="section soft-section">
+          <div className="shell benefits-feature-row">
+            <div className="benefits-heading">
+              <div className="eyebrow">SADECE ANALİZ DEĞİL</div>
+              <h2>Günlük operasyon için gerçek fayda.</h2>
+            </div>
+            {benefits.map(([title, text]) => (
+              <div className="benefit-feature" key={title}>
+                <span>✓</span><strong>{title}</strong><p>{text}</p>
+              </div>
             ))}
           </div>
         </section>
 
-        <section className="section soft-section">
-          <div className="shell two-col">
+        <section className="how-bottom-cta">
+          <div className="how-bottom-photo" />
+          <div className="shell how-bottom-inner">
             <div>
-              <div className="eyebrow">ÇİFT VERİ GİRİŞİ YOK</div>
-              <h2>Ekibiniz zaten bildiği sistemlerde çalışmaya devam eder.</h2>
+              <div className="eyebrow eyebrow-light">BUGÜN BAŞLAYIN</div>
+              <h2>Mutfakta daha fazla görünürlük.<br/><span>İşletmede daha fazla kontrol.</span></h2>
             </div>
-            <div className="copy-stack">
-              <p>Satışlar POS'a, satın almalar mevcut stok veya satın alma sistemine girilmeye devam eder.</p>
-              <p>COSTERA bu sistemlerin üzerinde çalışır, veriyi standartlaştırır ve aynı bilgiyi tekrar girmenizi istemek yerine yalnızca istisnalara odaklanır.</p>
+            <div>
+              <p>Bir şubeyi bağlayın, veriyi doğrulayın ve güvenle büyütün.</p>
+              <div className="hero-actions">
+                <Link className="button button-gold" href="/tr/demo">Demo İste</Link>
+                <Link className="button button-ghost" href="/tr/pricing">Fiyatlandırmayı Gör</Link>
+              </div>
             </div>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="shell action-banner">
-            <div><h2>Kendi restoran verinizle akışı görün.</h2><p>Bir şubeyle başlayın, veriyi doğrulayın, sonra ölçekleyin.</p></div>
-            <Link className="button button-gold" href="/tr/demo">Demo İste</Link>
           </div>
         </section>
       </main>
