@@ -28,10 +28,17 @@ const copy = {
   },
 };
 
-export function SiteHeader({ locale = "en" }: { locale?: Locale }) {
+export function SiteHeader({
+  locale = "en",
+  path = "/",
+}: {
+  locale?: Locale;
+  path?: string;
+}) {
   const t = copy[locale];
   const prefix = locale === "tr" ? "/tr" : "";
-  const otherLocaleHref = locale === "tr" ? "/" : "/tr";
+  const cleanPath = path === "/" ? "" : path;
+  const otherLocaleHref = locale === "tr" ? (cleanPath || "/") : `/tr${cleanPath}`;
 
   return (
     <header className="site-header">
@@ -61,7 +68,9 @@ export function SiteHeader({ locale = "en" }: { locale?: Locale }) {
             {locale === "tr" ? "EN" : "TR"}
           </Link>
           <Link className="text-link" href={`${prefix}/login`}>{t.login}</Link>
-          <Link className="button button-gold button-small" href={`${prefix}/demo`}>{t.demo}<span>→</span></Link>
+          <Link className="button button-gold button-small" href={`${prefix}/demo`}>
+            {t.demo}<span>→</span>
+          </Link>
         </div>
       </div>
     </header>
