@@ -1287,3 +1287,24 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   .pricing-visual-grid { padding-top:35px; }
   .pricing-bottom-banner > .shell { flex-direction:column; align-items:flex-start; }
 }
+
+.mobile-menu { display:none; position:relative; }
+.mobile-menu summary {
+  width:38px; height:38px; padding:0; border:1px solid #d9dee2; border-radius:9px;
+  list-style:none; display:grid; place-content:center; gap:4px; cursor:pointer; background:#fff;
+}
+.mobile-menu summary::-webkit-details-marker { display:none; }
+.mobile-menu summary span { width:17px; height:2px; display:block; border-radius:999px; background:var(--navy); }
+.mobile-menu-panel {
+  position:absolute; top:48px; right:0; width:230px; padding:12px;
+  border:1px solid #e1e5e7; border-radius:13px; background:#fff;
+  box-shadow:0 20px 50px rgba(8,35,58,.16);
+  display:flex; flex-direction:column; gap:4px;
+}
+.mobile-menu-panel > a:not(.button) { padding:10px 9px; border-radius:8px; color:#405a6d; font-size:13px; font-weight:700; }
+.mobile-menu-panel > a:not(.button):hover { background:#f4f6f7; }
+
+@media (max-width: 900px) {
+  .mobile-menu { display:block; }
+  .desktop-demo { display:none; }
+}
