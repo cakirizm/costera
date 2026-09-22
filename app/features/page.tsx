@@ -17,7 +17,7 @@ const modules = [
 export default function FeaturesPage() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader locale="en" path="/features" />
       <main>
         <section className="page-hero">
           <div className="shell narrow">
@@ -70,7 +70,7 @@ export default function FeaturesPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter locale="en" />
     </>
   );
 }
