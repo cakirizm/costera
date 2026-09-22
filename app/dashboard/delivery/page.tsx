@@ -29,22 +29,24 @@ export default async function DeliveryPage(){
    );
  }
 
+ const priceById = new Map(sampleInput.menuItems.map((m) => [m.id, m.sellingPrice]));
  const channelMap = new Map<string, { sales: number; rows: number; qty: number }>();
  for (const sale of sampleInput.sales) {
    if (sale.channel.toLowerCase() === "dine-in") continue;
    const current = channelMap.get(sale.channel) || { sales: 0, rows: 0, qty: 0 };
-   current.sales += sale.netSales || 0;
+   current.sales += sale.netSales ?? sale.quantity * (priceById.get(sale.menuItemId) || 0);
    current.rows += 1;
    current.qty += sale.quantity;
    channelMap.set(sale.channel, current);
  }
+ const money = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
  const rows = [...channelMap.entries()].map(([channel, value]) => ({ channel, ...value }));
  const deliverySales = rows.reduce((sum, row) => sum + row.sales, 0);
 
  return (
   <COSTERAAppShell active="/dashboard/delivery" locale={locale} title={tx(locale,"Delivery & Channels","Delivery & Kanallar")} eyebrow={tx(locale,"POS CHANNEL DISCOVERY","POS KANAL KEŞFİ")}>
    <div className="costera-metrics five">
-    <AppMetric label={tx(locale,"Delivery Sales","Delivery Satışları")} value={"$" + deliverySales.toLocaleString()} meta={tx(locale,"Detected from connected POS","Bağlı POS'tan bulundu")} />
+    <AppMetric label={tx(locale,"Delivery Sales","Delivery Satışları")} value={money(deliverySales)} meta={tx(locale,"Detected from connected POS","Bağlı POS'tan bulundu")} />
     <AppMetric label={tx(locale,"Channels Detected","Bulunan Kanallar")} value={String(rows.length)} meta={tx(locale,"No fixed vendor list","Sabit firma listesi yok")} tone="good" />
     <AppMetric label={tx(locale,"Platform Fees","Platform Ücretleri")} value={tx(locale,"Missing","Eksik")} meta={tx(locale,"POS demo does not provide fees","POS demo ücret verisi sağlamıyor")} tone="bad" />
     <AppMetric label={tx(locale,"Settlements","Settlement")} value={tx(locale,"Missing","Eksik")} meta={tx(locale,"POS demo does not provide payouts","POS demo ödeme verisi sağlamıyor")} tone="bad" />
@@ -62,7 +64,7 @@ export default async function DeliveryPage(){
       <div className="head"><span>{tx(locale,"Channel","Kanal")}</span><span>{tx(locale,"Sales","Satış")}</span><span>{tx(locale,"Order rows","Sipariş satırları")}</span><span>{tx(locale,"Fees","Ücretler")}</span><span>Settlement</span><span>{tx(locale,"Status","Durum")}</span></div>
       {rows.map((row)=><div className="row" key={row.channel}>
        <span><b>{row.channel}</b><small>{tx(locale,"Provided by POS","POS tarafından sağlandı")}</small></span>
-       <span>{"$" + row.sales.toLocaleString()}</span>
+       <span>{money(row.sales)}</span>
        <span>{row.rows}</span>
        <span className="missing">{tx(locale,"Not supplied","Sağlanmadı")}</span>
        <span className="missing">{tx(locale,"Not supplied","Sağlanmadı")}</span>
