@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 import { EmptyWorkspace } from "@/components/app/EmptyWorkspace";
 import { analyzeCost } from "@/lib/costera/engine";
-import { sampleInput } from "@/lib/costera/sample";
+import { getSessionContext } from "@/lib/session";
+import { getRestaurantInput } from "@/lib/costera/repository";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
 
 const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -10,11 +10,11 @@ const qty = (n: number, unit: string) => (n > 0 ? "+" : "") + n.toLocaleString("
 
 export default async function VariancePage(){
  const locale = await getAppLocale();
- const cookieStore = await cookies();
- const demoConnected = cookieStore.get("costera_pos_demo")?.value === "1";
+ const ctx = await getSessionContext();
+ const input = ctx?.restaurant ? await getRestaurantInput(ctx.restaurant.id) : null;
  const tr = locale === "tr";
 
- if (!demoConnected) {
+ if (!input) {
    return (
     <COSTERAAppShell active="/dashboard/variance" locale={locale} title={tx(locale,"Cost Control","Maliyet Kontrolü")} eyebrow={tx(locale,"NO LIVE SOURCE","CANLI VERİ KAYNAĞI YOK")}>
       <div className="costera-metrics four">
@@ -32,7 +32,7 @@ export default async function VariancePage(){
    );
  }
 
- const analysis = analyzeCost(sampleInput);
+ const analysis = analyzeCost(input);
  const t = analysis.totals;
  const top = analysis.ingredientVariance.slice(0, 5);
  const focus = top[0];

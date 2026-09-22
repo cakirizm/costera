@@ -1,16 +1,17 @@
-import { cookies } from "next/headers";
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 import { EmptyWorkspace } from "@/components/app/EmptyWorkspace";
 import { analyzeCost } from "@/lib/costera/engine";
-import { sampleInput } from "@/lib/costera/sample";
+import { getSessionContext } from "@/lib/session";
+import { getRestaurantInput } from "@/lib/costera/repository";
+import type { CosteraInput } from "@/lib/costera/types";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
 
 const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
-function discoveredChannels() {
-  const priceById = new Map(sampleInput.menuItems.map((m) => [m.id, m.sellingPrice]));
+function discoveredChannels(input: CosteraInput) {
+  const priceById = new Map(input.menuItems.map((m) => [m.id, m.sellingPrice]));
   const map = new Map<string, number>();
-  for (const sale of sampleInput.sales) {
+  for (const sale of input.sales) {
     const revenue = sale.netSales ?? sale.quantity * (priceById.get(sale.menuItemId) || 0);
     map.set(sale.channel, (map.get(sale.channel) || 0) + revenue);
   }
@@ -21,10 +22,10 @@ function discoveredChannels() {
 
 export default async function DashboardPage(){
  const locale = await getAppLocale();
- const cookieStore = await cookies();
- const demoConnected = cookieStore.get("costera_pos_demo")?.value === "1";
+ const ctx = await getSessionContext();
+ const input = ctx?.restaurant ? await getRestaurantInput(ctx.restaurant.id) : null;
 
- if (!demoConnected) {
+ if (!input) {
    return (
     <COSTERAAppShell active="/dashboard" locale={locale} title={tx(locale,"Overview","Genel Bakış")} eyebrow={tx(locale,"NO LIVE SOURCE","CANLI VERİ KAYNAĞI YOK")}>
       <div className="costera-metrics five">
@@ -43,10 +44,10 @@ export default async function DashboardPage(){
    );
  }
 
- const analysis = analyzeCost(sampleInput);
+ const analysis = analyzeCost(input);
  const t = analysis.totals;
  const varianceRows = analysis.ingredientVariance.slice(0,5);
- const channelRows = discoveredChannels();
+ const channelRows = discoveredChannels(input);
  const maxChannel = Math.max(...channelRows.map((x)=>x.sales),1);
  const positiveGap = Math.max(0,t.unexplainedCost);
  const gapShare = t.netSales > 0 ? (positiveGap/t.netSales)*100 : 0;

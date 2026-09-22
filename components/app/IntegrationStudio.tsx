@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { connectDemoAction, disconnectDataAction } from "@/lib/data-actions";
 import type { AppLocale } from "@/lib/costera/i18n";
 
 type Preview = {
   provider: string;
-  mode: string;
   syncedAt: string;
   records: { sales: number; menuItems: number; ingredients: number; inventoryRows: number };
   totals: { netSales: number; actualFoodCostPct: number; unexplainedCost: number };
 };
 
-type Status = { connected: boolean; preview?: Preview };
 type ConnectorType = "POS" | "Delivery" | "Accounting / ERP" | "Inventory / Back Office";
 type ConnectionMethod = "REST API" | "Webhook" | "SFTP / CSV" | "Database Read-only" | "Other";
 type AuthMethod = "API Key" | "Bearer Token" | "OAuth 2.0" | "Basic Auth" | "Other";
@@ -56,12 +56,20 @@ const EMPTY_DRAFT: Omit<ConnectorDraft, "id" | "createdAt"> = {
   capabilities: ["Sales & order lines", "Menu items", "Recipes / BOM", "Inventory balances"],
 };
 
-export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
+export function IntegrationStudio({
+  locale = "en",
+  connected,
+  preview,
+}: {
+  locale?: AppLocale;
+  connected: boolean;
+  preview: Preview | null;
+}) {
   const tr = locale === "tr";
   const t = (en: string, turkish: string) => (tr ? turkish : en);
+  const router = useRouter();
 
-  const [status, setStatus] = useState<Status>({ connected: false });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [builderOpen, setBuilderOpen] = useState(false);
   const [draft, setDraft] = useState(EMPTY_DRAFT);
@@ -75,32 +83,19 @@ export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
     }
   }, []);
 
-  const refresh = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/integrations/pos-demo", { cache: "no-store" });
-      const payload = await response.json();
-      setStatus({ connected: Boolean(payload.connected), preview: payload.preview });
-    } finally { setLoading(false); }
-  };
-
-  useEffect(() => { refresh(); }, []);
-
-  const demoAction = async (name: "connect" | "sync" | "disconnect" | "reset") => {
+  const demoAction = async (name: "connect" | "sync" | "disconnect") => {
     setMessage("");
     setLoading(true);
     try {
-      const response = await fetch("/api/integrations/pos-demo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: name }),
-      });
-      const payload = await response.json();
-      setStatus({ connected: Boolean(payload.connected), preview: payload.preview });
-      if (name === "connect") setMessage(t("Universal POS Demo connected. Overview and Cost Control are now populated through the same adapter pattern used by real connectors.","Universal POS Demo bağlandı. Genel Bakış ve Maliyet Kontrolü artık gerçek connector mimarisiyle aynı adapter akışından veri alıyor."));
+      const result = name === "disconnect" ? await disconnectDataAction() : await connectDemoAction();
+      if (!result.ok) {
+        setMessage(t("Connection action failed.", "Bağlantı işlemi başarısız oldu."));
+        return;
+      }
+      if (name === "connect") setMessage(t("Universal POS Demo connected. Sales, recipes and inventory are now saved to your workspace and every dashboard reads from them.","Universal POS Demo bağlandı. Satış, reçete ve stok verisi çalışma alanınıza kaydedildi; tüm dashboard'lar artık bu veriden okuyor."));
       if (name === "sync") setMessage(t("Demo source synced successfully.","Demo kaynağı başarıyla senkronlandı."));
-      if (name === "disconnect") setMessage(t("Demo source disconnected. Live-data dashboards are empty again.","Demo kaynağı bağlantısı kesildi. Canlı veri ekranları tekrar boş."));
-      if (name === "reset") setMessage(t("Workspace connection reset.","Çalışma alanı bağlantısı sıfırlandı."));
+      if (name === "disconnect") setMessage(t("Data source disconnected. Dashboards are empty again.","Veri kaynağı bağlantısı kesildi. Dashboard'lar tekrar boş."));
+      router.refresh();
     } catch {
       setMessage(t("Connection action failed.","Bağlantı işlemi başarısız oldu."));
     } finally { setLoading(false); }
@@ -332,7 +327,7 @@ export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
           <p>{t("Test the full integration path without pretending a real vendor is connected. This demo uses the same normalize → calculate → dashboard flow.","Gerçek bir firma bağlıymış gibi göstermeden tüm entegrasyon akışını test edin. Demo aynı normalize → hesapla → dashboard akışını kullanır.")}</p>
         </div>
         <div className="integration-demo-actions">
-          {!status.connected ? (
+          {!connected ? (
             <button className="primary" type="button" onClick={() => demoAction("connect")} disabled={loading}>{t("Start Demo Feed","Demo Akışını Başlat")}</button>
           ) : (
             <>
@@ -340,7 +335,6 @@ export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
               <button type="button" onClick={() => demoAction("disconnect")} disabled={loading}>{t("Disconnect","Bağlantıyı Kes")}</button>
             </>
           )}
-          <button type="button" onClick={() => demoAction("reset")} disabled={loading}>{t("Reset","Sıfırla")}</button>
         </div>
       </section>
 
@@ -415,18 +409,18 @@ export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
         </section>
       )}
 
-      {status.connected && status.preview && (
+      {connected && preview && (
         <section className="integration-live-preview">
           <div className="integration-live-head">
-            <div><span>{t("LIVE DEMO FEED","CANLI DEMO AKIŞI")}</span><h2>Universal POS → COSTERA</h2><p>{t("Last sync","Son senkron")}: {new Date(status.preview.syncedAt).toLocaleString(tr ? "tr-TR" : "en-US")}</p></div>
+            <div><span>{t("LIVE DATA FEED","CANLI VERİ AKIŞI")}</span><h2>{preview.provider} → COSTERA</h2><p>{t("Last sync","Son senkron")}: {new Date(preview.syncedAt).toLocaleString(tr ? "tr-TR" : "en-US")}</p></div>
             <div className="integration-live-dot"><i /> {t("Receiving data","Veri alınıyor")}</div>
           </div>
 
           <div className="integration-live-metrics">
-            <article><span>{t("Sales rows","Satış satırları")}</span><strong>{status.preview.records.sales}</strong></article>
-            <article><span>{t("Menu items","Menü ürünleri")}</span><strong>{status.preview.records.menuItems}</strong></article>
-            <article><span>{t("Ingredients","Malzemeler")}</span><strong>{status.preview.records.ingredients}</strong></article>
-            <article><span>{t("Inventory rows","Stok satırları")}</span><strong>{status.preview.records.inventoryRows}</strong></article>
+            <article><span>{t("Sales rows","Satış satırları")}</span><strong>{preview.records.sales}</strong></article>
+            <article><span>{t("Menu items","Menü ürünleri")}</span><strong>{preview.records.menuItems}</strong></article>
+            <article><span>{t("Ingredients","Malzemeler")}</span><strong>{preview.records.ingredients}</strong></article>
+            <article><span>{t("Inventory rows","Stok satırları")}</span><strong>{preview.records.inventoryRows}</strong></article>
           </div>
 
           <div className="integration-live-flow">
@@ -437,9 +431,9 @@ export function IntegrationStudio({ locale = "en" }: { locale?: AppLocale }) {
           </div>
 
           <div className="integration-live-bottom">
-            <div><span>{t("Net Sales","Net Satış")}</span><strong>{"$"}{status.preview.totals.netSales.toLocaleString()}</strong></div>
-            <div><span>{t("Actual Food Cost","Gerçek Food Cost")}</span><strong>{status.preview.totals.actualFoodCostPct}%</strong></div>
-            <div><span>{t("Unexplained Cost","Açıklanamayan Maliyet")}</span><strong>{"$"}{status.preview.totals.unexplainedCost.toLocaleString()}</strong></div>
+            <div><span>{t("Net Sales","Net Satış")}</span><strong>{"$"}{preview.totals.netSales.toLocaleString()}</strong></div>
+            <div><span>{t("Actual Food Cost","Gerçek Food Cost")}</span><strong>{preview.totals.actualFoodCostPct}%</strong></div>
+            <div><span>{t("Unexplained Cost","Açıklanamayan Maliyet")}</span><strong>{"$"}{preview.totals.unexplainedCost.toLocaleString()}</strong></div>
             <div className="integration-live-links"><Link href="/dashboard">{t("Open Overview","Genel Bakışı Aç")}</Link><Link href="/dashboard/variance">{t("Open Cost Control","Maliyet Kontrolünü Aç")}</Link></div>
           </div>
         </section>

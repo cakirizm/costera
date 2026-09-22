@@ -4560,6 +4560,28 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   gap: 14px;
 }
 
+.import-saved-banner {
+  margin-top: 12px;
+  padding: 11px 14px;
+  border: 1px solid #cfe3d8;
+  border-left: 3px solid #1c8a5f;
+  border-radius: 10px;
+  background: #f2fbf6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #186043;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.import-saved-banner a {
+  color: #12613f;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .import-result-metrics {
   margin-top: 14px;
   display: grid;

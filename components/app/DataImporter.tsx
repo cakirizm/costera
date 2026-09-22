@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   buildCosteraInput,
   inferMapping,
@@ -10,6 +11,7 @@ import {
   type ParsedTable,
   type SourceKind,
 } from "@/lib/costera/ingestion";
+import { importDataAction } from "@/lib/data-actions";
 import type { CosteraAnalysis } from "@/lib/costera/types";
 import type { AppLocale } from "@/lib/costera/i18n";
 
@@ -213,6 +215,8 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
   const [result, setResult] = useState<CosteraAnalysis | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [runError, setRunError] = useState("");
+  const [saved, setSaved] = useState(false);
+  const router = useRouter();
 
   const sourceKinds: SourceKind[] = ["pos", "recipes", "inventory"];
 
@@ -310,6 +314,11 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
       if (!response.ok || !payload.ok) throw new Error(payload.error || "Engine rejected the data.");
 
       setResult(payload.analysis as CosteraAnalysis);
+
+      // Persist the imported dataset to the workspace so every dashboard reads from it.
+      const savedResult = await importDataAction(built.input);
+      setSaved(savedResult.ok);
+      if (savedResult.ok) router.refresh();
     } catch (error) {
       setRunError(error instanceof Error ? error.message : "Analysis failed.");
     } finally {
@@ -398,6 +407,13 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
             </div>
             <button type="button" onClick={downloadResult}>{t("Download JSON","JSON İndir")}</button>
           </div>
+
+          {saved && (
+            <div className="import-saved-banner">
+              <span>{t("Saved to your workspace — every dashboard now uses this data.","Çalışma alanına kaydedildi — tüm dashboard'lar artık bu veriyi kullanıyor.")}</span>
+              <a href="/dashboard">{t("Open dashboard →","Dashboard'ı aç →")}</a>
+            </div>
+          )}
 
           <div className="import-result-metrics">
             <article><span>{t("Net Sales","Net Satış")}</span><strong>{"$"}{result.totals.netSales.toLocaleString()}</strong><small>{result.dataQuality.mappedSalesCount}/{result.dataQuality.salesCount} sales rows mapped</small></article>

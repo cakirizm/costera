@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { AppMetric, COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 import { EmptyWorkspace } from "@/components/app/EmptyWorkspace";
-import { sampleInput } from "@/lib/costera/sample";
+import { getSessionContext } from "@/lib/session";
+import { getRestaurantInput } from "@/lib/costera/repository";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
 
 export default async function DeliveryPage(){
  const locale = await getAppLocale();
- const cookieStore = await cookies();
- const demoConnected = cookieStore.get("costera_pos_demo")?.value === "1";
+ const ctx = await getSessionContext();
+ const input = ctx?.restaurant ? await getRestaurantInput(ctx.restaurant.id) : null;
 
- if (!demoConnected) {
+ if (!input) {
    return (
     <COSTERAAppShell active="/dashboard/delivery" locale={locale} title={tx(locale,"Delivery & Channels","Delivery & Kanallar")} eyebrow={tx(locale,"NO LIVE SOURCE","CANLI VERİ KAYNAĞI YOK")}>
       <div className="costera-metrics five">
@@ -29,9 +29,9 @@ export default async function DeliveryPage(){
    );
  }
 
- const priceById = new Map(sampleInput.menuItems.map((m) => [m.id, m.sellingPrice]));
+ const priceById = new Map(input.menuItems.map((m) => [m.id, m.sellingPrice]));
  const channelMap = new Map<string, { sales: number; rows: number; qty: number }>();
- for (const sale of sampleInput.sales) {
+ for (const sale of input.sales) {
    if (sale.channel.toLowerCase() === "dine-in") continue;
    const current = channelMap.get(sale.channel) || { sales: 0, rows: 0, qty: 0 };
    current.sales += sale.netSales ?? sale.quantity * (priceById.get(sale.menuItemId) || 0);

@@ -14,6 +14,12 @@ enum Role {
   FINANCE
 }
 
+enum DataSourceKind {
+  DEMO
+  IMPORT
+  POS_API
+}
+
 model User {
   id           String       @id @default(cuid())
   email        String       @unique
@@ -26,12 +32,89 @@ model User {
 }
 
 model Restaurant {
-  id          String       @id @default(cuid())
-  name        String
-  city        String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  memberships Membership[]
+  id                String         @id @default(cuid())
+  name              String
+  city              String?
+  targetFoodCostPct Float          @default(25)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  memberships       Membership[]
+  dataSource        DataSource?
+  ingredients       Ingredient[]
+  menuItems         MenuItem[]
+  sales             Sale[]
+  inventory         InventoryRow[]
+}
+
+model DataSource {
+  id           String         @id @default(cuid())
+  restaurantId String         @unique
+  kind         DataSourceKind
+  provider     String
+  periodFrom   DateTime
+  periodTo     DateTime
+  syncedAt     DateTime       @default(now())
+  restaurant   Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Ingredient {
+  id           String     @id @default(cuid())
+  restaurantId String
+  extId        String
+  name         String
+  unit         String
+  unitCost     Float
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, extId])
+}
+
+model MenuItem {
+  id           String       @id @default(cuid())
+  restaurantId String
+  extId        String
+  name         String
+  sellingPrice Float
+  recipeLines  RecipeLine[]
+  restaurant   Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, extId])
+}
+
+model RecipeLine {
+  id              String   @id @default(cuid())
+  menuItemId      String
+  ingredientExtId String
+  quantity        Float
+  menuItem        MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+}
+
+model Sale {
+  id            String     @id @default(cuid())
+  restaurantId  String
+  menuItemExtId String
+  quantity      Float
+  channel       String
+  locationId    String
+  netSales      Float?
+  restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model InventoryRow {
+  id              String     @id @default(cuid())
+  restaurantId    String
+  ingredientExtId String
+  openingQty      Float
+  purchasesQty    Float
+  transferInQty   Float      @default(0)
+  transferOutQty  Float      @default(0)
+  closingQty      Float
+  knownWasteQty   Float      @default(0)
+  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, ingredientExtId])
 }
 
 model Membership {
