@@ -32,17 +32,18 @@ export async function getSessionContext(): Promise<SessionContext | null> {
   };
 }
 
-const ROLE_LABELS: Record<string, { en: string; tr: string }> = {
-  OWNER: { en: "Owner", tr: "Sahip" },
-  MANAGER: { en: "Manager", tr: "Yönetici" },
-  KITCHEN: { en: "Kitchen", tr: "Mutfak" },
-  FINANCE: { en: "Finance", tr: "Finans" },
+const ROLE_LABELS: Record<string, { en: string; tr: string; ar: string }> = {
+  OWNER: { en: "Owner", tr: "Sahip", ar: "مالك" },
+  MANAGER: { en: "Manager", tr: "Yönetici", ar: "مدير" },
+  KITCHEN: { en: "Kitchen", tr: "Mutfak", ar: "مطبخ" },
+  FINANCE: { en: "Finance", tr: "Finans", ar: "مالية" },
 };
 
-export function roleLabel(role: string | null, tr: boolean): string {
-  if (!role) return tr ? "Üye" : "Member";
+export function roleLabel(role: string | null, locale: "en" | "tr" | "ar" | boolean): string {
+  const lang = locale === true ? "tr" : locale === false ? "en" : locale;
+  if (!role) return lang === "ar" ? "عضو" : lang === "tr" ? "Üye" : "Member";
   const entry = ROLE_LABELS[role];
-  return entry ? (tr ? entry.tr : entry.en) : role;
+  return entry ? entry[lang] : role;
 }
 
 export function initials(name: string | null, email: string | null): string {

@@ -24,9 +24,15 @@ describe("roleLabel", () => {
     expect(roleLabel("MANAGER", false)).toBe("Manager");
   });
 
+  it("returns Arabic label when locale is ar", () => {
+    expect(roleLabel("OWNER", "ar")).toBe("مالك");
+    expect(roleLabel("MANAGER", "ar")).toBe("مدير");
+  });
+
   it("returns default for null role", () => {
     expect(roleLabel(null, true)).toBe("Üye");
     expect(roleLabel(null, false)).toBe("Member");
+    expect(roleLabel(null, "ar")).toBe("عضو");
   });
 
   it("returns raw role string for unknown roles", () => {
