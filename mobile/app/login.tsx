@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../src/lib/auth";
 import { colors, spacing } from "../src/lib/theme";
+import { t } from "../src/lib/i18n";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
@@ -29,10 +30,10 @@ export default function LoginScreen() {
     if (!result.ok) {
       setError(
         result.error === "INVALID_CREDENTIALS"
-          ? "E-posta veya şifre hatalı."
+          ? t("Invalid credentials")
           : result.error === "RATE_LIMITED"
-          ? "Çok fazla deneme. Lütfen bekleyin."
-          : "Bağlantı hatası. Tekrar deneyin."
+          ? t("Rate limited")
+          : t("Connection error")
       );
     }
   };
@@ -46,13 +47,13 @@ export default function LoginScreen() {
         <View style={s.header}>
           <Text style={s.logo}>COSTERA</Text>
           <View style={s.badge}>
-            <Text style={s.badgeText}>MOBİL İZLEME</Text>
+            <Text style={s.badgeText}>{t("MOBILE_MONITOR")}</Text>
           </View>
         </View>
 
         <View style={s.card}>
-          <Text style={s.title}>Giriş Yap</Text>
-          <Text style={s.subtitle}>Web hesabınızla giriş yapın</Text>
+          <Text style={s.title}>{t("Sign In")}</Text>
+          <Text style={s.subtitle}>{t("Sign in with your web account")}</Text>
 
           {error !== "" && (
             <View style={s.errorBox}>
@@ -60,7 +61,7 @@ export default function LoginScreen() {
             </View>
           )}
 
-          <Text style={s.label}>E-posta</Text>
+          <Text style={s.label}>{t("Email")}</Text>
           <TextInput
             style={s.input}
             value={email}
@@ -71,9 +72,10 @@ export default function LoginScreen() {
             autoCapitalize="none"
             autoCorrect={false}
             editable={!loading}
+            accessibilityLabel={t("Email")}
           />
 
-          <Text style={s.label}>Şifre</Text>
+          <Text style={s.label}>{t("Password")}</Text>
           <TextInput
             style={s.input}
             value={password}
@@ -83,6 +85,7 @@ export default function LoginScreen() {
             secureTextEntry
             editable={!loading}
             onSubmitEditing={handleLogin}
+            accessibilityLabel={t("Password")}
           />
 
           <TouchableOpacity
@@ -94,12 +97,12 @@ export default function LoginScreen() {
             {loading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              <Text style={s.buttonText}>Giriş Yap</Text>
+              <Text style={s.buttonText}>{t("Sign In")}</Text>
             )}
           </TouchableOpacity>
         </View>
 
-        <Text style={s.footer}>Salt okunur izleme · Veri web panelinden yönetilir</Text>
+        <Text style={s.footer}>{t("Read-only footer")}</Text>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

@@ -9,6 +9,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: costera
+          POSTGRES_PASSWORD: costera
+          POSTGRES_DB: costera
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U costera"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://costera:costera@localhost:5432/costera?schema=public
+      AUTH_SECRET: ci-build-placeholder-secret-not-used-at-runtime
+      AUTH_TRUST_HOST: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -23,11 +41,26 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Migrate database
+        run: npx prisma migrate deploy
       - name: Test
         run: npm test
       - name: Build
         run: npm run build
-        env:
-          DATABASE_URL: postgresql://costera:costera@localhost:5432/costera?schema=public
-          AUTH_SECRET: ci-build-placeholder-secret-not-used-at-runtime
-          AUTH_TRUST_HOST: "true"
+
+  mobile-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install mobile dependencies
+        run: npm install
+        working-directory: mobile
+      - name: Typecheck mobile
+        run: npx tsc --noEmit
+        working-directory: mobile

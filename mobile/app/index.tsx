@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../src/lib/auth";
 import { getRestaurants, getOverview, type MobileOverview, type MobileRestaurant } from "../src/lib/api";
 import { colors, spacing } from "../src/lib/theme";
+import { t } from "../src/lib/i18n";
 
 const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 const pct = (n: number) => n.toFixed(1) + "%";
@@ -29,10 +30,10 @@ function KpiCard({ label, value, sub, tone }: { label: string; value: string; su
 
 function AlertCard({ alert }: { alert: MobileOverview["alerts"][number] }) {
   const kindMap: Record<string, string> = {
-    variance: "Fark",
-    "missing-menu": "Eksik menü",
-    "missing-ingredient": "Eksik malzeme",
-    "above-target": "Hedef üzeri",
+    variance: t("variance"),
+    "missing-menu": t("missing-menu"),
+    "missing-ingredient": t("missing-ingredient"),
+    "above-target": t("above-target"),
   };
   const borderColor = alert.severity === "high" ? colors.red : colors.amber;
   return (
@@ -40,7 +41,7 @@ function AlertCard({ alert }: { alert: MobileOverview["alerts"][number] }) {
       <Text style={s.alertKind}>{kindMap[alert.kind] ?? alert.kind}</Text>
       <View style={s.alertRow}>
         <Text style={s.alertSubject} numberOfLines={1}>
-          {alert.subject || "Food cost hedefin üzerinde"}
+          {alert.subject || t("Food cost above target")}
         </Text>
         {alert.value !== null && (
           <Text style={[s.alertValue, { color: borderColor }]}>
@@ -84,13 +85,13 @@ export default function OverviewScreen() {
 
     const restResult = await getRestaurants(token);
     if (!restResult.ok) {
-      setError("Veri alınamadı.");
+      setError(t("Data unavailable"));
       setLoading(false);
       return;
     }
     const first = restResult.data.restaurants[0];
     if (!first) {
-      setError("Bağlı restoran yok.");
+      setError(t("No restaurant"));
       setLoading(false);
       return;
     }
@@ -98,7 +99,7 @@ export default function OverviewScreen() {
 
     const overviewResult = await getOverview(token, first.id);
     if (overviewResult.ok) setOverview(overviewResult.data);
-    else setError("Özet verisi alınamadı.");
+    else setError(t("Overview unavailable"));
 
     setLoading(false);
   }, [token]);
@@ -132,10 +133,10 @@ export default function OverviewScreen() {
           <Text style={s.logo}>COSTERA</Text>
           <View style={s.headerRight}>
             <View style={s.badgeSmall}>
-              <Text style={s.badgeSmallText}>İZLEME</Text>
+              <Text style={s.badgeSmallText}>{t("MONITOR")}</Text>
             </View>
             <TouchableOpacity onPress={auth.signOut} activeOpacity={0.7}>
-              <Text style={s.logoutText}>Çıkış</Text>
+              <Text style={s.logoutText}>{t("Logout")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -171,16 +172,16 @@ export default function OverviewScreen() {
         {kpis ? (
           <>
             <View style={s.kpiGrid}>
-              <KpiCard label="Net Satış" value={money(kpis.netSales)} sub={`${kpis.unitsSold.toLocaleString("en-US", { maximumFractionDigits: 0 })} adet`} tone="good" />
-              <KpiCard label="Food Cost" value={kpis.actualFoodCostPct !== null ? pct(kpis.actualFoodCostPct) : "—"} sub={`hedef ${pct(kpis.targetFoodCostPct)}`} tone={kpis.actualFoodCostPct !== null && kpis.actualFoodCostPct > kpis.targetFoodCostPct ? "bad" : "good"} />
-              <KpiCard label="Açıklanamayan" value={kpis.unexplainedCost !== null ? money(kpis.unexplainedCost) : "—"} tone={kpis.unexplainedCost !== null && kpis.unexplainedCost > 0 ? "warn" : "good"} />
-              {kpis.operatingExpenses !== null && <KpiCard label="İşl. Gideri" value={money(kpis.operatingExpenses)} />}
-              {kpis.netProfit !== null && <KpiCard label="Net Kâr" value={money(kpis.netProfit)} tone={kpis.netProfit >= 0 ? "good" : "bad"} />}
+              <KpiCard label={t("Net Sales")} value={money(kpis.netSales)} sub={`${kpis.unitsSold.toLocaleString("en-US", { maximumFractionDigits: 0 })} ${t("units")}`} tone="good" />
+              <KpiCard label={t("Food Cost")} value={kpis.actualFoodCostPct !== null ? pct(kpis.actualFoodCostPct) : "—"} sub={`${t("target")} ${pct(kpis.targetFoodCostPct)}`} tone={kpis.actualFoodCostPct !== null && kpis.actualFoodCostPct > kpis.targetFoodCostPct ? "bad" : "good"} />
+              <KpiCard label={t("Unexplained")} value={kpis.unexplainedCost !== null ? money(kpis.unexplainedCost) : "—"} tone={kpis.unexplainedCost !== null && kpis.unexplainedCost > 0 ? "warn" : "good"} />
+              {kpis.operatingExpenses !== null && <KpiCard label={t("Op. Expenses")} value={money(kpis.operatingExpenses)} />}
+              {kpis.netProfit !== null && <KpiCard label={t("Net Profit")} value={money(kpis.netProfit)} tone={kpis.netProfit >= 0 ? "good" : "bad"} />}
             </View>
 
             {overview!.channels.length > 0 && (
               <View style={s.section}>
-                <Text style={s.sectionTitle}>KANALLAR</Text>
+                <Text style={s.sectionTitle}>{t("CHANNELS")}</Text>
                 {overview!.channels.map((ch) => (
                   <ChannelBar key={ch.name} name={ch.name} sales={ch.sales} maxSales={overview!.channels[0]?.sales || 1} />
                 ))}
@@ -190,7 +191,7 @@ export default function OverviewScreen() {
             {overview!.alerts.length > 0 && (
               <View style={s.section}>
                 <View style={s.alertHeader}>
-                  <Text style={s.sectionTitle}>UYARILAR</Text>
+                  <Text style={s.sectionTitle}>{t("ALERTS")}</Text>
                   <View style={s.alertBadge}>
                     <Text style={s.alertBadgeText}>{overview!.alerts.length}</Text>
                   </View>
@@ -201,13 +202,13 @@ export default function OverviewScreen() {
           </>
         ) : (
           <View style={s.emptyBox}>
-            <Text style={s.emptyTitle}>Henüz veri yok</Text>
-            <Text style={s.emptyText}>Web panelinden veri yükleyin veya bir kaynak bağlayın.</Text>
+            <Text style={s.emptyTitle}>{t("No data yet")}</Text>
+            <Text style={s.emptyText}>{t("Upload data or connect a source")}</Text>
           </View>
         )}
 
         <View style={s.footer}>
-          <Text style={s.footerText}>Salt okunur · Veri web panelinden yönetilir</Text>
+          <Text style={s.footerText}>{t("Read-only short")}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
