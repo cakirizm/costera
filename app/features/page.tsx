@@ -76,12 +76,12 @@ export default function FeaturesPage() {
         <section className="proof-strip">
           <div className="shell proof-strip-inner">
             <div className="proof-quote">
-              <div className="proof-avatar">JD</div>
+              <div className="proof-mark">”</div>
               <p>
-                “The value is not another report. It is seeing where cost is moving
-                before the end of the month.”
+                The value is not another report. It is seeing where cost is moving
+                before the end of the month.
               </p>
-              <small>Operations Director · Multi-site Restaurant Group</small>
+              <small>The principle behind COSTERA</small>
             </div>
             <div className="proof-stat"><strong>↓</strong><b>Clearer stock control</b><span>Across every connected location</span></div>
             <div className="proof-stat"><strong>24/7</strong><b>Management visibility</b><span>Desktop, tablet and mobile</span></div>

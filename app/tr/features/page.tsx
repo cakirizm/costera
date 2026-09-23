@@ -76,9 +76,9 @@ export default function TurkishFeaturesPage() {
         <section className="proof-strip">
           <div className="shell proof-strip-inner">
             <div className="proof-quote">
-              <div className="proof-avatar">JD</div>
-              <p>“Değer başka bir rapor değil; maliyetin nereye gittiğini ay sonunu beklemeden görebilmek.”</p>
-              <small>Operasyon Direktörü · Çok Şubeli Restoran Grubu</small>
+              <div className="proof-mark">”</div>
+              <p>Değer başka bir rapor değil; maliyetin nereye gittiğini ay sonunu beklemeden görebilmek.</p>
+              <small>COSTERA'nın çıkış noktası</small>
             </div>
             <div className="proof-stat"><strong>↓</strong><b>Daha net stok kontrolü</b><span>Bağlı tüm şubelerde</span></div>
             <div className="proof-stat"><strong>24/7</strong><b>Yönetim görünürlüğü</b><span>Bilgisayar, tablet ve mobil</span></div>

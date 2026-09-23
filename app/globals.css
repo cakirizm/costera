@@ -1186,6 +1186,11 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   width:54px; height:54px; display:grid; place-items:center; border-radius:50%;
   color:white; background:linear-gradient(145deg,#173f63,#9a6a2a); font-size:12px; font-weight:850;
 }
+.proof-mark {
+  width:54px; height:54px; display:grid; place-items:end center; border-radius:14px;
+  color:#bd8836; background:linear-gradient(150deg,#fbf3e4,#f3e6cd);
+  font-size:58px; line-height:.9; font-weight:800; padding-bottom:6px; overflow:hidden;
+}
 .proof-quote p { grid-column:2; margin:0; color:#526a7b; font-size:14px; line-height:1.55; font-style:italic; }
 .proof-quote small { grid-column:2; color:#89949c; font-size:10px; }
 .proof-stat { padding:0 24px; border-left:1px solid #dedfe1; text-align:center; }
@@ -1256,6 +1261,12 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 .faq-list summary span { color:var(--navy); font-size:19px; line-height:1; }
 .faq-list details p { margin:0 0 18px; color:#6e7e89; font-size:13px; line-height:1.6; }
 .pricing-help-card { padding:24px; border:1px solid #e3e6e8; border-radius:13px; background:#f7f7f6; }
+.pricing-help-icon {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:46px; height:46px; border-radius:13px; border:1px solid #eadfce;
+  background:#fff; color:#ad762d; margin-bottom:4px;
+}
+.pricing-help-icon svg { width:22px; height:22px; }
 .pricing-help-card h3 { margin:10px 0 8px; color:var(--navy); font-size:20px; }
 .pricing-help-card p { margin:0 0 18px; color:#6f7f8b; font-size:13px; line-height:1.6; }
 .pricing-bottom-banner { background:linear-gradient(135deg,#08253d,#0a3150); color:white; }
