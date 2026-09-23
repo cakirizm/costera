@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeCost } from "@/lib/costera/engine";
 import { sampleInput } from "@/lib/costera/sample";
+import { getSessionContext } from "@/lib/session";
 import type { CosteraInput } from "@/lib/costera/types";
 
 export const runtime = "nodejs";
 
+const UNAUTHORIZED = NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+
 export async function GET() {
+  const ctx = await getSessionContext();
+  if (!ctx) return UNAUTHORIZED;
+
   return NextResponse.json({
     ok: true,
     source: "sample",
@@ -15,6 +21,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const ctx = await getSessionContext();
+  if (!ctx) return UNAUTHORIZED;
+
   try {
     const input = (await request.json()) as CosteraInput;
 
