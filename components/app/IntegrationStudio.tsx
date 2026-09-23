@@ -2,7 +2,7 @@
 import { tx } from "@/lib/costera/locale";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { connectDemoAction, disconnectDataAction } from "@/lib/data-actions";
 import type { AppLocale } from "@/lib/costera/i18n";
@@ -74,15 +74,13 @@ export function IntegrationStudio({
   const [message, setMessage] = useState("");
   const [builderOpen, setBuilderOpen] = useState(false);
   const [draft, setDraft] = useState(EMPTY_DRAFT);
-  const [savedDrafts, setSavedDrafts] = useState<ConnectorDraft[]>([]);
-  const [coverage, setCoverage] = useState({ orders: false, fees: false, settlements: false });
-
-  useEffect(() => {
+  const [savedDrafts, setSavedDrafts] = useState<ConnectorDraft[]>(() => {
+    if (typeof window === "undefined") return [];
     const raw = window.localStorage.getItem("costera_connector_drafts");
-    if (raw) {
-      try { setSavedDrafts(JSON.parse(raw)); } catch { setSavedDrafts([]); }
-    }
-  }, []);
+    if (!raw) return [];
+    try { return JSON.parse(raw) as ConnectorDraft[]; } catch { return []; }
+  });
+  const [coverage, setCoverage] = useState({ orders: false, fees: false, settlements: false });
 
   const demoAction = async (name: "connect" | "sync" | "disconnect") => {
     setMessage("");

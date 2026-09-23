@@ -78,7 +78,7 @@ export default function TurkishFeaturesPage() {
             <div className="proof-quote">
               <div className="proof-mark">”</div>
               <p>Değer başka bir rapor değil; maliyetin nereye gittiğini ay sonunu beklemeden görebilmek.</p>
-              <small>COSTERA'nın çıkış noktası</small>
+              <small>COSTERA&apos;nın çıkış noktası</small>
             </div>
             <div className="proof-stat"><strong>↓</strong><b>Daha net stok kontrolü</b><span>Bağlı tüm şubelerde</span></div>
             <div className="proof-stat"><strong>24/7</strong><b>Yönetim görünürlüğü</b><span>Bilgisayar, tablet ve mobil</span></div>

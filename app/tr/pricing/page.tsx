@@ -103,7 +103,7 @@ export default function TurkishPricingPage() {
             <div>
               <div className="eyebrow eyebrow-light">DOĞRU KURULUMLA BAŞLAYIN</div>
               <h2>Daha az maliyet kaçağı. Daha fazla kontrol.</h2>
-              <p>Yaygınlaştırmadan önce COSTERA'nın işletmenize nasıl uyduğunu görün.</p>
+              <p>Yaygınlaştırmadan önce COSTERA&apos;nın işletmenize nasıl uyduğunu görün.</p>
             </div>
             <div className="hero-actions">
               <Link className="button button-gold" href="/tr/demo">Demo İste</Link>
