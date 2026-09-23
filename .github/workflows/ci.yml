@@ -19,6 +19,8 @@ jobs:
           package-manager-cache: false
       - name: Install
         run: npm install
+      - name: Test
+        run: npm test
       - name: Build
         run: npm run build
         env:
