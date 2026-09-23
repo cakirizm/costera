@@ -39,6 +39,39 @@ const ROLE_LABELS: Record<string, { en: string; tr: string; ar: string }> = {
   FINANCE: { en: "Finance", tr: "Finans", ar: "مالية" },
 };
 
+export type RoleType = "OWNER" | "MANAGER" | "KITCHEN" | "FINANCE";
+
+const ROLE_ACCESS: Record<string, readonly RoleType[]> = {
+  "/dashboard": ["OWNER", "MANAGER", "KITCHEN", "FINANCE"],
+  "/dashboard/variance": ["OWNER", "MANAGER"],
+  "/dashboard/inventory": ["OWNER", "MANAGER", "KITCHEN"],
+  "/dashboard/recipes": ["OWNER", "MANAGER", "KITCHEN"],
+  "/dashboard/pos": ["OWNER", "MANAGER"],
+  "/dashboard/delivery": ["OWNER", "MANAGER"],
+  "/dashboard/finance": ["OWNER", "FINANCE"],
+  "/dashboard/purchasing": ["OWNER", "MANAGER"],
+  "/dashboard/integrations": ["OWNER"],
+  "/dashboard/settings": ["OWNER"],
+  "/dashboard/reports": ["OWNER", "MANAGER", "FINANCE"],
+  "/dashboard/import": ["OWNER", "MANAGER"],
+};
+
+export function hasAccess(role: RoleType | null, path: string): boolean {
+  if (!role) return false;
+  const allowed = ROLE_ACCESS[path];
+  if (!allowed) return true;
+  return allowed.includes(role);
+}
+
+export async function requireRole(...allowed: RoleType[]): Promise<SessionContext> {
+  const ctx = await getSessionContext();
+  if (!ctx) throw new Error("UNAUTHORIZED");
+  if (allowed.length > 0 && (!ctx.role || !allowed.includes(ctx.role))) {
+    throw new Error("FORBIDDEN");
+  }
+  return ctx;
+}
+
 export function roleLabel(role: string | null, locale: "en" | "tr" | "ar" | boolean): string {
   const lang = locale === true ? "tr" : locale === false ? "en" : locale;
   if (!role) return lang === "ar" ? "عضو" : lang === "tr" ? "Üye" : "Member";

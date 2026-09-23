@@ -9,7 +9,7 @@ import { describe, it, expect, vi } from "vitest";
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 vi.mock("@/lib/prisma", () => ({ prisma: {} }));
 
-import { roleLabel, initials } from "./session";
+import { roleLabel, initials, hasAccess } from "./session";
 
 describe("roleLabel", () => {
   it("returns Turkish label when tr is true", () => {
@@ -60,5 +60,37 @@ describe("initials", () => {
 
   it("handles whitespace-only name by falling through to trimmed empty", () => {
     expect(initials("   ", "x@y.com")).toBe("");
+  });
+});
+
+describe("hasAccess", () => {
+  it("OWNER can access all pages", () => {
+    expect(hasAccess("OWNER", "/dashboard")).toBe(true);
+    expect(hasAccess("OWNER", "/dashboard/finance")).toBe(true);
+    expect(hasAccess("OWNER", "/dashboard/settings")).toBe(true);
+    expect(hasAccess("OWNER", "/dashboard/integrations")).toBe(true);
+  });
+
+  it("KITCHEN can access inventory and recipes but not finance", () => {
+    expect(hasAccess("KITCHEN", "/dashboard")).toBe(true);
+    expect(hasAccess("KITCHEN", "/dashboard/inventory")).toBe(true);
+    expect(hasAccess("KITCHEN", "/dashboard/recipes")).toBe(true);
+    expect(hasAccess("KITCHEN", "/dashboard/finance")).toBe(false);
+    expect(hasAccess("KITCHEN", "/dashboard/settings")).toBe(false);
+  });
+
+  it("FINANCE can access finance and reports but not inventory", () => {
+    expect(hasAccess("FINANCE", "/dashboard")).toBe(true);
+    expect(hasAccess("FINANCE", "/dashboard/finance")).toBe(true);
+    expect(hasAccess("FINANCE", "/dashboard/reports")).toBe(true);
+    expect(hasAccess("FINANCE", "/dashboard/inventory")).toBe(false);
+  });
+
+  it("returns false for null role", () => {
+    expect(hasAccess(null, "/dashboard")).toBe(false);
+  });
+
+  it("returns true for unknown paths (no restriction defined)", () => {
+    expect(hasAccess("KITCHEN", "/dashboard/unknown")).toBe(true);
   });
 });

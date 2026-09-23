@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { getSessionContext } from "@/lib/session";
+import { requireRole } from "@/lib/session";
 
 export type ExpenseState = { error?: string; ok?: boolean };
 
@@ -16,13 +16,9 @@ const expenseSchema = z.object({
   incurredOn: z.coerce.date(),
 });
 
-async function requireRestaurantId(): Promise<string | null> {
-  const ctx = await getSessionContext();
-  return ctx?.restaurant?.id ?? null;
-}
-
 export async function addExpenseAction(_prev: ExpenseState, formData: FormData): Promise<ExpenseState> {
-  const restaurantId = await requireRestaurantId();
+  const ctx = await requireRole("OWNER", "FINANCE");
+  const restaurantId = ctx.restaurant?.id;
   if (!restaurantId) return { error: "Çalışma alanı bulunamadı." };
 
   const parsed = expenseSchema.safeParse({
@@ -52,7 +48,8 @@ export async function addExpenseAction(_prev: ExpenseState, formData: FormData):
 }
 
 export async function deleteExpenseAction(id: string): Promise<ExpenseState> {
-  const restaurantId = await requireRestaurantId();
+  const ctx = await requireRole("OWNER", "FINANCE");
+  const restaurantId = ctx.restaurant?.id;
   if (!restaurantId) return { error: "Çalışma alanı bulunamadı." };
 
   // Ownership guard: only delete an expense that belongs to this restaurant.

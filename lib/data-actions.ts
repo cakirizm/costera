@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getSessionContext } from "@/lib/session";
+import { requireRole } from "@/lib/session";
 import { saveDataset, clearDataset } from "@/lib/costera/repository";
 import { sampleInput } from "@/lib/costera/sample";
 import type { CosteraInput } from "@/lib/costera/types";
@@ -21,13 +21,9 @@ function revalidateDashboards() {
   for (const path of DASHBOARD_PATHS) revalidatePath(path);
 }
 
-async function requireRestaurantId(): Promise<string | null> {
-  const ctx = await getSessionContext();
-  return ctx?.restaurant?.id ?? null;
-}
-
 export async function connectDemoAction(): Promise<DataActionResult> {
-  const restaurantId = await requireRestaurantId();
+  const ctx = await requireRole("OWNER", "MANAGER");
+  const restaurantId = ctx.restaurant?.id;
   if (!restaurantId) return { ok: false, error: "No workspace found." };
 
   await saveDataset(restaurantId, sampleInput, {
@@ -40,7 +36,8 @@ export async function connectDemoAction(): Promise<DataActionResult> {
 }
 
 export async function disconnectDataAction(): Promise<DataActionResult> {
-  const restaurantId = await requireRestaurantId();
+  const ctx = await requireRole("OWNER", "MANAGER");
+  const restaurantId = ctx.restaurant?.id;
   if (!restaurantId) return { ok: false, error: "No workspace found." };
 
   await clearDataset(restaurantId);
@@ -49,7 +46,8 @@ export async function disconnectDataAction(): Promise<DataActionResult> {
 }
 
 export async function importDataAction(input: CosteraInput): Promise<DataActionResult> {
-  const restaurantId = await requireRestaurantId();
+  const ctx = await requireRole("OWNER", "MANAGER");
+  const restaurantId = ctx.restaurant?.id;
   if (!restaurantId) return { ok: false, error: "No workspace found." };
 
   if (!input || !Array.isArray(input.ingredients) || !Array.isArray(input.menuItems) || !Array.isArray(input.sales) || !Array.isArray(input.inventory)) {
