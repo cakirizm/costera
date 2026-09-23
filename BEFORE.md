@@ -42,7 +42,7 @@ o faz tamamlanmadan tespit "çözülmüş" sayılmaz.
 | 7 | CSS teknik borcu — `.costera-sidebar-brand` iki kez çakışan tanımla (satır 3019 ve 6594); taşan kartlar, "saçma oklar", "dümdüz logo" bunun sonucu | `app/globals.css` | **Faz 1** | ✅ Çözüldü — tüm 9 dashboard sayfası tarandı; source-kartı okları, Cost Control denklem-şeridi grid taşması (yanlış kolon sırası, oklar yanlış yerdeydi), inventory & recipes tablo taşmaları düzeltildi; sidebar logosu düzgün. Entegrasyon "scroll bozukluğu" tarayıcı-pane artefaktı çıktı |
 | 7b | Kanal dağılımı hep $0 + tutarsız para formatı (nokta vs virgül) — overview ve delivery `sale.netSales` (yok olan alan) okuyordu | `app/dashboard/page.tsx`, `app/dashboard/delivery/page.tsx` | **Faz 1** | ✅ Çözüldü — gelir `quantity × sellingPrice`'tan türetiliyor, tutarlı `money()` formatı, tarayıcıda doğrulandı |
 | 8 | Landing "premium" değil — ikonlar unicode karakter (`◫ ≋ ▥ ▣`); sosyal kanıt / testimonial / illüstrasyon yok | `components/LandingPage.tsx` | **Faz 1 + Faz 6** | 🟡 Kısmen — unicode ikonlar SVG'ye çevrildi ve doğrulandı; sosyal kanıt/testimonial Faz 6'da |
-| 9 | Mobil uygulama yok — read-only yönetici izleme uygulaması gerekiyor (web ile aynı auth/backend) | (repoda yok) | **Faz 5** | ⬜ Bekliyor |
+| 9 | Mobil uygulama yok — read-only yönetici izleme uygulaması gerekiyor (web ile aynı auth/backend) | (repoda yok) | **Faz 5** | ⏸️ Ertelendi — PWA vs native kararı ve deploy adresi netleşince yapılacak (kullanıcı isteğiyle sonraya bırakıldı) |
 | 10 | Kalite altyapısı yok — lint/test yok, CI sadece build | `.github/workflows/ci.yml`, `package.json` | **Faz 7** | ⬜ Bekliyor |
 
 ---
