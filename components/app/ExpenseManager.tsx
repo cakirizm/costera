@@ -1,4 +1,5 @@
 "use client";
+import { tx } from "@/lib/costera/locale";
 
 import { useActionState, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -26,9 +27,8 @@ const initial: ExpenseState = {};
 const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
 export function ExpenseManager({ expenses, locale }: { expenses: ExpenseItem[]; locale: AppLocale }) {
-  const tr = locale === "tr";
-  const t = (en: string, turkish: string) => (tr ? turkish : en);
-  const catLabel = (c: string) => (tr ? CATEGORY_LABELS[c]?.tr : CATEGORY_LABELS[c]?.en) ?? c;
+  const t = (en: string, turkish: string) => tx(locale, en, turkish);
+  const catLabel = (c: string) => tx(locale, CATEGORY_LABELS[c]?.en ?? c, CATEGORY_LABELS[c]?.tr ?? c);
 
   const router = useRouter();
   const [state, action, pending] = useActionState(
@@ -56,7 +56,7 @@ export function ExpenseManager({ expenses, locale }: { expenses: ExpenseItem[]; 
   return (
     <div className="expense-manager">
       <form action={action} className="expense-form">
-        {state.error && <div className="expense-error" role="alert">{state.error}</div>}
+        {state.error && <div className="expense-error" role="alert">{tx(locale, state.error, state.error)}</div>}
         <div className="expense-form-grid">
           <label>{t("Category", "Kategori")}
             <select name="category" defaultValue="RENT">

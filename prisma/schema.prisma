@@ -38,6 +38,7 @@ model User {
   updatedAt    DateTime     @updatedAt
   memberships  Membership[]
   resetTokens  PasswordResetToken[]
+  mobileSessions MobileSession[]
 }
 
 model Restaurant {
@@ -162,4 +163,25 @@ model PasswordResetToken {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// Opaque, read-only native sessions. Only a SHA-256 token digest is stored.
+model MobileSession {
+  id                String   @id @default(cuid())
+  userId            String
+  tokenHash         String   @unique
+  credentialVersion String
+  expiresAt         DateTime
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// Shared across backend processes; login limits must not depend on one server's memory.
+model MobileLoginWindow {
+  id        String @id
+  attempts  Int @default(1)
+  expiresAt DateTime
+  @@index([expiresAt])
 }

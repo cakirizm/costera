@@ -1,8 +1,9 @@
+import { tx, localePath, arabicCopy, type AppLocale } from "@/lib/costera/locale";
 import Link from "next/link";
 import { DashboardMock } from "./DashboardMock";
 import { SiteHeader } from "./SiteHeader";
 
-type Locale = "en" | "tr";
+type Locale = AppLocale;
 
 const copy = {
   en: {
@@ -127,8 +128,8 @@ function FeatureIcon({ index }: { index: number }) {
 }
 
 export function LandingPage({ locale = "en" }: { locale?: Locale }) {
-  const t = copy[locale];
-  const prefix = locale === "tr" ? "/tr" : "";
+  const t = locale === "ar" ? arabicCopy(copy.en) : copy[locale];
+  const prefix = locale === "en" ? "" : `/${locale}`;
 
   return (
     <>
@@ -140,7 +141,7 @@ export function LandingPage({ locale = "en" }: { locale?: Locale }) {
             <div className="reference-hero-copy">
               <div className="eyebrow">{t.eyebrow}</div>
 
-              {locale === "tr" ? (
+              {locale === "ar" ? (<h1><span>اربط مطبخك بالبيانات،</span><span>وتحكم في <em>ربحية</em></span><span>مطعمك.</span></h1>) : locale === "tr" ? (
                 <h1>
                   <span>Mutfağınızı veriye</span>
                   <span>bağlayın, <em>kârlılığınızı</em></span>
@@ -254,10 +255,10 @@ export function LandingPage({ locale = "en" }: { locale?: Locale }) {
             <p>{t.ctaBody}</p>
             <div className="reference-cta-actions">
               <Link className="button button-gold" href={`${prefix}/demo`}>{t.ctaPrimary}<span>→</span></Link>
-              <Link className="button button-outline reference-cta-outline" href="/register">{t.ctaSecondary}</Link>
+              <Link className="button button-outline reference-cta-outline" href={localePath(locale, "/register")}>{t.ctaSecondary}</Link>
             </div>
           </div>
-          <div className="reference-signature">CONTROL COSTS. GROW PROFIT.</div>
+          <div className="reference-signature">{tx(locale, "CONTROL COSTS. GROW PROFIT.", "MALİYETİ KONTROL ET. KÂRI ARTIR.")}</div>
         </section>
       </main>
     </>

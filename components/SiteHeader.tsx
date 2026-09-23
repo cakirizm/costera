@@ -1,8 +1,9 @@
+import { arabicCopy, type AppLocale } from "@/lib/costera/locale";
 import Link from "next/link";
 import { Brand } from "./Brand";
-import { TurkeyFlag, UKFlag } from "./Flags";
+import { SiteLanguageSwitcher } from "./SiteLanguageSwitcher";
 
-type Locale = "en" | "tr";
+type Locale = AppLocale;
 
 const copy = {
   en: {
@@ -37,9 +38,6 @@ function ChevronDown() {
   );
 }
 
-function SwitchFlag({ locale }: { locale: Locale }) {
-  return locale === "tr" ? <UKFlag /> : <TurkeyFlag />;
-}
 
 export function SiteHeader({
   locale = "en",
@@ -48,10 +46,8 @@ export function SiteHeader({
   locale?: Locale;
   path?: string;
 }) {
-  const t = copy[locale];
-  const prefix = locale === "tr" ? "/tr" : "";
-  const cleanPath = path === "/" ? "" : path;
-  const otherLocaleHref = locale === "tr" ? (cleanPath || "/") : `/tr${cleanPath}`;
+  const t = locale === "ar" ? arabicCopy(copy.en) : copy[locale];
+  const prefix = locale === "en" ? "" : `/${locale}`;
 
   return (
     <header className="site-header">
@@ -82,10 +78,7 @@ export function SiteHeader({
           <Link className="button button-gold button-small desktop-demo" href={`${prefix}/demo`}>
             {t.demo}<span>→</span>
           </Link>
-          <Link href={otherLocaleHref} className="language-switch language-switch-flag" aria-label="Change language">
-            <SwitchFlag locale={locale} />
-            <span>{locale === "tr" ? "EN" : "TR"}</span>
-          </Link>
+          <SiteLanguageSwitcher locale={locale} path={path} />
 
           <details className="mobile-menu">
             <summary aria-label="Open menu"><span></span><span></span><span></span></summary>
@@ -94,10 +87,7 @@ export function SiteHeader({
               <Link href={`${prefix}/features`}>{t.features}</Link>
               <Link href={`${prefix}/pricing`}>{t.pricing}</Link>
               <Link href={`${prefix}/login`}>{t.login}</Link>
-              <Link href={otherLocaleHref} className="mobile-language">
-                <SwitchFlag locale={locale} />
-                {locale === "tr" ? "English" : "Türkçe"}
-              </Link>
+              <SiteLanguageSwitcher locale={locale} path={path} />
               <Link className="button button-gold full-button" href={`${prefix}/demo`}>{t.demo}</Link>
             </div>
           </details>

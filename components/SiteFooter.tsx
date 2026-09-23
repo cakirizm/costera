@@ -1,7 +1,8 @@
+import { arabicCopy, type AppLocale } from "@/lib/costera/locale";
 import Link from "next/link";
 import { Brand } from "./Brand";
 
-type Locale = "en" | "tr";
+type Locale = AppLocale;
 
 const copy = {
   en: {
@@ -33,8 +34,8 @@ const copy = {
 };
 
 export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
-  const t = copy[locale];
-  const prefix = locale === "tr" ? "/tr" : "";
+  const t = locale === "ar" ? arabicCopy(copy.en) : copy[locale];
+  const prefix = locale === "en" ? "" : `/${locale}`;
 
   return (
     <footer className="site-footer">

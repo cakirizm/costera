@@ -1,3 +1,4 @@
+import { tx } from "@/lib/costera/locale";
 import Link from "next/link";
 import { Brand } from "@/components/Brand";
 import { AppLanguageSwitcher } from "@/components/app/AppLanguageSwitcher";
@@ -101,30 +102,29 @@ export async function COSTERAAppShell({
   locale?: AppLocale;
   children: React.ReactNode;
 }) {
-  const tr = locale === "tr";
   const ctx = await getSessionContext();
-  const workspaceName = ctx?.restaurant?.name ?? (tr ? "Çalışma alanı" : "Workspace");
+  const workspaceName = ctx?.restaurant?.name ?? (tx(locale, "Workspace", "Çalışma alanı"));
   const workspaceMeta = ctx?.restaurant?.city
-    ? ctx.restaurant.city + " · " + ctx.locationCount + " " + (tr ? "şube" : ctx.locationCount === 1 ? "location" : "locations")
-    : ctx?.locationCount + " " + (tr ? "şube" : ctx && ctx.locationCount === 1 ? "location" : "locations");
-  const userName = ctx?.user.name ?? ctx?.user.email ?? (tr ? "Kullanıcı" : "User");
+    ? ctx.restaurant.city + " · " + ctx.locationCount + " " + (tx(locale, ctx.locationCount === 1 ? "location" : "locations", "şube"))
+    : ctx?.locationCount + " " + (tx(locale, ctx && ctx.locationCount === 1 ? "location" : "locations", "şube"));
+  const userName = ctx?.user.name ?? ctx?.user.email ?? (tx(locale, "User", "Kullanıcı"));
   const userInitials = initials(ctx?.user.name ?? null, ctx?.user.email ?? null);
   const workspaceInitials = initials(ctx?.restaurant?.name ?? null, null);
 
   return (
-    <main className="costera-app premium-shell">
+    <main className="costera-app premium-shell" lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <aside className="costera-sidebar">
         <div className="costera-sidebar-top">
           <Link href="/dashboard" className="costera-sidebar-brand">
             <Brand compact />
           </Link>
-          <div className="costera-product-badge">CONTROL SUITE</div>
+          <div className="costera-product-badge">{tx(locale, "CONTROL SUITE", "KONTROL PAKETİ")}</div>
         </div>
 
         <div className="costera-workspace">
           <div className="workspace-avatar">{workspaceInitials}</div>
           <div>
-            <span>{tr ? "ÇALIŞMA ALANI" : "WORKSPACE"}</span>
+            <span>{tx(locale, "WORKSPACE", "ÇALIŞMA ALANI")}</span>
             <strong>{workspaceName}</strong>
             <small>{workspaceMeta}</small>
           </div>
@@ -134,11 +134,11 @@ export async function COSTERAAppShell({
         <nav className="costera-nav">
           {navGroups.map((group) => (
             <div className="costera-nav-group" key={group.en}>
-              <small>{tr ? group.tr : group.en}</small>
+              <small>{tx(locale, group.en, group.tr)}</small>
               {group.items.map(([href, icon, enLabel, trLabel]) => (
                 <Link key={href} href={href} className={active === href ? "active" : ""}>
                   <i><NavIcon name={icon} /></i>
-                  <span>{tr ? trLabel : enLabel}</span>
+                  <span>{tx(locale, enLabel, trLabel)}</span>
                   {href === "/dashboard/variance" && <b>4</b>}
                 </Link>
               ))}
@@ -150,26 +150,30 @@ export async function COSTERAAppShell({
           <div className="costera-sync-card">
             <div className="costera-sync-icon"><span /></div>
             <div>
-              <strong>{tr ? "Veri akışı aktif" : "Data pipeline active"}</strong>
-              <small>{tr ? "Son senkron: 2 dk önce" : "Last sync: 2 min ago"}</small>
+              <strong>{tx(locale, "Data pipeline active", "Veri akışı aktif")}</strong>
+              <small>{tx(locale, "Last sync: 2 min ago", "Son senkron: 2 dk önce")}</small>
             </div>
           </div>
-          <Link href="/">← {tr ? "Web sitesine dön" : "Back to website"}</Link>
+          <Link href="/m" className="costera-mobile-link">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg>
+            {tx(locale, "Mobile monitor", "Mobil izleme")}
+          </Link>
+          <Link href={locale === "en" ? "/" : `/${locale}`}>← {tx(locale, "Back to website", "Web sitesine dön")}</Link>
         </div>
       </aside>
 
       <section className="costera-app-main">
         <header className="costera-topbar">
           <div className="costera-page-heading">
-            <small>{eyebrow || (tr ? "COSTERA KONTROL MERKEZİ" : "COSTERA CONTROL CENTER")}</small>
+            <small>{eyebrow || (tx(locale, "COSTERA CONTROL CENTER", "COSTERA KONTROL MERKEZİ"))}</small>
             <h1>{title}</h1>
           </div>
 
           <div className="costera-topbar-actions">
             <label className="costera-location-select">
-              <span>{tr ? "Şube" : "Location"}</span>
+              <span>{tx(locale, "Location", "Şube")}</span>
               <select defaultValue="all">
-                <option value="all">{tr ? "Tüm şubeler" : "All locations"}</option>
+                <option value="all">{tx(locale, "All locations", "Tüm şubeler")}</option>
                 <option>Downtown</option>
                 <option>Marina</option>
                 <option>Jumeirah</option>
@@ -181,9 +185,9 @@ export async function COSTERAAppShell({
               <span>Sep 1–22</span>
             </button>
 
-            <div className="costera-live"><i /> {tr ? "Canlı" : "Live"}</div>
+            <div className="costera-live"><i /> {tx(locale, "Live", "Canlı")}</div>
 
-            <button className="costera-icon-button" aria-label={tr ? "Bildirimler" : "Notifications"}>
+            <button className="costera-icon-button" aria-label={tx(locale, "Notifications", "Bildirimler")}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
               <i />
             </button>
@@ -194,10 +198,10 @@ export async function COSTERAAppShell({
               <div className="costera-user">{userInitials}</div>
               <div>
                 <strong>{userName}</strong>
-                <small>{roleLabel(ctx?.role ?? null, tr)}</small>
+                <small>{tx(locale, roleLabel(ctx?.role ?? null, false), roleLabel(ctx?.role ?? null, true))}</small>
               </div>
               <form action={signOutAction}>
-                <button type="submit" className="costera-logout" aria-label={tr ? "Çıkış yap" : "Sign out"} title={tr ? "Çıkış yap" : "Sign out"}>
+                <button type="submit" className="costera-logout" aria-label={tx(locale, "Sign out", "Çıkış yap")} title={tx(locale, "Sign out", "Çıkış yap")}>
                   <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
                 </button>
               </form>

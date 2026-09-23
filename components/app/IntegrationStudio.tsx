@@ -1,4 +1,5 @@
 "use client";
+import { tx } from "@/lib/costera/locale";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -66,7 +67,7 @@ export function IntegrationStudio({
   preview: Preview | null;
 }) {
   const tr = locale === "tr";
-  const t = (en: string, turkish: string) => (tr ? turkish : en);
+  const t = (en: string, turkish: string) => tx(locale, en, turkish);
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -142,7 +143,7 @@ export function IntegrationStudio({
     setSavedDrafts(next);
     window.localStorage.setItem("costera_connector_drafts", JSON.stringify(next));
     setMessage(
-      tr
+      locale === "ar" ? connector.providerName + " — تم حفظ طلب التكامل. لم يتم الاتصال بعد. أرسل وثائق الواجهة أو رد المزود إلى فريق COSTERA لإعداد الموصل." : tr
         ? connector.providerName + " connector talebi olarak kaydedildi. Henüz bağlı DEĞİL. API dokümanını veya firma cevabını COSTERA geliştirme tarafına verdiğinizde hesap motorunu değiştirmeden adapter eklenebilir."
         : connector.providerName + " saved as a connector request. It is NOT connected yet. Send COSTERA the API documentation or vendor response and an adapter can be added without changing the calculation engine."
     );
@@ -185,7 +186,7 @@ export function IntegrationStudio({
       title: t("Delivery connector may be required.","Delivery connector gerekebilir."),
       text: t("If the POS does not expose delivery orders or financial deductions, add the delivery platform or aggregator as another source.","POS delivery siparişlerini veya finansal kesintileri vermiyorsa delivery platformunu ya da aggregator'ı ayrı kaynak olarak ekleyin."),
     };
-  }, [coverage, tr]);
+  }, [coverage, locale]);
 
   const capLabel = (cap: string) => {
     const map: Record<string,string> = {
@@ -200,7 +201,7 @@ export function IntegrationStudio({
       "Platform fees":"Platform ücretleri",
       "Settlements / payouts":"Settlement / ödemeler",
     };
-    return tr ? map[cap] || cap : cap;
+    return tx(locale, cap, map[cap] || cap);
   };
 
   return (
@@ -214,7 +215,7 @@ export function IntegrationStudio({
             <span><i />API</span>
             <span><i />Webhook</span>
             <span><i />SFTP / CSV</span>
-            <span><i />Read-only DB</span>
+            <span><i />{tx(locale, "Read-only DB", "Read-only DB")}</span>
           </div>
         </div>
 
@@ -244,14 +245,14 @@ export function IntegrationStudio({
             <div className="network-icon delivery">
               <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7 15.3 7.3M8.7 13.3l6.6 3.4"/></svg>
             </div>
-            <div><b>Delivery</b><small>{t("Orders · Fees · Payouts","Sipariş · Ücret · Ödeme")}</small></div>
+            <div><b>{tx(locale, "Delivery", "Delivery")}</b><small>{t("Orders · Fees · Payouts","Sipariş · Ücret · Ödeme")}</small></div>
           </div>
 
           <div className="integration-network-source source-c">
             <div className="network-icon finance">
               <svg viewBox="0 0 24 24"><path d="M5 19V9M12 19V5M19 19v-7"/><path d="M3 19h18"/></svg>
             </div>
-            <div><b>ERP / Stock</b><small>{t("Purchases · Inventory","Satın alma · Stok")}</small></div>
+            <div><b>{tx(locale, "ERP / Stock", "ERP / Stock")}</b><small>{t("Purchases · Inventory","Satın alma · Stok")}</small></div>
           </div>
 
           <div className="integration-network-core">
@@ -289,7 +290,7 @@ export function IntegrationStudio({
             <b>{t("Live sales feed","Canlı satış akışı")}</b>
           </div>
           <div className="source-card-copy"><span>{t("PRIMARY SOURCE","ANA KAYNAK")}</span><h3>{t("Any POS system","Herhangi bir POS sistemi")}</h3><p>{t("Sales, menu, order lines, recipes and stock references can enter through a provider adapter.","Satış, menü, sipariş satırları, reçete ve stok referansları sağlayıcı adapter üzerinden sisteme alınabilir.")}</p></div>
-          <div className="source-card-tags"><span>Sales</span><span>Menu</span><span>Orders</span></div>
+          <div className="source-card-tags"><span>{tx(locale, "Sales", "Sales")}</span><span>{tx(locale, "Menu", "Menu")}</span><span>{tx(locale, "Orders", "Orders")}</span></div>
           <button type="button" onClick={() => openBuilder("POS")}>{t("Connect a POS","POS Bağla")} <i>→</i></button>
         </article>
 
@@ -298,11 +299,11 @@ export function IntegrationStudio({
             <div className="source-visual-icon">
               <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7 15.3 7.3M8.7 13.3l6.6 3.4"/></svg>
             </div>
-            <div className="source-settlement-visual"><span>Orders</span><i>→</i><span>Fees</span><i>→</i><span>Payout</span></div>
+            <div className="source-settlement-visual"><span>{tx(locale, "Orders", "Orders")}</span><i>→</i><span>{tx(locale, "Fees", "Fees")}</span><i>→</i><span>{tx(locale, "Payout", "Payout")}</span></div>
             <b>{t("Channel economics","Kanal ekonomisi")}</b>
           </div>
           <div className="source-card-copy"><span>{t("OPTIONAL SOURCE","OPSİYONEL KAYNAK")}</span><h3>{t("Any delivery platform","Herhangi bir delivery platformu")}</h3><p>{t("Add only what the POS cannot provide: channel fees, commissions, deductions or settlement payouts.","POS'un sağlayamadığı verileri ekleyin: kanal ücretleri, komisyonlar, kesintiler veya settlement ödemeleri.")}</p></div>
-          <div className="source-card-tags"><span>Fees</span><span>Commission</span><span>Payouts</span></div>
+          <div className="source-card-tags"><span>{tx(locale, "Fees", "Fees")}</span><span>{tx(locale, "Commission", "Commission")}</span><span>{tx(locale, "Payouts", "Payouts")}</span></div>
           <button type="button" onClick={() => openBuilder("Delivery")}>{t("Connect delivery","Delivery Bağla")} <i>→</i></button>
         </article>
 
@@ -315,7 +316,7 @@ export function IntegrationStudio({
             <b>{t("Back-office layer","Back-office katmanı")}</b>
           </div>
           <div className="source-card-copy"><span>{t("OPTIONAL SOURCE","OPSİYONEL KAYNAK")}</span><h3>{t("Accounting / ERP / Stock","Muhasebe / ERP / Stok")}</h3><p>{t("Bring purchasing, receipts, supplier cost and inventory movements into the same profitability model.","Satın alma, mal kabul, tedarikçi maliyeti ve stok hareketlerini aynı kârlılık modeline alın.")}</p></div>
-          <div className="source-card-tags"><span>Purchases</span><span>COGS</span><span>Inventory</span></div>
+          <div className="source-card-tags"><span>{tx(locale, "Purchases", "Purchases")}</span><span>{tx(locale, "COGS", "COGS")}</span><span>{tx(locale, "Inventory", "Inventory")}</span></div>
           <button type="button" onClick={() => openBuilder("Accounting / ERP")}>{t("Connect back office","Back-office Bağla")} <i>→</i></button>
         </article>
       </section>
@@ -323,7 +324,7 @@ export function IntegrationStudio({
       <section className="integration-demo-card">
         <div>
           <span>{t("SAFE TEST CONNECTOR","GÜVENLİ TEST CONNECTOR")}</span>
-          <h2>Universal POS Demo</h2>
+          <h2>{tx(locale, "Universal POS Demo", "Universal POS Demo")}</h2>
           <p>{t("Test the full integration path without pretending a real vendor is connected. This demo uses the same normalize → calculate → dashboard flow.","Gerçek bir firma bağlıymış gibi göstermeden tüm entegrasyon akışını test edin. Demo aynı normalize → hesapla → dashboard akışını kullanır.")}</p>
         </div>
         <div className="integration-demo-actions">
@@ -369,10 +370,10 @@ export function IntegrationStudio({
 
           <div className="connector-builder-grid">
             <label>{t("Provider / System Name *","Sağlayıcı / Sistem Adı *")}<input placeholder="e.g. Polaris POS, Foodics, CustomPOS" value={draft.providerName} onChange={(e) => setDraft({ ...draft, providerName: e.target.value })} /></label>
-            <label>{t("Integration Method","Entegrasyon Yöntemi")}<select value={draft.method} onChange={(e) => setDraft({ ...draft, method: e.target.value as ConnectionMethod })}><option>REST API</option><option>Webhook</option><option>SFTP / CSV</option><option>Database Read-only</option><option>Other</option></select></label>
-            <label>{t("Authentication","Kimlik Doğrulama")}<select value={draft.auth} onChange={(e) => setDraft({ ...draft, auth: e.target.value as AuthMethod })}><option>API Key</option><option>Bearer Token</option><option>OAuth 2.0</option><option>Basic Auth</option><option>Other</option></select></label>
+            <label>{t("Integration Method","Entegrasyon Yöntemi")}<select value={draft.method} onChange={(e) => setDraft({ ...draft, method: e.target.value as ConnectionMethod })}><option>REST API</option><option>Webhook</option><option>SFTP / CSV</option><option value="Database Read-only">{tx(locale, "Database Read-only", "Database Read-only")}</option><option value="Other">{tx(locale, "Other", "Other")}</option></select></label>
+            <label>{t("Authentication","Kimlik Doğrulama")}<select value={draft.auth} onChange={(e) => setDraft({ ...draft, auth: e.target.value as AuthMethod })}><option>API Key</option><option>Bearer Token</option><option>OAuth 2.0</option><option>Basic Auth</option><option value="Other">{tx(locale, "Other", "Other")}</option></select></label>
             <label>{t("API / Documentation URL","API / Dokümantasyon URL")}<input placeholder="https://docs.vendor.com/api" value={draft.docsUrl} onChange={(e) => setDraft({ ...draft, docsUrl: e.target.value })} /></label>
-            <label>API Base URL<input placeholder="https://api.vendor.com/v1" value={draft.baseUrl} onChange={(e) => setDraft({ ...draft, baseUrl: e.target.value })} /></label>
+            <label>{tx(locale, "API Base URL", "API Base URL")}<input placeholder="https://api.vendor.com/v1" value={draft.baseUrl} onChange={(e) => setDraft({ ...draft, baseUrl: e.target.value })} /></label>
             <label>{t("Account / Outlet / Tenant ID","Hesap / Şube / Tenant ID")}<input placeholder={t("Restaurant or outlet identifier","Restoran veya şube kimliği")} value={draft.accountId} onChange={(e) => setDraft({ ...draft, accountId: e.target.value })} /></label>
           </div>
 
@@ -412,7 +413,7 @@ export function IntegrationStudio({
       {connected && preview && (
         <section className="integration-live-preview">
           <div className="integration-live-head">
-            <div><span>{t("LIVE DATA FEED","CANLI VERİ AKIŞI")}</span><h2>{preview.provider} → COSTERA</h2><p>{t("Last sync","Son senkron")}: {new Date(preview.syncedAt).toLocaleString(tr ? "tr-TR" : "en-US")}</p></div>
+            <div><span>{t("LIVE DATA FEED","CANLI VERİ AKIŞI")}</span><h2>{preview.provider} {tx(locale, "→ COSTERA", "→ COSTERA")}</h2><p>{t("Last sync","Son senkron")}: {new Date(preview.syncedAt).toLocaleString(tx(locale, "en-US", "tr-TR"))}</p></div>
             <div className="integration-live-dot"><i /> {t("Receiving data","Veri alınıyor")}</div>
           </div>
 
@@ -425,9 +426,9 @@ export function IntegrationStudio({
 
           <div className="integration-live-flow">
             <div><b>{t("Any POS","Herhangi bir POS")}</b><small>{t("Provider-specific format","Sağlayıcıya özel format")}</small></div><i>→</i>
-            <div><b>COSTERA Adapter</b><small>{t("Normalize fields","Alanları normalize et")}</small></div><i>→</i>
+            <div><b>{tx(locale, "COSTERA Adapter", "COSTERA Adapter")}</b><small>{t("Normalize fields","Alanları normalize et")}</small></div><i>→</i>
             <div><b>{t("Cost Engine","Maliyet Motoru")}</b><small>{t("Expected vs actual","Beklenen vs gerçek")}</small></div><i>→</i>
-            <div className="active"><b>Dashboard</b><small>{t("Management result","Yönetim sonucu")}</small></div>
+            <div className="active"><b>{tx(locale, "Dashboard", "Dashboard")}</b><small>{t("Management result","Yönetim sonucu")}</small></div>
           </div>
 
           <div className="integration-live-bottom">

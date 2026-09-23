@@ -1,3 +1,5 @@
+import { getRequestLocale } from "@/lib/costera/i18n";
+import { translateArabic, localePath } from "@/lib/costera/locale";
 import Link from "next/link";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { ResetForm } from "@/components/auth/AuthForms";
@@ -7,31 +9,33 @@ export default async function ResetPasswordPage({
 }: {
   searchParams: Promise<{ token?: string }>;
 }) {
+  const locale = await getRequestLocale();
+  const label = (text: string) => locale === "ar" ? translateArabic(text) : text;
   const { token } = await searchParams;
 
   if (!token) {
     return (
-      <AuthShell
-        eyebrow="RESET PASSWORD"
-        title="Invalid reset link."
-        subtitle="This password reset link is missing or malformed."
-        visualTitle="Secure access, restored in minutes."
-        visualText="Request a new reset link to continue."
+      <AuthShell locale={locale}
+        eyebrow={label("RESET PASSWORD")}
+        title={label("Invalid reset link.")}
+        subtitle={label("This password reset link is missing or malformed.")}
+        visualTitle={label("Secure access, restored in minutes.")}
+        visualText={label("Request a new reset link to continue.")}
       >
-        <p className="auth-foot"><Link href="/forgot-password">Request a new link</Link></p>
+        <p className="auth-foot"><Link href={localePath(locale, "/forgot-password")}>{label("Request a new link")}</Link></p>
       </AuthShell>
     );
   }
 
   return (
-    <AuthShell
-      eyebrow="RESET PASSWORD"
-      title="Set a new password."
-      subtitle="Choose a strong password to secure your COSTERA account."
-      visualTitle="Secure access, restored in minutes."
-      visualText="Your new password takes effect immediately."
+    <AuthShell locale={locale}
+      eyebrow={label("RESET PASSWORD")}
+      title={label("Set a new password.")}
+      subtitle={label("Choose a strong password to secure your COSTERA account.")}
+      visualTitle={label("Secure access, restored in minutes.")}
+      visualText={label("Your new password takes effect immediately.")}
     >
-      <ResetForm token={token} />
+      <ResetForm locale={locale} token={token} />
     </AuthShell>
   );
 }

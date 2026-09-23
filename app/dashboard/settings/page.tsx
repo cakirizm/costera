@@ -20,17 +20,17 @@ export default async function SettingsPage(){
      <div className="costera-form-stack">
       <label>{tx(locale,"Group name","Grup adı")}<input defaultValue="Demo Restaurant Group" /></label>
       <label>{tx(locale,"Currency","Para birimi")}<select defaultValue="USD"><option>USD</option><option>AED</option><option>EUR</option></select></label>
-      <label>{tx(locale,"Current interface language","Mevcut arayüz dili")}<select value={locale.toUpperCase()} disabled><option>EN</option><option>TR</option></select></label>
+      <label>{tx(locale,"Current interface language","Mevcut arayüz dili")}<select value={locale.toUpperCase()} disabled><option>EN</option><option>TR</option><option>AR</option></select></label>
      </div>
     </article>
 
     <article className="costera-panel">
      <div className="costera-panel-head"><div><span>{tx(locale,"ACCESS","ERİŞİM")}</span><h2>{tx(locale,"Roles","Roller")}</h2></div></div>
      <div className="costera-role-list">
-      <span><b>Owner</b><small>{tx(locale,"Full access","Tam erişim")}</small></span>
-      <span><b>Operations Manager</b><small>{tx(locale,"Operations + reports","Operasyon + raporlar")}</small></span>
-      <span><b>Kitchen Manager</b><small>{tx(locale,"Inventory + recipes","Stok + reçeteler")}</small></span>
-      <span><b>Finance</b><small>{tx(locale,"Finance + reports","Finans + raporlar")}</small></span>
+      <span><b>{tx(locale, "Owner", "Owner")}</b><small>{tx(locale,"Full access","Tam erişim")}</small></span>
+      <span><b>{tx(locale, "Operations Manager", "Operations Manager")}</b><small>{tx(locale,"Operations + reports","Operasyon + raporlar")}</small></span>
+      <span><b>{tx(locale, "Kitchen Manager", "Kitchen Manager")}</b><small>{tx(locale,"Inventory + recipes","Stok + reçeteler")}</small></span>
+      <span><b>{tx(locale, "Finance", "Finance")}</b><small>{tx(locale,"Finance + reports","Finans + raporlar")}</small></span>
      </div>
     </article>
    </section>

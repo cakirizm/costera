@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Brand } from "@/components/Brand";
-import { TurkeyFlag } from "@/components/Flags";
+import { SiteLanguageSwitcher } from "@/components/SiteLanguageSwitcher";
+import { translateArabic, localePath, type AppLocale } from "@/lib/costera/locale";
 
 export function AuthShell({
+  locale = "en",
   eyebrow,
   title,
   subtitle,
@@ -10,6 +12,7 @@ export function AuthShell({
   visualText,
   children,
 }: {
+  locale?: AppLocale;
   eyebrow: string;
   title: string;
   subtitle: string;
@@ -21,11 +24,11 @@ export function AuthShell({
     <main className="auth-page">
       <div className="auth-visual">
         <div className="auth-brand-row">
-          <Link href="/" className="auth-brand"><Brand light /></Link>
-          <Link href="/tr/login" className="language-switch language-switch-flag auth-language"><TurkeyFlag /><span>TR</span></Link>
+          <Link href={localePath(locale)} className="auth-brand"><Brand light /></Link>
+          <SiteLanguageSwitcher locale={locale} path="/login" />
         </div>
         <div className="auth-visual-copy">
-          <div className="eyebrow eyebrow-light">RESTAURANT COST INTELLIGENCE</div>
+          <div className="eyebrow eyebrow-light">{locale === "ar" ? translateArabic("RESTAURANT COST INTELLIGENCE") : "RESTAURANT COST INTELLIGENCE"}</div>
           <h1>{visualTitle}</h1>
           <p>{visualText}</p>
         </div>

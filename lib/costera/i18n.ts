@@ -1,12 +1,14 @@
-import { cookies } from "next/headers";
-
-export type AppLocale = "en" | "tr";
+import { cookies, headers } from "next/headers";
+import { isAppLocale, type AppLocale } from "./locale";
+export { tx } from "./locale";
+export type { AppLocale } from "./locale";
 
 export async function getAppLocale(): Promise<AppLocale> {
   const store = await cookies();
-  return store.get("costera_app_lang")?.value === "tr" ? "tr" : "en";
+  const value = store.get("costera_app_lang")?.value;
+  return isAppLocale(value) ? value : "en";
 }
-
-export function tx(locale: AppLocale, en: string, tr: string) {
-  return locale === "tr" ? tr : en;
+export async function getRequestLocale(): Promise<AppLocale> {
+  const value = (await headers()).get("x-costera-locale");
+  return isAppLocale(value) ? value : getAppLocale();
 }

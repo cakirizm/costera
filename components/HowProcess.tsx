@@ -1,4 +1,6 @@
-type Locale = "en" | "tr";
+import { tx } from "@/lib/costera/locale";
+import { arabicCopy, type AppLocale } from "@/lib/costera/locale";
+type Locale = AppLocale;
 
 const copy = {
   en: {
@@ -63,7 +65,7 @@ function CardFooter({ label }: { label: string }) {
 }
 
 export function HowProcess({ locale = "en" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = locale === "ar" ? arabicCopy(copy.en) : copy[locale];
 
   return (
     <div className="how-pro-grid">
@@ -78,7 +80,7 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
           <div className="how-photo-shade" />
           <div className="how-pos-source-list how-pos-source-overlay">
             <span><i>▣</i>POS</span>
-            <span><i>◈</i>Delivery</span>
+            <span><i>◈</i>{tx(locale, "Delivery", "Delivery")}</span>
             <span><i>⌁</i>API</span>
           </div>
           <div className="how-flow-dots"><i /><i /><i /><i /></div>
@@ -98,10 +100,10 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
           />
           <div className="how-photo-shade how-food-shade" />
           <div className="how-recipe-list how-recipe-overlay">
-            <span><i>✓</i>Chicken 120 g</span>
-            <span><i>✓</i>Sauce 30 g</span>
-            <span><i>✓</i>Parmesan 10 g</span>
-            <span><i>✓</i>Basil 5 g</span>
+            <span><i>✓</i>{tx(locale, "Chicken 120 g", "Chicken 120 g")}</span>
+            <span><i>✓</i>{tx(locale, "Sauce 30 g", "Sauce 30 g")}</span>
+            <span><i>✓</i>{tx(locale, "Parmesan 10 g", "Parmesan 10 g")}</span>
+            <span><i>✓</i>{tx(locale, "Basil 5 g", "Basil 5 g")}</span>
           </div>
         </div>
         <h3>{t.steps[1][0]}</h3>
@@ -112,11 +114,11 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
       <article className="how-pro-card">
         <StepNumber n={3} />
         <div className="how-pro-visual how-stock-visual">
-          <div className="how-stock-heading">Stock Movement</div>
-          <div className="how-stock-row"><span><i className="stock-emoji">🍅</i>{t.stockIn}</span><b>50 kg</b></div>
-          <div className="how-stock-row"><span><i className="stock-emoji">🍗</i>{t.purchase}</span><b>30 kg</b></div>
-          <div className="how-stock-row"><span><i className="stock-emoji">🥬</i>{t.transfer}</span><b>5 kg</b></div>
-          <div className="how-stock-row"><span><i className="stock-emoji">🗑️</i>{t.waste}</span><b>2 kg</b></div>
+          <div className="how-stock-heading">{tx(locale, "Stock Movement", "Stock Movement")}</div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🍅</i>{t.stockIn}</span><b>{tx(locale, "50 kg", "50 kg")}</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🍗</i>{t.purchase}</span><b>{tx(locale, "30 kg", "30 kg")}</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🥬</i>{t.transfer}</span><b>{tx(locale, "5 kg", "5 kg")}</b></div>
+          <div className="how-stock-row"><span><i className="stock-emoji">🗑️</i>{t.waste}</span><b>{tx(locale, "2 kg", "2 kg")}</b></div>
         </div>
         <h3>{t.steps[2][0]}</h3>
         <p>{t.steps[2][1]}</p>
@@ -150,9 +152,9 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
             <span className="how-alert-icon">!</span>
             <div><small>{t.variance}</small><strong>$1,260</strong><em>+14.1%</em></div>
           </div>
-          <div className="how-variance-row"><span>🍗 Chicken</span><b>+18%</b><em>$480</em></div>
-          <div className="how-variance-row"><span>🫒 Olive Oil</span><b>+22%</b><em>$320</em></div>
-          <div className="how-variance-row"><span>🍅 Tomato</span><b>+12%</b><em>$280</em></div>
+          <div className="how-variance-row"><span>{tx(locale, "🍗 Chicken", "🍗 Chicken")}</span><b>+18%</b><em>$480</em></div>
+          <div className="how-variance-row"><span>{tx(locale, "🫒 Olive Oil", "🫒 Olive Oil")}</span><b>+22%</b><em>$320</em></div>
+          <div className="how-variance-row"><span>{tx(locale, "🍅 Tomato", "🍅 Tomato")}</span><b>+12%</b><em>$280</em></div>
         </div>
         <h3>{t.steps[4][0]}</h3>
         <p>{t.steps[4][1]}</p>
@@ -169,7 +171,7 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
             <strong>$8,320</strong>
             <span>↗ 12%</span>
             <div className="how-phone-chart"><i /><i /><i /><i /><i /><i /></div>
-            <b>Food Cost 28.5%</b>
+            <b>{tx(locale, "Food Cost 28.5%", "Food Cost 28.5%")}</b>
           </div>
           <div className="how-mobile-actions">
             <span>🔔 {t.alerts}</span>

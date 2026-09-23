@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "COSTERA",
+    "slug": "costera-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "costera",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#0b2c46",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.costera.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0b2c46"
+      },
+      "package": "app.costera.mobile"
+    },
+    "plugins": ["expo-router", "expo-secure-store"]
+  }
+}

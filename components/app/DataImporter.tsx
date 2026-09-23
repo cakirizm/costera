@@ -1,4 +1,5 @@
 "use client";
+import { tx } from "@/lib/costera/locale";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -110,8 +111,7 @@ function SourceCard({
   onDemo: () => void;
   locale: AppLocale;
 }) {
-  const tr = locale === "tr";
-  const t = (en: string, turkish: string) => tr ? turkish : en;
+  const t = (en: string, turkish: string) => tx(locale, en, turkish);
   const sourceLabel = kind === "pos" ? t("POS / Sales","POS / Satış") : kind === "recipes" ? t("Recipes / BOM","Reçeteler / BOM") : t("Inventory / Purchases","Stok / Satın Alma");
   const schema = schemas[kind];
   const required = new Set<string>(schema.required);
@@ -169,7 +169,7 @@ function SourceCard({
             {schema.fields.map(([field, label]) => (
               <label key={field}>
                 <span>
-                  {label}
+                  {t(label, label)}
                   {required.has(field) && <b>*</b>}
                 </span>
                 <select
@@ -203,8 +203,7 @@ function SourceCard({
 }
 
 export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
-  const tr = locale === "tr";
-  const t = (en: string, turkish: string) => tr ? turkish : en;
+  const t = (en: string, turkish: string) => tx(locale, en, turkish);
   const [sources, setSources] = useState<Record<SourceKind, SourceState>>({
     pos: blankSource(),
     recipes: blankSource(),
@@ -361,7 +360,7 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
         {readiness.map((item, index) => (
           <div className={item.ready ? "ready" : ""} key={item.kind}>
             <i>{item.ready ? "✓" : index + 1}</i>
-            <span>{schemas[item.kind].label}</span>
+            <span>{t(schemas[item.kind].label, schemas[item.kind].label)}</span>
           </div>
         ))}
         <div className={result ? "ready" : ""}><i>{result ? "✓" : "4"}</i><span>{t("Analysis","Analiz")}</span></div>
@@ -388,7 +387,7 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
           <small>
             {allReady
               ? t("Files will be normalized in your browser and sent to the COSTERA analysis API.","Dosyalar tarayıcıda normalize edilip COSTERA analiz API'sine gönderilecek.")
-              : readiness.filter((x) => !x.ready).map((x) => schemas[x.kind].label).join(", ") + " " + t("needs attention.","kontrol edilmeli.")}
+              : readiness.filter((x) => !x.ready).map((x) => t(schemas[x.kind].label, schemas[x.kind].label)).join(", ") + " " + t("needs attention.","kontrol edilmeli.")}
           </small>
         </div>
         <button type="button" disabled={!allReady || running} onClick={runAnalysis}>
@@ -416,10 +415,10 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
           )}
 
           <div className="import-result-metrics">
-            <article><span>{t("Net Sales","Net Satış")}</span><strong>{"$"}{result.totals.netSales.toLocaleString()}</strong><small>{result.dataQuality.mappedSalesCount}/{result.dataQuality.salesCount} sales rows mapped</small></article>
-            <article><span>{t("Target Food Cost","Hedef Food Cost")}</span><strong>{result.totals.targetFoodCostPct}%</strong><small>Configured target</small></article>
-            <article className="bad"><span>{t("Actual Food Cost","Gerçek Food Cost")}</span><strong>{result.totals.actualFoodCostPct}%</strong><small>{result.totals.targetGapPp > 0 ? "+" : ""}{result.totals.targetGapPp} pp vs target</small></article>
-            <article className="bad"><span>{t("Unexplained Cost","Açıklanamayan Maliyet")}</span><strong>{"$"}{result.totals.unexplainedCost.toLocaleString()}</strong><small>Requires root-cause review</small></article>
+            <article><span>{t("Net Sales","Net Satış")}</span><strong>{"$"}{result.totals.netSales.toLocaleString()}</strong><small>{result.dataQuality.mappedSalesCount}/{result.dataQuality.salesCount} {tx(locale, "sales rows mapped", "sales rows mapped")}</small></article>
+            <article><span>{t("Target Food Cost","Hedef Food Cost")}</span><strong>{result.totals.targetFoodCostPct}%</strong><small>{tx(locale, "Configured target", "Configured target")}</small></article>
+            <article className="bad"><span>{t("Actual Food Cost","Gerçek Food Cost")}</span><strong>{result.totals.actualFoodCostPct}%</strong><small>{result.totals.targetGapPp > 0 ? "+" : ""}{result.totals.targetGapPp} {tx(locale, "pp vs target", "pp vs target")}</small></article>
+            <article className="bad"><span>{t("Unexplained Cost","Açıklanamayan Maliyet")}</span><strong>{"$"}{result.totals.unexplainedCost.toLocaleString()}</strong><small>{tx(locale, "Requires root-cause review", "Requires root-cause review")}</small></article>
           </div>
 
           <div className="import-result-grid">
@@ -427,7 +426,7 @@ export function DataImporter({ locale = "en" }: { locale?: AppLocale }) {
               <div className="head"><span>{t("Ingredient","Malzeme")}</span><span>{t("Actual","Gerçek")}</span><span>{t("Theoretical","Teorik")}</span><span>{t("Gap","Fark")}</span><span>{t("Impact","Etki")}</span></div>
               {result.ingredientVariance.slice(0, 8).map((row) => (
                 <div key={row.ingredientId}>
-                  <span><b>{row.ingredient}</b><small>{row.risk} risk</small></span>
+                  <span><b>{row.ingredient}</b><small>{row.risk} {tx(locale, "risk", "risk")}</small></span>
                   <span>{row.actualUsageQty} {row.unit}</span>
                   <span>{row.theoreticalQty} {row.unit}</span>
                   <span className={row.unexplainedQty > 0 ? "bad" : "good"}>{row.unexplainedQty > 0 ? "+" : ""}{row.unexplainedQty} {row.unit}</span>

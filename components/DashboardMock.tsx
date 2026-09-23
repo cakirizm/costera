@@ -1,3 +1,4 @@
+import { tx } from "@/lib/costera/locale";
 const varianceRows = [
   ["Meat & Poultry", "$980", "+12.4%"],
   ["Dairy", "$420", "+5.1%"],
@@ -5,8 +6,7 @@ const varianceRows = [
   ["Other", "$770", "+2.1%"],
 ];
 
-export function DashboardMock({ locale = "en" }: { locale?: "en" | "tr" }) {
-  const tr = locale === "tr";
+export function DashboardMock({ locale = "en" }: { locale?: "en" | "tr" | "ar" }) {
   return (
     <div className="product-laptop" aria-label="COSTERA dashboard preview">
       <div className="laptop-camera" />
@@ -17,46 +17,46 @@ export function DashboardMock({ locale = "en" }: { locale?: "en" | "tr" }) {
               <span className="mock-brand-mark">C</span>
               <strong>COSTERA</strong>
             </div>
-            <span className="mock-period">{tr ? "1 - 31 Mayıs" : "May 1 - 31"}</span>
+            <span className="mock-period">{tx(locale, "May 1 - 31", "1 - 31 Mayıs")}</span>
           </div>
           <div className="mock-body">
             <aside className="mock-sidebar">
-              <span className="active">{tr ? "Genel Bakış" : "Overview"}</span>
-              <span>{tr ? "Stok" : "Inventory"}</span>
-              <span>{tr ? "Reçeteler" : "Recipes"}</span>
-              <span>{tr ? "Satın Alma" : "Purchasing"}</span>
-              <span>{tr ? "Satış & POS" : "Sales & POS"}</span>
-              <span>Delivery</span>
-              <span>{tr ? "Raporlar" : "Reports"}</span>
+              <span className="active">{tx(locale, "Overview", "Genel Bakış")}</span>
+              <span>{tx(locale, "Inventory", "Stok")}</span>
+              <span>{tx(locale, "Recipes", "Reçeteler")}</span>
+              <span>{tx(locale, "Purchasing", "Satın Alma")}</span>
+              <span>{tx(locale, "Sales & POS", "Satış & POS")}</span>
+              <span>{tx(locale, "Delivery", "Delivery")}</span>
+              <span>{tx(locale, "Reports", "Raporlar")}</span>
             </aside>
 
             <section className="mock-content">
               <div className="mock-title-row">
                 <div>
-                  <small>{tr ? "Tüm Şubeler" : "All locations"}</small>
-                  <h3>{tr ? "Genel Bakış" : "Overview"}</h3>
+                  <small>{tx(locale, "All locations", "Tüm Şubeler")}</small>
+                  <h3>{tx(locale, "Overview", "Genel Bakış")}</h3>
                 </div>
-                <span className="live-pill">{tr ? "Canlı" : "Live"}</span>
+                <span className="live-pill">{tx(locale, "Live", "Canlı")}</span>
               </div>
 
               <div className="mock-kpis">
                 <article>
-                  <small>{tr ? "Toplam Satış" : "Total Sales"}</small>
+                  <small>{tx(locale, "Total Sales", "Toplam Satış")}</small>
                   <strong>$58,240</strong>
                   <span className="success-text">+8.3%</span>
                 </article>
                 <article>
-                  <small>{tr ? "Hedef Food Cost" : "Target Food Cost"}</small>
+                  <small>{tx(locale, "Target Food Cost", "Hedef Food Cost")}</small>
                   <strong>25.0%</strong>
-                  <span className="success-text">{tr ? "Hedefte" : "On target"}</span>
+                  <span className="success-text">{tx(locale, "On target", "Hedefte")}</span>
                 </article>
                 <article>
-                  <small>{tr ? "Gerçek Food Cost" : "Actual Food Cost"}</small>
+                  <small>{tx(locale, "Actual Food Cost", "Gerçek Food Cost")}</small>
                   <strong>29.4%</strong>
                   <span className="danger-text">+4.4 pp</span>
                 </article>
                 <article>
-                  <small>{tr ? "Açıklanamayan Fark" : "Unexplained Variance"}</small>
+                  <small>{tx(locale, "Unexplained Variance", "Açıklanamayan Fark")}</small>
                   <strong>$2,480</strong>
                   <span className="danger-text">+12.0%</span>
                 </article>
@@ -66,12 +66,12 @@ export function DashboardMock({ locale = "en" }: { locale?: "en" | "tr" }) {
                 <div className="chart-card">
                   <div className="card-heading">
                     <div>
-                      <span>{tr ? "Food Cost Trendi" : "Food Cost Trend"}</span>
-                      <small>{tr ? "Gerçek vs. hedef" : "Actual vs target"}</small>
+                      <span>{tx(locale, "Food Cost Trend", "Food Cost Trendi")}</span>
+                      <small>{tx(locale, "Actual vs target", "Gerçek vs. hedef")}</small>
                     </div>
                     <div className="chart-legend">
-                      <i className="legend-line actual" />{tr ? "Gerçek" : "Actual"}
-                      <i className="legend-line target" />{tr ? "Hedef" : "Target"}
+                      <i className="legend-line actual" />{tx(locale, "Actual", "Gerçek")}
+                      <i className="legend-line target" />{tx(locale, "Target", "Hedef")}
                     </div>
                   </div>
                   <div className="chart-area">
@@ -88,17 +88,17 @@ export function DashboardMock({ locale = "en" }: { locale?: "en" | "tr" }) {
                 <div className="variance-card">
                   <div className="card-heading">
                     <div>
-                      <span>{tr ? "En Yüksek Kayıplar" : "Largest Variances"}</span>
-                      <small>{tr ? "Bu ay" : "This month"}</small>
+                      <span>{tx(locale, "Largest Variances", "En Yüksek Kayıplar")}</span>
+                      <small>{tx(locale, "This month", "Bu ay")}</small>
                     </div>
                   </div>
                   <div className="variance-donut-row">
                     <div className="mini-donut">
-                      <div><strong>$2.48k</strong><small>{tr ? "Toplam" : "Total"}</small></div>
+                      <div><strong>$2.48k</strong><small>{tx(locale, "Total", "Toplam")}</small></div>
                     </div>
                     <div className="mini-legend">
                       {varianceRows.map(([name, value, percent], index) => (
-                        <span key={name}><i className={`dot dot-${index + 1}`} />{name}<b>{value}</b><em>{percent}</em></span>
+                        <span key={name}><i className={`dot dot-${index + 1}`} />{tx(locale, name, name)}<b>{value}</b><em>{percent}</em></span>
                       ))}
                     </div>
                   </div>
@@ -106,9 +106,9 @@ export function DashboardMock({ locale = "en" }: { locale?: "en" | "tr" }) {
               </div>
 
               <div className="channel-strip">
-                <span>{tr ? "Restoran İçi" : "Dine-in"}<b>68.4%</b></span>
-                <span>{tr ? "Paket Servis" : "Delivery"}<b>52.1%</b></span>
-                <span>{tr ? "Takeaway" : "Takeaway"}<b>61.7%</b></span>
+                <span>{tx(locale, "Dine-in", "Restoran İçi")}<b>68.4%</b></span>
+                <span>{tx(locale, "Delivery", "Paket Servis")}<b>52.1%</b></span>
+                <span>{tx(locale, "Takeaway", "Takeaway")}<b>61.7%</b></span>
               </div>
             </section>
           </div>

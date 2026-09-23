@@ -18,7 +18,6 @@ const CATEGORY_LABELS: Record<string, { en: string; tr: string }> = {
 
 export default async function FinancePage() {
   const locale = await getAppLocale();
-  const tr = locale === "tr";
   const ctx = await getSessionContext();
   const restaurantId = ctx?.restaurant?.id ?? null;
 
@@ -46,7 +45,7 @@ export default async function FinancePage() {
   for (const e of expenses) byCategory.set(e.category, (byCategory.get(e.category) || 0) + e.amount);
   const categoryRows = [...byCategory.entries()].sort((a, b) => b[1] - a[1]);
   const maxCat = Math.max(...categoryRows.map(([, v]) => v), 1);
-  const catLabel = (c: string) => (tr ? CATEGORY_LABELS[c]?.tr : CATEGORY_LABELS[c]?.en) ?? c;
+  const catLabel = (c: string) => tx(locale, CATEGORY_LABELS[c]?.en ?? c, CATEGORY_LABELS[c]?.tr ?? c);
 
   return (
     <COSTERAAppShell active="/dashboard/finance" locale={locale} title={tx(locale, "Finance", "Finans")} eyebrow={tx(locale, "LIVE MANAGEMENT P&L", "CANLI YÖNETİM P&L")}>

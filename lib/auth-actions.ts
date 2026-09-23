@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { signIn, signOut } from "@/auth";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/login" });
@@ -124,8 +125,8 @@ export async function forgotPasswordAction(_prev: ActionState, formData: FormDat
 
     const base = process.env.APP_URL ?? "http://localhost:3000";
     const link = `${base}/reset-password?token=${token}`;
-    // Dev: no email provider yet — log the link so it can be used during development.
-    console.log(`\n[COSTERA] Şifre sıfırlama bağlantısı (${email}):\n${link}\n`);
+    // Sends via SMTP when configured; otherwise falls back to a console log (dev).
+    await sendPasswordResetEmail(email, link);
   }
 
   return { ok: true, message: genericMessage };

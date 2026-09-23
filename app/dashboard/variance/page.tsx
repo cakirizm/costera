@@ -48,10 +48,10 @@ export default async function VariancePage(){
     "Small unexplained usage":"Küçük açıklanamayan tüketim",
     "Within expected range":"Beklenen aralıkta"
    };
-   return tr ? m[label] || label : label;
+   return tx(locale, label, m[label] || label);
  };
  const reason=(r:string)=> {
-   if(!tr) return r;
+   if(!tr) return tx(locale, r, r);
    const map:Record<string,string>={
     "Inventory usage exists but COSTERA has no theoretical recipe consumption for this ingredient.":"Stok tüketimi var ancak COSTERA'da bu malzeme için teorik reçete tüketimi bulunmuyor.",
     "Recorded stock usage is lower than recipe-driven theoretical usage.":"Kayıtlı stok tüketimi reçete bazlı teorik tüketimin altında.",
@@ -63,7 +63,7 @@ export default async function VariancePage(){
    return map[r] || r;
  };
  const action=(a:string)=>{
-   if(!tr) return a;
+   if(!tr) return tx(locale, a, a);
    const map:Record<string,string>={
     "Check recipe mapping and confirm that every sold menu item using this ingredient is linked.":"Reçete eşleştirmesini kontrol edin ve bu malzemeyi kullanan tüm satılmış ürünlerin bağlı olduğunu doğrulayın.",
     "Review stock count timing, transfers, purchase receipts and recipe quantity assumptions.":"Stok sayım zamanını, transferleri, mal kabullerini ve reçete miktar varsayımlarını kontrol edin.",
