@@ -43,7 +43,7 @@ o faz tamamlanmadan tespit "çözülmüş" sayılmaz.
 | 7b | Kanal dağılımı hep $0 + tutarsız para formatı (nokta vs virgül) — overview ve delivery `sale.netSales` (yok olan alan) okuyordu | `app/dashboard/page.tsx`, `app/dashboard/delivery/page.tsx` | **Faz 1** | ✅ Çözüldü — gelir `quantity × sellingPrice`'tan türetiliyor, tutarlı `money()` formatı, tarayıcıda doğrulandı |
 | 8 | Landing "premium" değil — ikonlar unicode karakter (`◫ ≋ ▥ ▣`); sosyal kanıt / testimonial / illüstrasyon yok | `components/LandingPage.tsx` | **Faz 1 + Faz 6** | ✅ Büyük ölçüde — Faz 1: unicode→SVG ikonlar. Faz 6: yetenek metrikleri, "nasıl çalışır" 3 adım, özellik vitrini, koyu CTA bandı eklendi (EN+TR). Gerçek müşteri testimonial'ı bilinçli olarak eklenmedi (fake olmasın); gerçek müşteri gelince eklenecek |
 | 9 | Mobil uygulama yok — read-only yönetici izleme uygulaması gerekiyor (web ile aynı auth/backend) | (repoda yok) | **Faz 5** | ⏸️ Ertelendi — PWA vs native kararı ve deploy adresi netleşince yapılacak (kullanıcı isteğiyle sonraya bırakıldı) |
-| 10 | Kalite altyapısı yok — lint/test yok, CI sadece build | `.github/workflows/ci.yml`, `package.json` | **Faz 7** | ⬜ Bekliyor |
+| 10 | Kalite altyapısı yok — lint/test yok, CI sadece build | `.github/workflows/ci.yml`, `package.json` | **Faz 7** | 🟡 Büyük ölçüde — Vitest + 30 birim test (cost engine + veri ingestion), `test`/`typecheck` scriptleri, CI'ya test adımı. Kalan: ESLint kurulumu ve DB/UI (integration/e2e) testleri sonraki dilim |
 
 ---
 
