@@ -15,6 +15,13 @@ export async function getDataSource(restaurantId: string) {
   return prisma.dataSource.findUnique({ where: { restaurantId } });
 }
 
+export async function getExpenses(restaurantId: string) {
+  return prisma.expense.findMany({
+    where: { restaurantId },
+    orderBy: { incurredOn: "desc" },
+  });
+}
+
 export async function getRestaurantInput(restaurantId: string): Promise<CosteraInput | null> {
   const source = await prisma.dataSource.findUnique({ where: { restaurantId } });
   if (!source) return null;

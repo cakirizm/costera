@@ -9599,6 +9599,158 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   font-variant-numeric: tabular-nums;
 }
 
+.finance-expense-panel {
+  margin-top: 16px;
+}
+
+.expense-form {
+  margin-top: 4px;
+}
+
+.expense-error {
+  margin-bottom: 12px;
+  padding: 10px 13px;
+  border: 1px solid #eccdc8;
+  border-left: 3px solid #c9483b;
+  border-radius: 9px;
+  background: #fdf5f4;
+  color: #9c3529;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.expense-form-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.8fr .9fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.expense-form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #46606f;
+  font-size: 11px;
+  font-weight: 750;
+  min-width: 0;
+}
+
+.expense-form-grid input,
+.expense-form-grid select {
+  height: 42px;
+  padding: 0 11px;
+  border: 1px solid #d8dee2;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 13px;
+  outline: none;
+}
+
+.expense-form-grid input:focus,
+.expense-form-grid select:focus {
+  border-color: #ad803b;
+  box-shadow: 0 0 0 3px rgba(173,128,59,.09);
+}
+
+.expense-form-grid > button {
+  height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(135deg,#0a304b,#123f5d);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 750;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.expense-form-grid > button:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+.expense-list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.expense-row {
+  display: grid;
+  grid-template-columns: 150px minmax(0,1fr) 100px 90px 30px;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 4px;
+  border-bottom: 1px solid #eef1f3;
+}
+
+.expense-cat {
+  font-size: 11px;
+  font-weight: 800;
+  color: #9b6b2c;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.expense-label {
+  color: #24455b;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-date {
+  color: #8a97a0;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.expense-amount {
+  text-align: right;
+  color: #15364d;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.expense-row > button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e2e8ec;
+  border-radius: 7px;
+  background: #f7f9fa;
+  color: #94a2ab;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.expense-row > button:hover {
+  color: #c44a3e;
+  border-color: #eccdc8;
+  background: #fdf5f4;
+}
+
+@media (max-width: 900px) {
+  .expense-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .expense-form-grid > button {
+    grid-column: 1 / -1;
+  }
+  .expense-row {
+    grid-template-columns: minmax(0,1fr) 80px 26px;
+  }
+  .expense-cat,
+  .expense-date {
+    display: none;
+  }
+}
+
 .finance-expense-empty {
   margin-top: 16px;
   padding: 22px 18px;
