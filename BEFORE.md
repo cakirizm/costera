@@ -68,6 +68,27 @@ Ekip arkadaşının serbest metin notları ve karşılık gelen tespit/faz:
 
 ---
 
+## Kapsamlı Güvenlik & Kalite Denetimi
+
+Tüm fazlar tamamlandıktan sonra proje genelinde kapsamlı bir denetim yapıldı.
+Bulunan sorunlar üç seviyeye ayrılarak sırayla düzeltildi:
+
+| Seviye | Sorun | Düzeltme | Durum |
+|---|---|---|---|
+| 🔴 Kritik | `/api/engine/analyze` endpoint'i auth koruması olmadan açık | `getSessionContext()` guard + 401 eklendi | ✅ |
+| 🔴 Kritik | `AUTH_SECRET` rotasyon gereksinimi | `.env`'deki secret yenilendi, `.env` hiç git history'de değil | ✅ |
+| 🟠 Orta | E-posta şablonlarında XSS açığı | `escapeHtml()` fonksiyonu eklendi (`lib/email.ts`) | ✅ |
+| 🟠 Orta | CI'da PostgreSQL servisi eksik | `ci.yml`'ye PG 17 service + migrate adımı eklendi | ✅ |
+| 🟠 Orta | Mobil uygulama i18n eksik (hardcoded Türkçe) | `mobile/src/lib/i18n.ts` + tüm ekranlarda `t()` çağrıları | ✅ |
+| 🟠 Orta | Mobil erişilebilirlik eksik | TextInput'lara `accessibilityLabel` eklendi | ✅ |
+| 🟢 Düşük | `mobile/.env.example` eksik | Dosya oluşturuldu (`EXPO_PUBLIC_API_URL` belgelendi) | ✅ |
+| 🟢 Düşük | `roleLabel()` Arapça desteği yok | `ROLE_LABELS`'a AR eklendi, `roleLabel()` locale union type | ✅ |
+| 🟢 Düşük | `sharp` bağımlılığı eksik (Next.js image opt.) | `package.json`'a eklendi | ✅ |
+| 🟢 Düşük | `arabicCopy()` kullanılmıyor iddiası | Yanlış — 4 bileşende aktif kullanımda, değişiklik gerekmedi | ✅ Doğrulandı |
+| 🟢 Düşük | Mobil restoran değiştirme | Bilgilendirme — mevcut tek restoran akışı yeterli | ✅ Değerlendirildi |
+
+---
+
 ## Faz Haritası (Özet)
 
 - **Faz 1 — Görsel/UX düzeltmeleri** (backend gerektirmez): Tespit 6, 7, 8(kısmi)
