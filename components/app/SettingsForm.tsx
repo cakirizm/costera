@@ -2,8 +2,8 @@
 
 import { useActionState } from "react";
 import { updateTargetsAction, updateRestaurantAction, type SettingsState } from "@/lib/settings-actions";
-import { tx } from "@/lib/costera/i18n";
-import type { AppLocale } from "@/lib/costera/i18n";
+import { tx } from "@/lib/costera/locale";
+import type { AppLocale } from "@/lib/costera/locale";
 
 const initial: SettingsState = {};
 
