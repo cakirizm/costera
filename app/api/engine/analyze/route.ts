@@ -9,15 +9,19 @@ export const runtime = "nodejs";
 const UNAUTHORIZED = NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
 export async function GET() {
-  const ctx = await getSessionContext();
-  if (!ctx) return UNAUTHORIZED;
+  try {
+    const ctx = await getSessionContext();
+    if (!ctx) return UNAUTHORIZED;
 
-  return NextResponse.json({
-    ok: true,
-    source: "sample",
-    input: sampleInput,
-    analysis: analyzeCost(sampleInput),
-  });
+    return NextResponse.json({
+      ok: true,
+      source: "sample",
+      input: sampleInput,
+      analysis: analyzeCost(sampleInput),
+    });
+  } catch {
+    return NextResponse.json({ ok: false, error: "Internal server error." }, { status: 500 });
+  }
 }
 
 export async function POST(request: NextRequest) {

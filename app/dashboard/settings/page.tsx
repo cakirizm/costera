@@ -1,27 +1,27 @@
 import { COSTERAAppShell } from "@/components/app/COSTERAAppShell";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
+import { requireRole } from "@/lib/session";
+import { prisma } from "@/lib/prisma";
+import { TargetsForm, RestaurantForm } from "@/components/app/SettingsForm";
 
 export default async function SettingsPage(){
  const locale = await getAppLocale();
+ const ctx = await requireRole("OWNER");
+ const restaurant = ctx.restaurant
+   ? await prisma.restaurant.findUnique({ where: { id: ctx.restaurant.id }, select: { name: true, city: true, targetFoodCostPct: true } })
+   : null;
+
  return (
   <COSTERAAppShell active="/dashboard/settings" locale={locale} title={tx(locale,"Settings","Ayarlar")}>
    <section className="costera-grid settings-layout">
     <article className="costera-panel">
      <div className="costera-panel-head"><div><span>{tx(locale,"COST CONTROL","MALİYET KONTROLÜ")}</span><h2>{tx(locale,"Targets","Hedefler")}</h2></div></div>
-     <div className="costera-form-stack">
-      <label>{tx(locale,"Target Food Cost","Hedef Food Cost")}<input defaultValue="25.0%" /></label>
-      <label>{tx(locale,"Variance warning threshold","Fark uyarı eşiği")}<input defaultValue="2.0%" /></label>
-      <label>{tx(locale,"Critical threshold","Kritik eşik")}<input defaultValue="5.0%" /></label>
-     </div>
+     <TargetsForm locale={locale} targetFoodCostPct={restaurant?.targetFoodCostPct ?? 25} />
     </article>
 
     <article className="costera-panel">
      <div className="costera-panel-head"><div><span>{tx(locale,"ORGANIZATION","ORGANİZASYON")}</span><h2>{tx(locale,"Restaurant settings","Restoran ayarları")}</h2></div></div>
-     <div className="costera-form-stack">
-      <label>{tx(locale,"Group name","Grup adı")}<input defaultValue="Demo Restaurant Group" /></label>
-      <label>{tx(locale,"Currency","Para birimi")}<select defaultValue="USD"><option>USD</option><option>AED</option><option>EUR</option></select></label>
-      <label>{tx(locale,"Current interface language","Mevcut arayüz dili")}<select value={locale.toUpperCase()} disabled><option>EN</option><option>TR</option><option>AR</option></select></label>
-     </div>
+     <RestaurantForm locale={locale} name={restaurant?.name ?? ""} city={restaurant?.city ?? ""} />
     </article>
 
     <article className="costera-panel">
