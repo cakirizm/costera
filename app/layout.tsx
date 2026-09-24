@@ -6,7 +6,13 @@ import "@/styles/dashboard/engine.css";
 import "@/styles/dashboard/import.css";
 import "@/styles/dashboard/control.css";
 import "@/styles/dashboard/integrations.css";
-import "@/styles/dashboard/premium.css";
+import "@/styles/dashboard/premium-shell.css";
+import "@/styles/dashboard/premium-pages.css";
+import "@/styles/dashboard/premium-empty.css";
+import "@/styles/dashboard/premium-typography.css";
+import "@/styles/dashboard/premium-qa.css";
+import "@/styles/dashboard/premium-qa-pages.css";
+import "@/styles/dashboard/premium-visual.css";
 import "@/styles/dashboard/ui.css";
 import { getRequestLocale } from "@/lib/costera/i18n";
 

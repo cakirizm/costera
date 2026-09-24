@@ -1,0 +1,104 @@
+/* =========================================================
+   COSTERA QA PASS — 1280 / TABLE FIT / EMPTY STATE BALANCE
+   ========================================================= */
+.costera-metric,
+.costera-metric-head,
+.costera-metric-main {
+  min-width: 0;
+}
+
+.costera-metric-head > span,
+.costera-metric > small {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.costera-metric > small {
+  min-height: 30px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.costera-metrics.five {
+  grid-template-columns: repeat(5,minmax(0,1fr));
+}
+
+.inventory-layout .costera-table {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.inventory-layout .costera-table-row {
+  min-width: 0;
+  grid-template-columns: 1.35fr .72fr .82fr .82fr .78fr .92fr;
+  column-gap: 12px;
+}
+
+.inventory-layout .costera-table-row > span {
+  min-width: 0;
+}
+
+.inventory-layout .costera-status {
+  white-space: nowrap;
+}
+
+.costera-empty-workspace {
+  min-height: 370px;
+  padding-top: 34px;
+  padding-bottom: 38px;
+}
+
+.costera-empty-visual {
+  height: 132px;
+  margin-bottom: 8px;
+}
+
+.empty-costera-core {
+  min-height: 82px;
+}
+
+.empty-costera-core span {
+  margin-top: 1px;
+  font-size: 10px;
+}
+
+.empty-costera-core small {
+  margin-top: 5px;
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.empty-result span,
+.empty-source span {
+  font-size: 9.5px;
+}
+
+@media (max-width: 1080px) {
+  .costera-metrics.five {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .costera-metrics.five,
+  .costera-metrics.four {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .costera-metrics.five,
+  .costera-metrics.four {
+    grid-template-columns: 1fr;
+  }
+
+  .costera-empty-workspace {
+    min-height: 340px;
+    padding: 26px 18px 30px;
+  }
+}
+
+
