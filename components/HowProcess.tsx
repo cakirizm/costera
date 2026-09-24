@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { tx } from "@/lib/costera/locale";
 import { arabicCopy, type AppLocale } from "@/lib/costera/locale";
 type Locale = AppLocale;
@@ -72,10 +73,13 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
       <article className="how-pro-card">
         <StepNumber n={1} />
         <div className="how-pro-visual how-pos-visual how-photo-visual">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1778792447408-b22ad88daa37?auto=format&fit=crop&w=900&q=85"
-            alt=""
+            alt="Restaurant POS terminal processing orders"
             className="how-real-photo how-pos-photo"
+            width={900}
+            height={600}
+            unoptimized
           />
           <div className="how-photo-shade" />
           <div className="how-pos-source-list how-pos-source-overlay">
@@ -93,10 +97,13 @@ export function HowProcess({ locale = "en" }: { locale?: Locale }) {
       <article className="how-pro-card">
         <StepNumber n={2} />
         <div className="how-pro-visual how-recipe-visual how-photo-visual">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=900&q=86"
-            alt=""
+            alt="Chef preparing a recipe with fresh ingredients"
             className="how-real-photo how-food-real-photo"
+            width={900}
+            height={600}
+            unoptimized
           />
           <div className="how-photo-shade how-food-shade" />
           <div className="how-recipe-list how-recipe-overlay">

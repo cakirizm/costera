@@ -1,6 +1,6 @@
 "use client";
 
-export default function DashboardError({
+export default function InventoryError({
   error,
   reset,
 }: {
@@ -10,7 +10,7 @@ export default function DashboardError({
   return (
     <div className="costera-error-page">
       <div className="costera-error-card">
-        <h2>Bir şeyler ters gitti</h2>
+        <h2>Stok yüklenemedi</h2>
         <p>{error.message === "FORBIDDEN" ? "Bu sayfaya erişim yetkiniz yok." : "Beklenmeyen bir hata oluştu."}</p>
         <button type="button" onClick={reset}>Tekrar dene</button>
       </div>

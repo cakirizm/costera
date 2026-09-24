@@ -180,7 +180,7 @@ export async function COSTERAAppShell({
               </select>
             </label>
 
-            <button className="costera-period">
+            <button type="button" className="costera-period" aria-label="Select date range">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18"/></svg>
               <span>Sep 1–22</span>
             </button>

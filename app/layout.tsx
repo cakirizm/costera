@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import "@/styles/marketing/brand.css";
@@ -31,6 +31,25 @@ export const metadata: Metadata = {
   title: "COSTERA | Restaurant Cost Intelligence",
   description:
     "Connect POS, recipes, inventory, purchasing and delivery data to control food cost, identify unexplained stock variance and improve restaurant profitability.",
+  openGraph: {
+    title: "COSTERA | Restaurant Cost Intelligence",
+    description: "Control food cost, identify unexplained stock variance and improve restaurant profitability.",
+    siteName: "COSTERA",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "COSTERA | Restaurant Cost Intelligence",
+    description: "Control food cost, identify unexplained stock variance and improve restaurant profitability.",
+  },
+  icons: { icon: "/favicon.ico" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0b2c46",
 };
 
 export default async function RootLayout({

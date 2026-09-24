@@ -116,7 +116,7 @@ export default async function VariancePage(){
           <b className={"confidence " + focus.rootCause.confidence.toLowerCase()}>{confidence(focus.rootCause.confidence)} {tx(locale,"confidence","güven")}</b>
         </div>
         <div className="control-action">
-          <span>{tx(locale,"RECOMMENDED ACTION","ÖNERİLEN AKSİYON")}</span><h3>{tx(locale,"What to do next","Sırada ne yapılmalı")}</h3><p>{action(focus.rootCause.action)}</p><button>{tx(locale,"Mark for review","İncelemeye işaretle")}</button>
+          <span>{tx(locale,"RECOMMENDED ACTION","ÖNERİLEN AKSİYON")}</span><h3>{tx(locale,"What to do next","Sırada ne yapılmalı")}</h3><p>{action(focus.rootCause.action)}</p><button type="button">{tx(locale,"Mark for review","İncelemeye işaretle")}</button>
         </div>
       </div>
     </section>

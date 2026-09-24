@@ -24,7 +24,9 @@ function getTransport() {
 async function sendMail(mail: Mail): Promise<void> {
   const transport = getTransport();
   if (!transport) {
-    console.log(`\n[COSTERA] E-mail (no SMTP configured) → ${mail.to}\nSubject: ${mail.subject}\n${mail.text}\n`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(`\n[COSTERA] E-mail (no SMTP configured) → ${mail.to}\nSubject: ${mail.subject}\n${mail.text}\n`);
+    }
     return;
   }
   await transport.sendMail({
