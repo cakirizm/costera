@@ -44,15 +44,16 @@ export default async function PurchasingPage() {
     })
     .sort((a, b) => b.value - a.value);
 
+  const currency = ctx?.restaurant?.currency ?? "USD";
   const totalPurchases = rows.reduce((s, r) => s + r.value, 0);
   const highest = rows[0];
 
   return (
     <COSTERAAppShell active="/dashboard/purchasing" locale={locale} title={tx(locale, "Purchasing", "Satın Alma")} eyebrow={tx(locale, "LIVE PURCHASE SUMMARY", "CANLI SATIN ALMA ÖZETİ")}>
       <div className="costera-metrics four">
-        <AppMetric label={tx(locale, "Total Purchases", "Toplam Satın Alma")} value={money(totalPurchases)} meta={tx(locale, "Purchased qty at unit cost", "Satın alınan miktar, birim maliyetle")} />
+        <AppMetric label={tx(locale, "Total Purchases", "Toplam Satın Alma")} value={money(totalPurchases, currency)} meta={tx(locale, "Purchased qty at unit cost", "Satın alınan miktar, birim maliyetle")} />
         <AppMetric label={tx(locale, "Ingredients Purchased", "Satın Alınan Malzeme")} value={String(rows.length)} meta={tx(locale, "With purchase movement", "Satın alma hareketi olan")} />
-        <AppMetric label={tx(locale, "Highest Spend", "En Yüksek Harcama")} value={highest ? money(highest.value) : "—"} meta={highest ? highest.name : tx(locale, "No purchases", "Satın alma yok")} tone="gold" />
+        <AppMetric label={tx(locale, "Highest Spend", "En Yüksek Harcama")} value={highest ? money(highest.value, currency) : "—"} meta={highest ? highest.name : tx(locale, "No purchases", "Satın alma yok")} tone="gold" />
         <AppMetric label={tx(locale, "Period", "Dönem")} value={input.period.to.slice(5)} meta={input.period.from + " → " + input.period.to} />
       </div>
       <section className="costera-grid purchasing-grid">
@@ -65,7 +66,7 @@ export default async function PurchasingPage() {
                 <span><b>{r.name}</b></span>
                 <span>{r.qty} {r.unit}</span>
                 <span>${r.unitCost.toFixed(2)}</span>
-                <span>{money(r.value)}</span>
+                <span>{money(r.value, currency)}</span>
               </div>
             ))}
           </div>

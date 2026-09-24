@@ -31,6 +31,7 @@ export default async function FinancePage() {
     incurredOn: e.incurredOn.toISOString().slice(0, 10),
   }));
 
+  const currency = ctx?.restaurant?.currency ?? "USD";
   const analysis = input ? analyzeCost(input) : null;
   const netSales = analysis?.totals.netSales ?? 0;
   const cogs = analysis?.totals.actualCost ?? 0;
@@ -49,24 +50,24 @@ export default async function FinancePage() {
   return (
     <COSTERAAppShell active="/dashboard/finance" locale={locale} title={tx(locale, "Finance", "Finans")} eyebrow={tx(locale, "LIVE MANAGEMENT P&L", "CANLI YÖNETİM P&L")}>
       <div className="costera-metrics five">
-        <AppMetric label={tx(locale, "Net Sales", "Net Satış")} value={money(netSales)} meta={input ? input.period.from + " → " + input.period.to : tx(locale, "No connected source", "Bağlı veri kaynağı yok")} tone="good" />
-        <AppMetric label="COGS" value={money(cogs)} meta={pct(cogs) + "% " + tx(locale, "of sales", "satışların")} tone="bad" />
-        <AppMetric label={tx(locale, "Gross Profit", "Brüt Kâr")} value={money(grossProfit)} meta={pct(grossProfit) + "% " + tx(locale, "gross margin", "brüt marj")} tone="good" />
-        <AppMetric label={tx(locale, "Operating Expenses", "Operasyon Giderleri")} value={money(operatingExpenses)} meta={expenses.length + " " + tx(locale, "expenses", "gider")} />
-        <AppMetric label={tx(locale, "Estimated Net Profit", "Tahmini Net Kâr")} value={money(netProfit)} meta={pct(netProfit) + "% " + tx(locale, "net margin", "net marj")} tone={netProfit >= 0 ? "good" : "bad"} />
+        <AppMetric label={tx(locale, "Net Sales", "Net Satış")} value={money(netSales, currency)} meta={input ? input.period.from + " → " + input.period.to : tx(locale, "No connected source", "Bağlı veri kaynağı yok")} tone="good" />
+        <AppMetric label="COGS" value={money(cogs, currency)} meta={pct(cogs) + "% " + tx(locale, "of sales", "satışların")} tone="bad" />
+        <AppMetric label={tx(locale, "Gross Profit", "Brüt Kâr")} value={money(grossProfit, currency)} meta={pct(grossProfit) + "% " + tx(locale, "gross margin", "brüt marj")} tone="good" />
+        <AppMetric label={tx(locale, "Operating Expenses", "Operasyon Giderleri")} value={money(operatingExpenses, currency)} meta={expenses.length + " " + tx(locale, "expenses", "gider")} />
+        <AppMetric label={tx(locale, "Estimated Net Profit", "Tahmini Net Kâr")} value={money(netProfit, currency)} meta={pct(netProfit) + "% " + tx(locale, "net margin", "net marj")} tone={netProfit >= 0 ? "good" : "bad"} />
       </div>
 
       <section className="costera-grid finance-layout">
         <article className="costera-panel span-2">
           <div className="costera-panel-head"><div><span>{tx(locale, "MANAGEMENT P&L", "YÖNETİM P&L")}</span><h2>{tx(locale, "Period profitability", "Dönem kârlılığı")}</h2></div></div>
           <div className="costera-pnl">
-            <div className="total"><span>{tx(locale, "Net Sales", "Net Satış")}</span><b>{money(netSales)}</b></div>
-            <div><span>{tx(locale, "Food COGS", "Yiyecek COGS")}</span><b>-{money(cogs)}</b></div>
-            <div className="subtotal"><span>{tx(locale, "Gross Profit", "Brüt Kâr")}</span><b>{money(grossProfit)}</b></div>
+            <div className="total"><span>{tx(locale, "Net Sales", "Net Satış")}</span><b>{money(netSales, currency)}</b></div>
+            <div><span>{tx(locale, "Food COGS", "Yiyecek COGS")}</span><b>-{money(cogs, currency)}</b></div>
+            <div className="subtotal"><span>{tx(locale, "Gross Profit", "Brüt Kâr")}</span><b>{money(grossProfit, currency)}</b></div>
             {categoryRows.map(([cat, amount]) => (
-              <div key={cat}><span>{catLabel(cat)}</span><b>-{money(amount)}</b></div>
+              <div key={cat}><span>{catLabel(cat)}</span><b>-{money(amount, currency)}</b></div>
             ))}
-            <div className="profit"><span>{tx(locale, "Estimated Net Profit", "Tahmini Net Kâr")}</span><b>{money(netProfit)}</b></div>
+            <div className="profit"><span>{tx(locale, "Estimated Net Profit", "Tahmini Net Kâr")}</span><b>{money(netProfit, currency)}</b></div>
           </div>
         </article>
 
@@ -81,7 +82,7 @@ export default async function FinancePage() {
             <div className="costera-expense-bars">
               {categoryRows.map(([cat, amount]) => (
                 <div key={cat}>
-                  <p><span>{catLabel(cat)}</span><b>{money(amount)}</b></p>
+                  <p><span>{catLabel(cat)}</span><b>{money(amount, currency)}</b></p>
                   <i><em style={{ width: Math.max(6, (amount / maxCat) * 100) + "%" }} /></i>
                 </div>
               ))}

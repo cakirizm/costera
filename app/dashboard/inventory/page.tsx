@@ -30,6 +30,7 @@ export default async function InventoryPage() {
     );
   }
 
+  const currency = ctx?.restaurant?.currency ?? "USD";
   const analysis = analyzeCost(input);
   const unitCostByIng = new Map(input.ingredients.map((i) => [i.id, i.unitCost]));
   const closingByIng = new Map(input.inventory.map((v) => [v.ingredientId, v.closingQty]));
@@ -46,8 +47,8 @@ export default async function InventoryPage() {
   return (
     <COSTERAAppShell active="/dashboard/inventory" locale={locale} title={tx(locale, "Inventory", "Stok")} eyebrow={tx(locale, "LIVE STOCK POSITION", "CANLI STOK DURUMU")}>
       <div className="costera-metrics five">
-        <AppMetric label={tx(locale, "Stock Value", "Stok Değeri")} value={money(stockValue)} meta={tx(locale, "Closing stock at unit cost", "Kapanış stoku, birim maliyetle")} />
-        <AppMetric label={tx(locale, "Unexplained Value", "Açıklanamayan Tutar")} value={money(analysis.totals.unexplainedCost)} meta={tx(locale, "Across all ingredients", "Tüm malzemelerde")} tone="bad" />
+        <AppMetric label={tx(locale, "Stock Value", "Stok Değeri")} value={money(stockValue, currency)} meta={tx(locale, "Closing stock at unit cost", "Kapanış stoku, birim maliyetle")} />
+        <AppMetric label={tx(locale, "Unexplained Value", "Açıklanamayan Tutar")} value={money(analysis.totals.unexplainedCost, currency)} meta={tx(locale, "Across all ingredients", "Tüm malzemelerde")} tone="bad" />
         <AppMetric label={tx(locale, "Critical Items", "Kritik Kalemler")} value={String(criticalCount)} meta={tx(locale, "High-risk variance", "Yüksek riskli fark")} tone={criticalCount > 0 ? "bad" : "good"} />
         <AppMetric label={tx(locale, "Tracked Items", "Takip Edilen Kalem")} value={String(input.ingredients.length)} meta={tx(locale, "Ingredients in model", "Modeldeki malzemeler")} />
         <AppMetric label={tx(locale, "Period", "Dönem")} value={input.period.to.slice(5)} meta={input.period.from + " → " + input.period.to} tone="gold" />
@@ -67,7 +68,7 @@ export default async function InventoryPage() {
                   <span><b>{r.ingredient}</b></span>
                   <span>{closing} {r.unit}</span>
                   <span>${r.unitCost.toFixed(2)}</span>
-                  <span>{money(value)}</span>
+                  <span>{money(value, currency)}</span>
                   <span className={r.unexplainedQty > 0 ? "negative" : ""}>{r.unexplainedQty > 0 ? "+" : ""}{r.unexplainedQty} {r.unit}</span>
                   <span><StatusPill tone={critical ? "bad" : "good"}>{critical ? tx(locale, "Review", "İncele") : tx(locale, "Normal", "Normal")}</StatusPill></span>
                 </div>
@@ -82,7 +83,7 @@ export default async function InventoryPage() {
               <div key={r.ingredientId}>
                 <i className="red">!</i>
                 <p><strong>{r.ingredient}</strong><span>{r.unexplainedQty} {r.unit} {tx(locale, "unexplained usage", "açıklanamayan kullanım")}</span></p>
-                <b>{money(r.unexplainedValue)}</b>
+                <b>{money(r.unexplainedValue, currency)}</b>
               </div>
             ))}
             {withinRange > 0 && (

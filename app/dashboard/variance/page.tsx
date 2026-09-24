@@ -30,6 +30,7 @@ export default async function VariancePage(){
    );
  }
 
+ const currency = ctx?.restaurant?.currency ?? "USD";
  const analysis = analyzeCost(input);
  const t = analysis.totals;
  const top = analysis.ingredientVariance.slice(0, 5);
@@ -78,22 +79,22 @@ export default async function VariancePage(){
    <div className="control-hero-v2">
     <div className="control-hero-copy">
       <span>{tx(locale,"UNEXPLAINED COST THIS PERIOD","BU DÖNEM AÇIKLANAMAYAN MALİYET")}</span>
-      <strong>{money(t.unexplainedCost)}</strong>
+      <strong>{money(t.unexplainedCost, currency)}</strong>
       <small>{((t.unexplainedCost / t.netSales) * 100).toFixed(1)}% {tx(locale,"of net sales · after approved waste is removed","net satışın · onaylı fire düşüldükten sonra")}</small>
     </div>
     <div className="control-equation-v2">
-      <div><small>{tx(locale,"Expected usage","Beklenen kullanım")}</small><b>{money(t.theoreticalCost)}</b><span>{tx(locale,"Recipe driven","Reçete bazlı")}</span></div><i>→</i>
-      <div><small>{tx(locale,"Actual usage","Gerçek kullanım")}</small><b>{money(t.actualCost)}</b><span>{tx(locale,"Inventory movement","Stok hareketi")}</span></div><i>−</i>
-      <div><small>{tx(locale,"Approved waste","Onaylı fire")}</small><b>{money(t.knownWasteCost)}</b><span>{tx(locale,"Explained loss","Açıklanmış kayıp")}</span></div><i>=</i>
-      <div className="danger"><small>{tx(locale,"Unexplained","Açıklanamayan")}</small><b>{money(t.unexplainedCost)}</b><span>{tx(locale,"Needs action","Aksiyon gerekli")}</span></div>
+      <div><small>{tx(locale,"Expected usage","Beklenen kullanım")}</small><b>{money(t.theoreticalCost, currency)}</b><span>{tx(locale,"Recipe driven","Reçete bazlı")}</span></div><i>→</i>
+      <div><small>{tx(locale,"Actual usage","Gerçek kullanım")}</small><b>{money(t.actualCost, currency)}</b><span>{tx(locale,"Inventory movement","Stok hareketi")}</span></div><i>−</i>
+      <div><small>{tx(locale,"Approved waste","Onaylı fire")}</small><b>{money(t.knownWasteCost, currency)}</b><span>{tx(locale,"Explained loss","Açıklanmış kayıp")}</span></div><i>=</i>
+      <div className="danger"><small>{tx(locale,"Unexplained","Açıklanamayan")}</small><b>{money(t.unexplainedCost, currency)}</b><span>{tx(locale,"Needs action","Aksiyon gerekli")}</span></div>
     </div>
    </div>
 
    <div className="costera-metrics four">
     <AppMetric label={tx(locale,"Target Food Cost","Hedef Food Cost")} value={t.targetFoodCostPct.toFixed(1) + "%"} meta={tx(locale,"Configured target","Tanımlı hedef")} tone="gold" />
     <AppMetric label={tx(locale,"Actual Food Cost","Gerçek Food Cost")} value={t.actualFoodCostPct.toFixed(1) + "%"} meta={(t.targetGapPp >= 0 ? "+" : "") + t.targetGapPp.toFixed(1) + " pp " + tx(locale,"vs target","hedefe göre")} tone={t.targetGapPp > 0 ? "bad" : "good"} />
-    <AppMetric label={tx(locale,"Approved Waste","Onaylı Fire")} value={money(t.knownWasteCost)} meta={tx(locale,"Known & explained","Bilinen & açıklanmış")} />
-    <AppMetric label={tx(locale,"Unexplained","Açıklanamayan")} value={money(t.unexplainedCost)} meta={tx(locale,"Remaining leakage","Kalan kaçak")} tone="bad" />
+    <AppMetric label={tx(locale,"Approved Waste","Onaylı Fire")} value={money(t.knownWasteCost, currency)} meta={tx(locale,"Known & explained","Bilinen & açıklanmış")} />
+    <AppMetric label={tx(locale,"Unexplained","Açıklanamayan")} value={money(t.unexplainedCost, currency)} meta={tx(locale,"Remaining leakage","Kalan kaçak")} tone="bad" />
    </div>
 
    {focus && (
@@ -107,7 +108,7 @@ export default async function VariancePage(){
         <div><small>{tx(locale,"EXPECTED","BEKLENEN")}</small><strong>{focus.theoreticalQty} {focus.unit}</strong><span>{tx(locale,"Recipe-driven usage","Reçete bazlı kullanım")}</span></div><i>→</i>
         <div><small>{tx(locale,"ACTUAL","GERÇEK")}</small><strong>{focus.actualUsageQty} {focus.unit}</strong><span>{tx(locale,"Stock-derived usage","Stok bazlı kullanım")}</span></div><i>−</i>
         <div><small>{tx(locale,"WASTE","FİRE")}</small><strong>{focus.knownWasteQty} {focus.unit}</strong><span>{tx(locale,"Approved / explained","Onaylı / açıklanmış")}</span></div><i>=</i>
-        <div className="danger"><small>{tx(locale,"UNEXPLAINED","AÇIKLANAMAYAN")}</small><strong>{qty(focus.unexplainedQty, focus.unit)}</strong><span>{money(focus.unexplainedValue)} {tx(locale,"impact","etki")}</span></div>
+        <div className="danger"><small>{tx(locale,"UNEXPLAINED","AÇIKLANAMAYAN")}</small><strong>{qty(focus.unexplainedQty, focus.unit)}</strong><span>{money(focus.unexplainedValue, currency)} {tx(locale,"impact","etki")}</span></div>
       </div>
 
       <div className="control-intelligence">
@@ -131,7 +132,7 @@ export default async function VariancePage(){
        <span><b>{r.ingredient}</b><small>{riskText(r.risk)} {tx(locale,"risk","risk")} · {r.shareOfGapPct}% {tx(locale,"share","pay")}</small></span>
        <span>{r.theoreticalQty} {r.unit}</span><span>{r.actualUsageQty} {r.unit}</span><span>{r.knownWasteQty} {r.unit}</span>
        <span className={r.unexplainedQty > 0 ? "negative" : "positive"}>{qty(r.unexplainedQty, r.unit)}</span>
-       <span className={r.unexplainedValue > 0 ? "negative" : "positive"}>{money(r.unexplainedValue)}</span>
+       <span className={r.unexplainedValue > 0 ? "negative" : "positive"}>{money(r.unexplainedValue, currency)}</span>
        <span><b className="cause-label">{cause(r.rootCause.label)}</b><small>{confidence(r.rootCause.confidence)} {tx(locale,"confidence","güven")}</small></span>
       </div>)}
      </div>
@@ -140,7 +141,7 @@ export default async function VariancePage(){
     <article className="costera-panel">
       <div className="costera-panel-head"><div><span>{tx(locale,"ACTION QUEUE","AKSİYON KUYRUĞU")}</span><h2>{tx(locale,"What management should review","Yönetimin incelemesi gerekenler")}</h2></div></div>
       <div className="control-action-list">
-        {top.slice(0,4).map((r,i)=><div key={r.ingredientId}><b>{String(i+1).padStart(2,"0")}</b><p><strong>{r.ingredient}</strong><span>{action(r.rootCause.action)}</span></p><em>{money(r.unexplainedValue)}</em></div>)}
+        {top.slice(0,4).map((r,i)=><div key={r.ingredientId}><b>{String(i+1).padStart(2,"0")}</b><p><strong>{r.ingredient}</strong><span>{action(r.rootCause.action)}</span></p><em>{money(r.unexplainedValue, currency)}</em></div>)}
       </div>
     </article>
    </section>

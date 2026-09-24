@@ -29,6 +29,7 @@ export default async function POSPage() {
     );
   }
 
+  const currency = ctx?.restaurant?.currency ?? "USD";
   const analysis = analyzeCost(input);
   const priceById = new Map(input.menuItems.map((m) => [m.id, m.sellingPrice]));
   const knownItem = new Set(input.menuItems.map((m) => m.id));
@@ -53,7 +54,7 @@ export default async function POSPage() {
     <COSTERAAppShell active="/dashboard/pos" locale={locale} title={tx(locale, "Sales & POS", "Satış & POS")} eyebrow={tx(locale, "LIVE SALES FEED", "CANLI SATIŞ AKIŞI")}>
       <div className="costera-metrics four">
         <AppMetric label={tx(locale, "Orders", "Siparişler")} value={totalOrders.toLocaleString("en-US")} meta={tx(locale, "Units sold in period", "Dönemde satılan adet")} tone="good" />
-        <AppMetric label={tx(locale, "Net Sales", "Net Satış")} value={money(analysis.totals.netSales)} meta={tx(locale, "Across all channels", "Tüm kanallar")} />
+        <AppMetric label={tx(locale, "Net Sales", "Net Satış")} value={money(analysis.totals.netSales, currency)} meta={tx(locale, "Across all channels", "Tüm kanallar")} />
         <AppMetric label={tx(locale, "Mapped Items", "Eşleşen Ürünler")} value={mappedPct + "%"} meta={analysis.dataQuality.missingMenuItems.length + " " + tx(locale, "items need mapping", "ürün eşleştirme bekliyor")} tone={mappedPct === 100 ? "good" : "gold"} />
         <AppMetric label={tx(locale, "Channels", "Kanallar")} value={String(rows.length)} meta={tx(locale, "Discovered from sales", "Satıştan keşfedildi")} />
       </div>
@@ -69,7 +70,7 @@ export default async function POSPage() {
                 <div className="costera-table-row" key={r.channel}>
                   <span><b>{r.channel}</b></span>
                   <span>{r.orders.toLocaleString("en-US")}</span>
-                  <span>{money(r.sales)}</span>
+                  <span>{money(r.sales, currency)}</span>
                   <span>{pct}%</span>
                   <span><StatusPill tone={fullyMapped ? "good" : "warning"}>{fullyMapped ? tx(locale, "Mapped", "Eşleşti") : tx(locale, "Check mapping", "Eşleştirmeyi kontrol et")}</StatusPill></span>
                 </div>

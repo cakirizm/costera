@@ -43,6 +43,7 @@ export default async function DashboardPage(){
    );
  }
 
+ const currency = ctx?.restaurant?.currency ?? "USD";
  const analysis = analyzeCost(input);
  const t = analysis.totals;
  const varianceRows = analysis.ingredientVariance.slice(0,5);
@@ -70,18 +71,18 @@ export default async function DashboardPage(){
 
    <div className="costera-alert-strip">
     <div><i>!</i><p>
-      <strong>{money(t.unexplainedCost)} {tx(locale,"unexplained cost requires review","açıklanamayan maliyet inceleme bekliyor")}</strong>
+      <strong>{money(t.unexplainedCost, currency)} {tx(locale,"unexplained cost requires review","açıklanamayan maliyet inceleme bekliyor")}</strong>
       <span>{tx(locale,"The gap remains after approved waste is removed.","Onaylı fire düşüldükten sonra kalan fark.")}</span>
     </p></div>
     <a href="/dashboard/variance">{tx(locale,"Investigate variance","Farkı incele")} →</a>
    </div>
 
    <div className="costera-metrics five">
-    <AppMetric label={tx(locale,"Net Sales","Net Satış")} value={money(t.netSales)} meta={analysis.dataQuality.mappedSalesCount + "/" + analysis.dataQuality.salesCount + " " + tx(locale,"sales rows mapped","satış satırı eşleşti")} tone="good" />
+    <AppMetric label={tx(locale,"Net Sales","Net Satış")} value={money(t.netSales, currency)} meta={analysis.dataQuality.mappedSalesCount + "/" + analysis.dataQuality.salesCount + " " + tx(locale,"sales rows mapped","satış satırı eşleşti")} tone="good" />
     <AppMetric label={tx(locale,"Target Food Cost","Hedef Food Cost")} value={t.targetFoodCostPct.toFixed(1) + "%"} meta={tx(locale,"Configured group target","Tanımlı grup hedefi")} tone="gold" />
     <AppMetric label={tx(locale,"Actual Food Cost","Gerçek Food Cost")} value={t.actualFoodCostPct.toFixed(1) + "%"} meta={(t.targetGapPp >= 0 ? "+" : "") + t.targetGapPp.toFixed(1) + " pp " + tx(locale,"vs target","hedefe göre")} tone={t.targetGapPp > 0 ? "bad" : "good"} />
-    <AppMetric label={tx(locale,"Unexplained Variance","Açıklanamayan Fark")} value={money(t.unexplainedCost)} meta={gapShare.toFixed(1) + "% " + tx(locale,"of net sales","net satışın")} tone="bad" />
-    <AppMetric label={tx(locale,"Theoretical Cost","Teorik Maliyet")} value={money(t.theoreticalCost)} meta={t.theoreticalFoodCostPct.toFixed(1) + "% " + tx(locale,"recipe-driven cost","reçete bazlı maliyet")} />
+    <AppMetric label={tx(locale,"Unexplained Variance","Açıklanamayan Fark")} value={money(t.unexplainedCost, currency)} meta={gapShare.toFixed(1) + "% " + tx(locale,"of net sales","net satışın")} tone="bad" />
+    <AppMetric label={tx(locale,"Theoretical Cost","Teorik Maliyet")} value={money(t.theoreticalCost, currency)} meta={t.theoreticalFoodCostPct.toFixed(1) + "% " + tx(locale,"recipe-driven cost","reçete bazlı maliyet")} />
    </div>
 
    <section className="overview-premium-grid">
@@ -131,9 +132,9 @@ export default async function DashboardPage(){
       </div>
 
       <div className="overview-pulse-list">
-        <div><span>{tx(locale,"Theoretical","Teorik")}</span><b>{money(t.theoreticalCost)}</b><i className="neutral"/></div>
-        <div><span>{tx(locale,"Approved waste","Onaylı fire")}</span><b>{money(t.knownWasteCost)}</b><i className="gold"/></div>
-        <div><span>{tx(locale,"Unexplained","Açıklanamayan")}</span><b className="bad">{money(t.unexplainedCost)}</b><i className="red"/></div>
+        <div><span>{tx(locale,"Theoretical","Teorik")}</span><b>{money(t.theoreticalCost, currency)}</b><i className="neutral"/></div>
+        <div><span>{tx(locale,"Approved waste","Onaylı fire")}</span><b>{money(t.knownWasteCost, currency)}</b><i className="gold"/></div>
+        <div><span>{tx(locale,"Unexplained","Açıklanamayan")}</span><b className="bad">{money(t.unexplainedCost, currency)}</b><i className="red"/></div>
       </div>
 
       <a href="/dashboard/variance" className="overview-primary-action">{tx(locale,"Open Cost Control","Maliyet Kontrolünü Aç")} <span>→</span></a>
@@ -148,7 +149,7 @@ export default async function DashboardPage(){
       {varianceRows.map((r,index)=><div className="row" key={r.ingredientId}>
        <span><i>{String(index+1).padStart(2,"0")}</i><b>{r.ingredient}</b></span>
        <span className={r.unexplainedQty>0?"negative":""}>{r.unexplainedQty>0?"+":""}{r.unexplainedQty} {r.unit}</span>
-       <span className={r.unexplainedValue>0?"negative":""}>{money(r.unexplainedValue)}</span>
+       <span className={r.unexplainedValue>0?"negative":""}>{money(r.unexplainedValue, currency)}</span>
        <span><em><u style={{width: Math.min(100,r.shareOfGapPct)+"%"}}/></em>{r.shareOfGapPct}%</span>
        <span><StatusPill tone={r.risk==="High"?"bad":r.risk==="Medium"?"warning":"good"}>{riskText(r.risk)}</StatusPill></span>
       </div>)}
@@ -157,10 +158,10 @@ export default async function DashboardPage(){
 
     <article className="costera-panel overview-channel-card">
      <div className="costera-panel-head"><div><span>{tx(locale,"SALES CHANNELS","SATIŞ KANALLARI")}</span><h2>{tx(locale,"Channel mix","Kanal dağılımı")}</h2></div><a href="/dashboard/delivery">{tx(locale,"Details","Detay")}</a></div>
-     <div className="overview-channel-total"><span>{tx(locale,"Tracked sales","Takip edilen satış")}</span><strong>{money(channelRows.reduce((s,x)=>s+x.sales,0))}</strong></div>
+     <div className="overview-channel-total"><span>{tx(locale,"Tracked sales","Takip edilen satış")}</span><strong>{money(channelRows.reduce((s,x)=>s+x.sales,0), currency)}</strong></div>
      <div className="overview-channel-bars">
       {channelRows.map((r)=><div key={r.channel}>
-        <div><span>{r.channel}</span><b>{money(r.sales)}</b></div>
+        <div><span>{r.channel}</span><b>{money(r.sales, currency)}</b></div>
         <i><em style={{width: Math.max(8,(r.sales/maxChannel)*100)+"%"}} /></i>
         <small>{r.channel.toLowerCase()==="dine-in"?tx(locale,"Direct sale","Direkt satış"):tx(locale,"Check fee coverage","Komisyon verisini kontrol et")}</small>
       </div>)}

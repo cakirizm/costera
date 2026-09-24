@@ -41,12 +41,13 @@ export default async function DeliveryPage(){
    channelMap.set(sale.channel, current);
  }
  const rows = [...channelMap.entries()].map(([channel, value]) => ({ channel, ...value }));
+ const currency = ctx?.restaurant?.currency ?? "USD";
  const deliverySales = rows.reduce((sum, row) => sum + row.sales, 0);
 
  return (
   <COSTERAAppShell active="/dashboard/delivery" locale={locale} title={tx(locale,"Delivery & Channels","Delivery & Kanallar")} eyebrow={tx(locale,"POS CHANNEL DISCOVERY","POS KANAL KEŞFİ")}>
    <div className="costera-metrics five">
-    <AppMetric label={tx(locale,"Delivery Sales","Delivery Satışları")} value={money(deliverySales)} meta={tx(locale,"Detected from connected POS","Bağlı POS'tan bulundu")} />
+    <AppMetric label={tx(locale,"Delivery Sales","Delivery Satışları")} value={money(deliverySales, currency)} meta={tx(locale,"Detected from connected POS","Bağlı POS'tan bulundu")} />
     <AppMetric label={tx(locale,"Channels Detected","Bulunan Kanallar")} value={String(rows.length)} meta={tx(locale,"No fixed vendor list","Sabit firma listesi yok")} tone="good" />
     <AppMetric label={tx(locale,"Platform Fees","Platform Ücretleri")} value={tx(locale,"Missing","Eksik")} meta={tx(locale,"POS demo does not provide fees","POS demo ücret verisi sağlamıyor")} tone="bad" />
     <AppMetric label={tx(locale,"Settlements","Settlement")} value={tx(locale,"Missing","Eksik")} meta={tx(locale,"POS demo does not provide payouts","POS demo ödeme verisi sağlamıyor")} tone="bad" />
@@ -64,7 +65,7 @@ export default async function DeliveryPage(){
       <div className="head"><span>{tx(locale,"Channel","Kanal")}</span><span>{tx(locale,"Sales","Satış")}</span><span>{tx(locale,"Order rows","Sipariş satırları")}</span><span>{tx(locale,"Fees","Ücretler")}</span><span>Settlement</span><span>{tx(locale,"Status","Durum")}</span></div>
       {rows.map((row)=><div className="row" key={row.channel}>
        <span><b>{row.channel}</b><small>{tx(locale,"Provided by POS","POS tarafından sağlandı")}</small></span>
-       <span>{money(row.sales)}</span>
+       <span>{money(row.sales, currency)}</span>
        <span>{row.rows}</span>
        <span className="missing">{tx(locale,"Not supplied","Sağlanmadı")}</span>
        <span className="missing">{tx(locale,"Not supplied","Sağlanmadı")}</span>

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import "@/lib/env";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import "@/styles/marketing/brand.css";
@@ -43,7 +44,6 @@ export const metadata: Metadata = {
     title: "COSTERA | Restaurant Cost Intelligence",
     description: "Control food cost, identify unexplained stock variance and improve restaurant profitability.",
   },
-  icons: { icon: "/favicon.ico" },
 };
 
 export const viewport: Viewport = {
