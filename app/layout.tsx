@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import "@/styles/dashboard/layout.css";
+import "@/styles/dashboard/engine.css";
+import "@/styles/dashboard/import.css";
+import "@/styles/dashboard/control.css";
+import "@/styles/dashboard/integrations.css";
+import "@/styles/dashboard/premium.css";
+import "@/styles/dashboard/ui.css";
 import { getRequestLocale } from "@/lib/costera/i18n";
 
 const manrope = Manrope({
