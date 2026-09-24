@@ -4,6 +4,7 @@ import { EmptyWorkspace } from "@/components/app/EmptyWorkspace";
 import { getSessionContext } from "@/lib/session";
 import { getRestaurantInput } from "@/lib/costera/repository";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
+import { money } from "@/lib/format";
 
 export default async function DeliveryPage(){
  const locale = await getAppLocale();
@@ -39,7 +40,6 @@ export default async function DeliveryPage(){
    current.qty += sale.quantity;
    channelMap.set(sale.channel, current);
  }
- const money = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
  const rows = [...channelMap.entries()].map(([channel, value]) => ({ channel, ...value }));
  const deliverySales = rows.reduce((sum, row) => sum + row.sales, 0);
 

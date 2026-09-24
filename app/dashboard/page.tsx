@@ -5,8 +5,7 @@ import { getSessionContext } from "@/lib/session";
 import { getRestaurantInput } from "@/lib/costera/repository";
 import type { CosteraInput } from "@/lib/costera/types";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
-
-const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+import { money } from "@/lib/format";
 
 function discoveredChannels(input: CosteraInput) {
   const priceById = new Map(input.menuItems.map((m) => [m.id, m.sellingPrice]));

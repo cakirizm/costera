@@ -45,6 +45,7 @@ model Restaurant {
   id                String         @id @default(cuid())
   name              String
   city              String?
+  currency          String         @default("USD")
   targetFoodCostPct Float          @default(25)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt

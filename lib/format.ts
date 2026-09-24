@@ -1,5 +1,15 @@
-export function money(n: number): string {
-  return "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  TRY: "₺",
+  AED: "د.إ",
+  SAR: "﷼",
+};
+
+export function money(n: number, currency = "USD"): string {
+  const symbol = CURRENCY_SYMBOLS[currency] ?? currency + " ";
+  return symbol + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
 export function pct(n: number): string {

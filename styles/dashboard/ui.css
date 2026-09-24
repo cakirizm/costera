@@ -103,3 +103,22 @@
 .costera-settings-save:disabled { opacity: .5; cursor: not-allowed; }
 .costera-settings-success { color: #16a34a; font-weight: 600; margin-top: 6px; }
 .costera-settings-error { color: #c54e42; font-weight: 600; margin-top: 6px; }
+
+/* === Report download === */
+.costera-report-download {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border: 1px solid #dce2e5;
+  border-radius: 7px;
+  color: #17384f;
+  background: #f8fafa;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: .15s ease;
+}
+.costera-report-download:hover {
+  background: #eef1f3;
+  border-color: #c5cdd2;
+}

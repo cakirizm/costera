@@ -24,7 +24,16 @@ export function TargetsForm({ locale, targetFoodCostPct }: { locale: AppLocale; 
   );
 }
 
-export function RestaurantForm({ locale, name, city }: { locale: AppLocale; name: string; city: string }) {
+const CURRENCIES = [
+  { code: "USD", label: "$ USD" },
+  { code: "EUR", label: "€ EUR" },
+  { code: "GBP", label: "£ GBP" },
+  { code: "TRY", label: "₺ TRY" },
+  { code: "AED", label: "د.إ AED" },
+  { code: "SAR", label: "﷼ SAR" },
+];
+
+export function RestaurantForm({ locale, name, city, currency }: { locale: AppLocale; name: string; city: string; currency: string }) {
   const [state, action, pending] = useActionState(updateRestaurantAction, initial);
   return (
     <form action={action} className="costera-form-stack">
@@ -35,6 +44,14 @@ export function RestaurantForm({ locale, name, city }: { locale: AppLocale; name
       <label>
         {tx(locale, "City", "Şehir")}
         <input name="city" type="text" defaultValue={city} disabled={pending} />
+      </label>
+      <label>
+        {tx(locale, "Currency", "Para birimi")}
+        <select name="currency" defaultValue={currency} disabled={pending}>
+          {CURRENCIES.map((c) => (
+            <option key={c.code} value={c.code}>{c.label}</option>
+          ))}
+        </select>
       </label>
       <button type="submit" disabled={pending} className="costera-settings-save">
         {pending ? tx(locale, "Saving…", "Kaydediliyor…") : tx(locale, "Save", "Kaydet")}

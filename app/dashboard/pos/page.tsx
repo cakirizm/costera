@@ -4,8 +4,7 @@ import { analyzeCost } from "@/lib/costera/engine";
 import { getSessionContext } from "@/lib/session";
 import { getRestaurantInput } from "@/lib/costera/repository";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
-
-const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+import { money } from "@/lib/format";
 
 export default async function POSPage() {
   const locale = await getAppLocale();

@@ -4,9 +4,7 @@ import { analyzeCost } from "@/lib/costera/engine";
 import { getSessionContext } from "@/lib/session";
 import { getRestaurantInput } from "@/lib/costera/repository";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
-
-const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
-const qty = (n: number, unit: string) => (n > 0 ? "+" : "") + n.toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + unit;
+import { money, qty } from "@/lib/format";
 
 export default async function VariancePage(){
  const locale = await getAppLocale();

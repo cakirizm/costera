@@ -11,9 +11,12 @@ const targetsSchema = z.object({
   targetFoodCostPct: z.coerce.number().min(1).max(100),
 });
 
+const SUPPORTED_CURRENCIES = ["USD", "EUR", "GBP", "TRY", "AED", "SAR"] as const;
+
 const restaurantSchema = z.object({
   name: z.string().trim().min(1).max(200),
   city: z.string().trim().max(200).optional(),
+  currency: z.enum(SUPPORTED_CURRENCIES).optional(),
 });
 
 export async function updateTargetsAction(_prev: SettingsState, formData: FormData): Promise<SettingsState> {
@@ -45,12 +48,17 @@ export async function updateRestaurantAction(_prev: SettingsState, formData: For
   const parsed = restaurantSchema.safeParse({
     name: formData.get("name"),
     city: formData.get("city"),
+    currency: formData.get("currency") || undefined,
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Geçersiz değer." };
 
   await prisma.restaurant.update({
     where: { id: restaurantId },
-    data: { name: parsed.data.name, city: parsed.data.city ?? null },
+    data: {
+      name: parsed.data.name,
+      city: parsed.data.city ?? null,
+      ...(parsed.data.currency ? { currency: parsed.data.currency } : {}),
+    },
   });
 
   revalidatePath("/dashboard");

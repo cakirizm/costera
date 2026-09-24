@@ -4,8 +4,7 @@ import { getSessionContext } from "@/lib/session";
 import { getRestaurantInput, getExpenses } from "@/lib/costera/repository";
 import { ExpenseManager, type ExpenseItem } from "@/components/app/ExpenseManager";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
-
-const money = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+import { money } from "@/lib/format";
 
 const CATEGORY_LABELS: Record<string, { en: string; tr: string }> = {
   RENT: { en: "Rent", tr: "Kira" },

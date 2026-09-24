@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export type SessionContext = {
   user: { id: string; name: string | null; email: string | null };
-  restaurant: { id: string; name: string; city: string | null } | null;
+  restaurant: { id: string; name: string; city: string | null; currency: string } | null;
   role: "OWNER" | "MANAGER" | "KITCHEN" | "FINANCE" | null;
   locationCount: number;
 };
@@ -25,7 +25,7 @@ export async function getSessionContext(): Promise<SessionContext | null> {
       email: session.user.email ?? null,
     },
     restaurant: membership
-      ? { id: membership.restaurant.id, name: membership.restaurant.name, city: membership.restaurant.city }
+      ? { id: membership.restaurant.id, name: membership.restaurant.name, city: membership.restaurant.city, currency: membership.restaurant.currency }
       : null,
     role: membership?.role ?? null,
     locationCount: 1,
