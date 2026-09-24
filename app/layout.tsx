@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import "@/styles/marketing/brand.css";
+import "@/styles/marketing/home.css";
+import "@/styles/marketing/pages.css";
+import "@/styles/marketing/reference.css";
+import "@/styles/marketing/how-steps.css";
 import "@/styles/dashboard/layout.css";
 import "@/styles/dashboard/engine.css";
 import "@/styles/dashboard/import.css";

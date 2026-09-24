@@ -1,0 +1,1022 @@
+/* =========================================================
+   APPROVED HOMEPAGE REFERENCE — FINAL OVERRIDES
+   ========================================================= */
+.reference-home {
+  background: #fff;
+}
+
+.reference-hero {
+  position: relative;
+  min-height: 652px;
+  overflow: hidden;
+  background: #fbfbfa;
+  border-bottom: 1px solid #ebe9e3;
+}
+
+.reference-hero-bg {
+  position: absolute;
+  inset: 0 0 0 43%;
+  background:
+    linear-gradient(90deg,
+      #fbfbfa 0%,
+      rgba(251,251,250,.98) 7%,
+      rgba(251,251,250,.84) 19%,
+      rgba(251,251,250,.26) 45%,
+      rgba(251,251,250,.05) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(4,22,37,.12)),
+    url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2200&q=88") center right / cover no-repeat;
+}
+
+.reference-hero-grid {
+  position: relative;
+  z-index: 2;
+  min-height: 652px;
+  display: grid;
+  grid-template-columns: minmax(0, .79fr) minmax(0, 1.21fr);
+  gap: 28px;
+  align-items: center;
+}
+
+.reference-hero-copy {
+  align-self: center;
+  padding: 48px 0 36px;
+  max-width: 615px;
+}
+
+.reference-hero-copy .eyebrow {
+  margin-bottom: 24px;
+}
+
+.reference-hero-copy h1 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(50px, 3.82vw, 64px);
+  line-height: 1.075;
+  letter-spacing: -.052em;
+  font-weight: 825;
+}
+
+.reference-hero-copy h1 > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.reference-hero-copy h1 em {
+  color: var(--gold);
+  font-style: normal;
+  font-weight: inherit;
+}
+
+.reference-hero-copy > p {
+  max-width: 585px;
+  margin: 24px 0 0;
+  color: #657788;
+  font-size: 17px;
+  line-height: 1.62;
+}
+
+.reference-hero-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.reference-hero-actions .button {
+  min-height: 52px;
+  padding-inline: 24px;
+}
+
+.reference-outline {
+  background: rgba(255,255,255,.86);
+  border-color: #dfd5c5;
+}
+
+.reference-play {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #a87530;
+  border-radius: 50%;
+  color: #a87530;
+  font-size: 8px;
+}
+
+.reference-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 23px;
+  margin-top: 32px;
+  color: #68798a;
+  font-size: 12px;
+  font-weight: 560;
+}
+
+.reference-trust span::before {
+  content: "✓";
+  margin-right: 7px;
+  color: var(--gold);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.reference-product {
+  position: relative;
+  align-self: center;
+  transform: translate(26px, 10px);
+}
+
+.reference-product .product-laptop {
+  width: min(100%, 705px);
+  max-width: 705px;
+  margin-left: auto;
+  margin-right: 8px;
+}
+
+.reference-product .laptop-screen {
+  border-width: 10px;
+  border-bottom-width: 17px;
+  border-radius: 16px 16px 10px 10px;
+}
+
+.reference-product .mock-body {
+  min-height: 330px;
+}
+
+.reference-product .mock-topbar {
+  height: 38px;
+}
+
+.reference-product .mock-content {
+  padding: 12px;
+}
+
+.reference-product .mock-sidebar {
+  padding-top: 14px;
+}
+
+.reference-product .mock-kpis strong {
+  font-size: 14px;
+}
+
+.reference-product .mock-lower {
+  grid-template-columns: 1.22fr 1fr;
+}
+
+.reference-product .chart-area {
+  height: 92px;
+}
+
+.reference-product .mini-donut {
+  width: 74px;
+  height: 74px;
+}
+
+.reference-product .mini-donut::after {
+  inset: 16px;
+}
+
+.reference-product .channel-strip span {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.reference-hand-note {
+  position: absolute;
+  top: 5px;
+  right: -28px;
+  width: 165px;
+  color: #fff;
+  font-family: "Segoe Script", "Bradley Hand", "Brush Script MT", cursive;
+  font-size: 16px;
+  line-height: 1.38;
+  font-style: italic;
+  transform: rotate(-6deg);
+  text-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+
+.reference-hand-note::after {
+  content: "";
+  position: absolute;
+  width: 78px;
+  height: 28px;
+  left: 14px;
+  top: 49px;
+  border-bottom: 2px solid rgba(255,255,255,.9);
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+.reference-why {
+  position: relative;
+  padding: 43px 0 34px;
+  background:
+    radial-gradient(circle at 88% 5%, rgba(210,174,112,.07), transparent 23%),
+    #fff;
+}
+
+.reference-why-grid {
+  display: grid;
+  grid-template-columns: 285px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.reference-why-intro .eyebrow {
+  margin-bottom: 16px;
+}
+
+.reference-why-intro h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 35px;
+  line-height: 1.06;
+  letter-spacing: -.045em;
+}
+
+.reference-why-intro > p {
+  margin: 15px 0 0;
+  color: #71818f;
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.reference-pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+
+.reference-pillar {
+  padding: 5px 0 0;
+}
+
+.reference-pillar-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 15px;
+  border: 1px solid #eadfce;
+  border-radius: 13px;
+  background: #fff;
+  color: #ad762d;
+  box-shadow: 0 7px 20px rgba(9,40,66,.05);
+}
+
+.reference-pillar-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.reference-pillar h3 {
+  margin: 0 0 8px;
+  color: var(--navy);
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.reference-pillar p {
+  margin: 0;
+  color: #71808d;
+  font-size: 13px;
+  line-height: 1.52;
+}
+
+.reference-signature {
+  width: max-content;
+  max-width: calc(100% - 40px);
+  margin: 32px auto 0;
+  padding: 0 56px;
+  position: relative;
+  color: #a97732;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: .22em;
+}
+
+.reference-signature::before,
+.reference-signature::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 38px;
+  height: 1px;
+  background: #c79a58;
+}
+
+.reference-signature::before { left: 0; }
+.reference-signature::after { right: 0; }
+
+/* ===== Premium marketing sections (Phase 6) ===== */
+.reference-stats {
+  padding: 46px 0;
+  background: linear-gradient(180deg,#fbfcfc,#f4f7f8);
+  border-top: 1px solid #eef1f2;
+  border-bottom: 1px solid #eef1f2;
+}
+.reference-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 20px;
+}
+.reference-stats-grid article {
+  padding: 4px 8px;
+  border-left: 2px solid #e2c68a;
+}
+.reference-stats-grid strong {
+  display: block;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: #0c3050;
+  font-weight: 780;
+}
+.reference-stats-grid span {
+  display: block;
+  margin: 9px 0 5px;
+  font-size: 13px;
+  font-weight: 750;
+  color: #244054;
+}
+.reference-stats-grid small {
+  display: block;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #7c8b95;
+}
+
+.reference-how {
+  padding: 74px 0 20px;
+}
+.reference-how-head {
+  max-width: 620px;
+  margin-bottom: 34px;
+}
+.reference-how-head h2 {
+  margin-top: 12px;
+  font-size: 32px;
+  line-height: 1.12;
+  letter-spacing: -.035em;
+  color: #0b2c48;
+}
+.reference-steps {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 20px;
+}
+.reference-step {
+  position: relative;
+  padding: 26px 22px;
+  border: 1px solid #e7ebee;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(9,40,66,.04);
+}
+.reference-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#0a2b45,#164a6d);
+  color: #e9cf9d;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+.reference-step h3 {
+  margin: 16px 0 8px;
+  font-size: 17px;
+  color: #12324a;
+  letter-spacing: -.02em;
+}
+.reference-step p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #61727d;
+}
+.reference-step-arrow {
+  position: absolute;
+  top: 44px;
+  right: -22px;
+  z-index: 2;
+  color: #c79a58;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.reference-features {
+  padding: 64px 0 20px;
+}
+.reference-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 20px;
+}
+.reference-feature {
+  padding: 28px 24px;
+  border: 1px solid #e7ebee;
+  border-radius: 16px;
+  background: linear-gradient(180deg,#fff,#fbfcfd);
+}
+.reference-feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  border: 1px solid #eadfce;
+  background: #fff;
+  color: #ad762d;
+  margin-bottom: 16px;
+}
+.reference-feature-icon svg { width: 24px; height: 24px; }
+.reference-feature h3 {
+  font-size: 17px;
+  color: #12324a;
+  letter-spacing: -.02em;
+  margin-bottom: 9px;
+}
+.reference-feature p {
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: #61727d;
+}
+
+.reference-cta {
+  margin-top: 74px;
+  padding: 66px 0 40px;
+  background:
+    radial-gradient(circle at 82% 0%, rgba(206,158,86,.16), transparent 40%),
+    linear-gradient(135deg,#082337 0%,#0f3a58 100%);
+  background-color: #0b2c46;
+}
+.reference-cta-inner {
+  max-width: 720px;
+  text-align: center;
+}
+.reference-cta-inner h2 {
+  margin-top: 12px;
+  font-size: 34px;
+  line-height: 1.1;
+  letter-spacing: -.04em;
+  color: #fff;
+}
+.reference-cta-inner p {
+  margin: 14px auto 26px;
+  max-width: 520px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255,255,255,.72);
+}
+.reference-cta-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.reference-cta-outline {
+  border-color: rgba(255,255,255,.32) !important;
+  color: #fff !important;
+}
+.reference-cta-outline:hover {
+  border-color: rgba(255,255,255,.6) !important;
+  background: rgba(255,255,255,.06) !important;
+}
+.reference-cta .reference-signature {
+  margin-top: 42px;
+  color: #d7ae67;
+}
+.reference-cta .reference-signature::before,
+.reference-cta .reference-signature::after {
+  background: rgba(215,174,103,.5);
+}
+
+@media (max-width: 900px) {
+  .reference-stats-grid { grid-template-columns: 1fr 1fr; gap: 26px 20px; }
+  .reference-steps { grid-template-columns: 1fr; }
+  .reference-step-arrow { display: none; }
+  .reference-feature-grid { grid-template-columns: 1fr; }
+  .reference-how-head h2, .reference-cta-inner h2 { font-size: 27px; }
+}
+
+/* Reference header proportions */
+.reference-home ~ * { }
+
+@media (min-width: 1200px) {
+  .shell {
+    width: min(1360px, calc(100% - 118px));
+  }
+
+  .site-header {
+    height: 84px;
+  }
+
+  .reference-home .reference-hero {
+    min-height: 648px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .reference-hero-bg {
+    inset: 46% 0 0;
+    background-position: center;
+  }
+
+  .reference-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-top: 34px;
+    padding-bottom: 60px;
+  }
+
+  .reference-hero-copy {
+    max-width: 700px;
+  }
+
+  .reference-product {
+    transform: none;
+  }
+
+  .reference-product .product-laptop {
+    margin-inline: auto;
+  }
+
+  .reference-hand-note {
+    right: 10px;
+  }
+
+  .reference-why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-pillar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .reference-hero {
+    min-height: auto;
+  }
+
+  .reference-hero-bg {
+    inset: 52% 0 0;
+  }
+
+  .reference-hero-grid {
+    min-height: auto;
+    padding-top: 22px;
+    padding-bottom: 44px;
+  }
+
+  .reference-hero-copy {
+    padding: 30px 0 12px;
+  }
+
+  .reference-hero-copy h1 {
+    font-size: 43px;
+  }
+
+  .reference-hero-copy h1 > span {
+    white-space: normal;
+  }
+
+  .reference-hero-copy > p {
+    font-size: 16px;
+  }
+
+  .reference-hero-actions {
+    flex-direction: column;
+  }
+
+  .reference-hero-actions .button {
+    width: 100%;
+  }
+
+  .reference-trust {
+    gap: 9px 16px;
+  }
+
+  .reference-hand-note {
+    display: none;
+  }
+
+  .reference-pillar-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .reference-why {
+    padding-top: 48px;
+  }
+
+  .reference-signature {
+    padding-inline: 46px;
+    letter-spacing: .15em;
+  }
+}
+
+
+/* =========================================================
+   COSTERA HEADER — BRAND-ACCURATE NAVIGATION
+   ========================================================= */
+.site-header {
+  height: 84px;
+  background: rgba(255,255,255,.985);
+  border-bottom: 1px solid #e9ecee;
+}
+
+.header-inner {
+  grid-template-columns: minmax(390px, 430px) 1fr auto;
+  gap: 28px;
+}
+
+.brand {
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  color: var(--navy);
+  font-size: 23px;
+  line-height: 1;
+  font-weight: 590;
+  letter-spacing: .225em;
+}
+
+.brand-divider {
+  height: 32px;
+  margin: 0 17px 0 15px;
+  background: #d8c39f;
+}
+
+.brand-tagline {
+  color: #b17428;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 500;
+  transform: rotate(-2deg) translateY(1px);
+}
+
+.nav-links {
+  gap: 31px;
+  font-size: 13.5px;
+  font-weight: 690;
+}
+
+.nav-dropdown-trigger {
+  gap: 8px;
+}
+
+.nav-chevron {
+  width: 10px;
+  height: 7px;
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #365166;
+  transition: transform .18s ease;
+}
+
+.nav-dropdown:hover .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.header-actions {
+  gap: 15px;
+  justify-self: end;
+}
+
+.header-actions .text-link {
+  white-space: nowrap;
+}
+
+.header-actions .desktop-demo {
+  min-height: 46px;
+  padding-inline: 20px;
+  white-space: nowrap;
+}
+
+.language-switch-flag {
+  min-width: 68px;
+  height: 40px;
+  padding: 0 11px;
+  gap: 7px;
+  border: 1px solid #dce2e6;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  box-shadow: 0 2px 8px rgba(9,40,66,.03);
+  font-size: 11px;
+  font-weight: 820;
+  letter-spacing: .04em;
+}
+
+.language-switch-flag:hover {
+  border-color: #c8d0d6;
+  background: #f8f9f9;
+}
+
+.language-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.mobile-language {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 1180px) {
+  .header-inner {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .brand-tagline,
+  .brand-divider {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .brand-name {
+    font-size: 21px;
+  }
+
+  .nav-links {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .language-switch-flag {
+    min-width: 60px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    height: 72px;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+    letter-spacing: .18em;
+  }
+
+  .language-switch-flag {
+    min-width: 54px;
+    height: 36px;
+    padding-inline: 8px;
+    gap: 5px;
+  }
+
+  .language-flag {
+    font-size: 15px;
+  }
+}
+
+
+/* Real SVG flags */
+.language-flag {
+  width: 24px;
+  height: 16px;
+  flex: 0 0 24px;
+  display: block;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(9,40,66,.08);
+}
+
+.mobile-language .language-flag {
+  width: 24px;
+  height: 16px;
+  flex-basis: 24px;
+}
+
+
+/* =========================================================
+   DESKTOP 100% VIEW = PREVIOUS 90% BROWSER-ZOOM COMPOSITION
+   Keep the homepage visually compact without asking the user
+   to change browser zoom.
+   ========================================================= */
+@media (min-width: 1200px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .site-header,
+  .reference-home {
+    zoom: .90;
+    width: 111.111111%;
+  }
+
+  .site-header {
+    max-width: 111.111111%;
+  }
+}
+
+/* Make the handwritten note readable on both light laptop UI
+   and the restaurant background. */
+.reference-hand-note {
+  color: #0a2943;
+  font-weight: 650;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.95),
+    0 0 8px rgba(255,255,255,.95),
+    0 2px 12px rgba(255,255,255,.82);
+}
+
+.reference-hand-note::after {
+  border-bottom-color: #b47a2f;
+  opacity: .95;
+}
+
+
+/* Final readability pass for the handwritten laptop note */
+.reference-hand-note {
+  top: 0;
+  right: -22px;
+  width: 188px;
+  padding: 7px 10px 9px;
+  border-radius: 10px;
+  color: #0a2943;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(180,122,47,.24);
+  box-shadow: 0 6px 18px rgba(9,40,66,.10);
+  backdrop-filter: blur(2px);
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.34;
+  text-shadow: none;
+}
+
+.reference-hand-note::after {
+  left: 28px;
+  top: 54px;
+  width: 78px;
+  border-bottom-color: #b47a2f;
+}
+
+
+/* Desktop fit correction: keep the compact 90% homepage feel
+   but stop the laptop/header from drifting beyond the viewport. */
+@media (min-width: 1200px) {
+  .site-header {
+    zoom: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .reference-home {
+    zoom: .90;
+    width: 111.111111%;
+  }
+
+  .reference-product {
+    transform: translate(-34px, 10px);
+  }
+
+  .reference-product .product-laptop {
+    max-width: 660px;
+    margin-left: auto;
+    margin-right: 42px;
+  }
+
+  .reference-hand-note {
+    top: 4px;
+    right: 20px;
+  }
+}
+
+
+/* =========================================================
+   DESKTOP FIRST-SCREEN HARD FIT
+   Grounded against 1343px user screenshot:
+   keep all four WHY COSTERA cards fully inside viewport.
+   ========================================================= */
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .reference-why-grid {
+    box-sizing: border-box;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 34px;
+    padding-right: 105px;
+  }
+
+  .reference-pillar-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .reference-pillar {
+    min-width: 0;
+  }
+
+  .reference-pillar h3 {
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .reference-pillar p {
+    font-size: 12px;
+    line-height: 1.48;
+  }
+
+  .reference-pillar-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .reference-signature {
+    transform: translateX(-38px);
+  }
+
+  .reference-hero-grid {
+    box-sizing: border-box;
+    padding-right: 72px;
+  }
+
+  .reference-product {
+    transform: translate(-54px, 10px);
+  }
+
+  .reference-product .product-laptop {
+    max-width: 635px;
+    margin-right: 28px;
+  }
+
+  .reference-hand-note {
+    right: 10px;
+  }
+}
+
+
+/* =========================================================
+   HERO OVERLAP FIX — move laptop right without clipping.
+   Targets common 1270–1440 desktop widths.
+   ========================================================= */
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .reference-hero-grid {
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    gap: 34px;
+    padding-right: 34px;
+  }
+
+  .reference-hero-copy {
+    position: relative;
+    z-index: 3;
+    max-width: 600px;
+  }
+
+  .reference-product {
+    position: relative;
+    z-index: 2;
+    transform: translate(6px, 10px);
+  }
+
+  .reference-product .product-laptop {
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .reference-hand-note {
+    right: 8px;
+  }
+}
+
+
