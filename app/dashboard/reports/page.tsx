@@ -15,6 +15,19 @@ export default async function ReportsPage() {
   const hasData = !!input;
 
   const reports = [
+    // Only offered once the terminal has closed a ticket today; an empty day
+    // close is a confusing download, not a report.
+    ...(posDay && posDay.ticketCount > 0
+      ? [
+          {
+            title: tx(locale, "POS Day Close", "POS Gün Sonu"),
+            period: tx(locale, "Today", "Bugün"),
+            desc: tx(locale, "Takings, payments, drawers", "Ciro, ödemeler, kasalar"),
+            type: "pos-day",
+            icon: "🧾",
+          },
+        ]
+      : []),
     {
       title: tx(locale, "Daily Cost Pulse", "Günlük Maliyet Nabzı"),
       period: tx(locale, "Today", "Bugün"),

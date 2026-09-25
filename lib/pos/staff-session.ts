@@ -119,3 +119,38 @@ export function effectiveRole(
 ): RoleType | null {
   return staff?.role ?? accountRole;
 }
+
+/**
+ * Marks a browser as a till.
+ *
+ * Locking the terminal clears the staff session, and without this the dashboard
+ * would fall back to trusting the browser login again - so a waiter alone with
+ * the owner's tablet could tap Lock and walk straight into the dashboard. Once a
+ * browser has been used as a till it stays one, and the dashboard demands a PIN
+ * with dashboard rights. An owner's own laptop never picks up this marker, so
+ * working from a desk is unaffected.
+ *
+ * Signing out clears it, which is the way back if a laptop is marked by mistake.
+ */
+export const TILL_COOKIE = "costera_pos_till";
+const TILL_TTL_SECONDS = 180 * 24 * 60 * 60;
+
+export async function markDeviceAsTill(): Promise<void> {
+  const store = await cookies();
+  store.set(TILL_COOKIE, "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: TILL_TTL_SECONDS,
+  });
+}
+
+export async function isTillDevice(): Promise<boolean> {
+  const store = await cookies();
+  return store.get(TILL_COOKIE)?.value === "1";
+}
+
+export async function clearTillMarker(): Promise<void> {
+  const store = await cookies();
+  store.delete(TILL_COOKIE);
+}

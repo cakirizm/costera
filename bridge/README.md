@@ -30,8 +30,39 @@ only its SHA-256 digest — so paste it straight into `.env` as
 npm start
 ```
 
-On Windows, install it as a service so it survives a reboot (`nssm`, `sc create`
-or Task Scheduler at logon). Point `COSTERA_URL` at the server the tills use.
+Point `COSTERA_URL` at the server the tills use.
+
+## Keep it running on the till
+
+From an elevated PowerShell, in this folder:
+
+```powershell
+.install-task.ps1
+```
+
+That registers a Scheduled Task which starts the bridge at logon and restarts it
+a minute after any crash. Use `-AtStartup` on a till that runs without anyone
+logging in, and `-TaskName` if one machine drives two bridges.
+
+A Scheduled Task rather than a real Windows service on purpose: a Node script is
+not a service binary, so a service would mean pulling in a wrapper such as
+`nssm`. The task needs nothing extra and survives reboots just as well. If you
+already run `nssm` for other things, wrapping `npm start` with it works too.
+
+Managing it afterwards:
+
+```powershell
+Get-ScheduledTask -TaskName "COSTERA POS Bridge"
+Stop-ScheduledTask -TaskName "COSTERA POS Bridge"
+Unregister-ScheduledTask -TaskName "COSTERA POS Bridge" -Confirm:$false
+```
+
+The token stays in `.env` and out of the task definition, which is readable by
+anyone on the machine.
+
+**Updating is manual for now.** There is no update channel: pull the repo on the
+till, `npm install`, then `Stop-ScheduledTask` / `Start-ScheduledTask`. Worth
+automating once more than a couple of venues run this.
 
 ## Printer transports
 

@@ -2,12 +2,55 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireRole } from "@/lib/session";
 import { getRestaurantInput, getExpenses } from "@/lib/costera/repository";
 import { analyzeCost } from "@/lib/costera/engine";
+import { businessDayKey, venueTime } from "@/lib/pos/business-day";
+import { moneyMinor } from "@/lib/pos/money";
+import { getPosDaySummary } from "@/lib/pos/reports";
 
 function toCsv(headers: string[], rows: string[][]): string {
   const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
   const lines = [headers.map(escape).join(",")];
   for (const row of rows) lines.push(row.map(escape).join(","));
   return lines.join("\n");
+}
+
+async function posDayCsv(restaurantId: string, currency: string): Promise<NextResponse> {
+  const summary = await getPosDaySummary(restaurantId);
+  const day = businessDayKey(summary.businessDay);
+  const money = (minor: number) => moneyMinor(minor, currency);
+
+  const rows: string[][] = [
+    ["Business day", day],
+    ["Tickets", String(summary.ticketCount)],
+    ["Takings", money(summary.grossMinor)],
+    ["Average ticket", money(summary.averageTicketMinor)],
+    ["Discounts", money(summary.discountMinor)],
+    ["Comped lines", String(summary.compedLines)],
+    ["Voided lines", String(summary.voidedLines)],
+    ["", ""],
+    ["Payment method", "Count / Amount"],
+    ...summary.byMethod.map((r) => [r.method, `${r.count} / ${money(r.amountMinor)}`]),
+    ["", ""],
+    ["Channel", "Tickets / Takings"],
+    ...summary.byChannel.map((r) => [r.channel, `${r.ticketCount} / ${money(r.grossMinor)}`]),
+    ["", ""],
+    ["Shift opened", "Expected / Counted / Difference"],
+    ...summary.shifts.map((s) => [
+      venueTime(s.openedAt),
+      s.countedCashMinor === null
+        ? "still open"
+        : `${money(s.expectedCashMinor ?? 0)} / ${money(s.countedCashMinor)} / ${money(s.differenceMinor ?? 0)}`,
+    ]),
+    ["", ""],
+    ["Top seller", "Sold / Takings"],
+    ...summary.topProducts.map((r) => [r.name, `${r.quantity} / ${money(r.grossMinor)}`]),
+  ];
+
+  return new NextResponse(toCsv(["Item", "Value"], rows), {
+    headers: {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": `attachment; filename="costera-pos-day-${day}.csv"`,
+    },
+  });
 }
 
 export async function GET(request: NextRequest) {
@@ -19,6 +62,10 @@ export async function GET(request: NextRequest) {
     }
 
     const type = request.nextUrl.searchParams.get("type") ?? "cost-summary";
+
+    if (type === "pos-day") {
+      return posDayCsv(restaurantId, ctx.restaurant?.currency ?? "TRY");
+    }
 
     const input = await getRestaurantInput(restaurantId);
     if (!input) {

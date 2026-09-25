@@ -11,7 +11,7 @@ import {
   revokeStaffPin,
   setStaffPin,
 } from "@/lib/pos/staff";
-import { clearActiveStaff, setActiveStaff } from "@/lib/pos/staff-session";
+import { clearActiveStaff, markDeviceAsTill, setActiveStaff } from "@/lib/pos/staff-session";
 import { recordAudit } from "@/lib/pos/audit";
 import { getSessionContext, requireRole } from "@/lib/session";
 
@@ -142,6 +142,7 @@ export async function unlockTerminalAction(pin: string): Promise<StaffResult> {
 
   await clearPinAttempts(restaurantId);
   await setActiveStaff(match.membershipId);
+  await markDeviceAsTill();
   await recordAudit({
     restaurantId,
     membershipId: match.membershipId,

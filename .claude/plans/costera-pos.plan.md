@@ -167,6 +167,12 @@ Toplam ~9–13 hafta geliştirme; ÖKC sertifikasyonu takvimi uzatabilir.
 Önce dikey dilim: **Faz 1 → 2 → 3 → 9**. Masa aç, sipariş al, nakit öde, veri motora aksın.
 KDS (4), vardiya/rapor (5), köprü (6), ÖKC (7), offline (8) bunun üzerine eklenir.
 
+## Kalan Açık Maddeler
+
+- **Faz 7 ÖKC** — marka (Ingenico / Verifone / Hugin / Beko-Profilo) ve TSM operatörü seçilmeden başlanamaz.
+- **Köprü otomatik güncelleme** — dağıtım kanalı yok; şimdilik tilltaki repoyu çekip görevi yeniden başlatmak gerekiyor.
+- **Çevrimdışı soğuk açılış** — adisyon durumunun istemcide önbelleklenmesi.
+
 ## Kabul Kriterleri
 
 - [ ] Faz görevleri tamamlandı
@@ -180,10 +186,10 @@ KDS (4), vardiya/rapor (5), köprü (6), ÖKC (7), offline (8) bunun üzerine ek
 - [x] Vardiya döngüsü (aç → nakit çıkış → say → kapat) ve gün sonu raporu tarayıcıda doğrulandı
 - [ ] KDS için SSE (polling yeterli olmadığında)
 - [x] Köprü uçtan uca doğrulandı: cihaz kaydı, kuyruk boşaltma, çekmece darbesi, hata/yeniden kuyruğa alma
-- [ ] Gün sonu raporunun xlsx dışa aktarımı (`app/api/reports/export`)
 - [x] Offline kuyruk tarayıcıda doğrulandı: kopukken satır eklendi, dönünce tek kez senkronlandı
-- [ ] Köprü için Windows servis kurulumu + otomatik güncelleme
 - [x] Personel + PIN kilidi: rol artık hesabın değil, terminaldeki kişinin rolü
 - [x] Satır içi yönetici onayı ve PIN deneme sınırı tarayıcıda doğrulandı
+- [x] Pano, till olarak kullanılmış bir tarayıcıda PIN oturumuna uyuyor
+- [x] Gün sonu dışa aktarımı (`?type=pos-day`, mevcut rotayla tutarlı CSV)
+- [x] Köprü için Windows Zamanlanmış Görev kurulumu (`bridge/install-task.ps1`)
 - [ ] Offline soğuk açılış (adisyon durumunun istemcide önbelleklenmesi)
-- [ ] Panonun da PIN oturumuna uyması: PIN'li garson "Çıkış" bağlantısını göremiyor ama pano hâlâ tarayıcı oturumuna güveniyor

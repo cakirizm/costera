@@ -1,6 +1,7 @@
 "use server";
 
 import { createHash, randomBytes } from "crypto";
+import { clearActiveStaff, clearTillMarker } from "@/lib/pos/staff-session";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
@@ -10,6 +11,10 @@ import { signIn, signOut } from "@/auth";
 import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function signOutAction() {
+  // Also drops the till marker and any PIN session: signing the browser out is
+  // the one way to take a device back out of terminal duty.
+  await clearActiveStaff();
+  await clearTillMarker();
   await signOut({ redirectTo: "/login" });
 }
 
