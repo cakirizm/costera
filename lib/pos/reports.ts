@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { businessDayFor } from "./business-day";
+import { businessDayFor, businessDayRange } from "./business-day";
 
 /**
  * Day-close numbers for the dashboard.
@@ -36,6 +36,7 @@ export async function getPosDaySummary(
   at = new Date(),
 ): Promise<PosDaySummary> {
   const businessDay = businessDayFor(at);
+  const { start, end } = businessDayRange(businessDay);
   const paidOrders = { restaurantId, businessDay, status: "PAID" as const };
 
   const [orders, byMethod, lines, shifts, writeOffs] = await Promise.all([
@@ -55,7 +56,7 @@ export async function getPosDaySummary(
       _sum: { quantity: true, lineTotalMinor: true },
     }),
     prisma.posShift.findMany({
-      where: { restaurantId, openedAt: { gte: businessDay } },
+      where: { restaurantId, openedAt: { gte: start, lt: end } },
       orderBy: { openedAt: "asc" },
       select: {
         id: true,

@@ -82,6 +82,7 @@ async function main() {
 
   await runOrderChecks(actor, order, table.id, shift.id, restaurant.id);
 
+  await runDayCloseChecks(restaurant.id, membership.id);
   await runStaffPinChecks(restaurant.id);
   await runApprovalChecks(restaurant.id);
   await runOfflineReplayChecks(actor, burger.id);
@@ -171,6 +172,50 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+/* The day close must only gather what belongs to that business day. */
+async function runDayCloseChecks(restaurantId: string, membershipId: string) {
+  const { getPosDaySummary } = await import("@/lib/pos/reports");
+  const { businessDayFor, businessDayRange, businessDayKey } = await import("@/lib/pos/business-day");
+
+  const now = new Date("2026-09-25T19:00:00Z");
+  const day = businessDayFor(now);
+  const { start, end } = businessDayRange(day);
+
+  // 03:25 local on the 25th still belongs to the evening of the 24th.
+  const previousEvening = new Date("2026-09-25T00:25:00Z");
+  // 22:00 local on the 25th is squarely inside it.
+  const sameEvening = new Date("2026-09-25T19:00:00Z");
+
+  const created: Record<string, string> = {};
+  for (const [label, openedAt] of [
+    ["previous", previousEvening],
+    ["same", sameEvening],
+  ] as const) {
+    const shift = await prisma.posShift.create({
+      data: {
+        restaurantId,
+        openingCashMinor: 1000,
+        openedByMembershipId: membershipId,
+        openedAt,
+        status: "CLOSED",
+        closedAt: openedAt,
+      },
+    });
+    created[label] = shift.id;
+  }
+
+  check("the window starts at the cutoff, not at midnight", start.toISOString(), "2026-09-25T03:00:00.000Z");
+  check("the window is exactly one day long", end.getTime() - start.getTime(), 24 * 60 * 60 * 1000);
+
+  const summary = await getPosDaySummary(restaurantId, now);
+  check("the day close is keyed on the business day", businessDayKey(summary.businessDay), "2026-09-25");
+  const ids = summary.shifts.map((s) => s.id);
+  check("a shift from the same evening is counted", ids.includes(created.same), true);
+  check("a shift from the previous evening is not", ids.includes(created.previous), false);
+
+  await prisma.posShift.deleteMany({ where: { restaurantId } });
+}
 
 /* Who may sign off a write-off, and how hard the PIN is to guess. */
 async function runApprovalChecks(restaurantId: string) {
