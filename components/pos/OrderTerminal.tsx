@@ -6,6 +6,7 @@ import type { AppLocale } from "@/lib/costera/i18n";
 import { tx } from "@/lib/costera/locale";
 import { posFailureText } from "@/lib/pos/messages";
 import { useOutbox } from "@/lib/pos/offline/use-outbox";
+import { ApprovalSheet } from "./ApprovalSheet";
 import { moneyMinor } from "@/lib/pos/money";
 import type { TerminalCategory, TerminalProduct } from "@/lib/pos/terminal-repository";
 import {
@@ -39,16 +40,16 @@ export type TerminalOrder = {
   lines: TerminalOrderLine[];
 };
 
+type WriteOff = { kind: "VOID" | "COMP"; lineId: string; label: string };
+
 export function OrderTerminal({
   locale,
   currency,
-  canApproveWriteOffs,
   menu,
   order,
 }: {
   locale: AppLocale;
   currency: string;
-  canApproveWriteOffs: boolean;
   menu: TerminalCategory[];
   order: TerminalOrder;
 }) {
@@ -58,6 +59,8 @@ export function OrderTerminal({
   const [chosenModifiers, setChosenModifiers] = useState<string[]>([]);
   const [expandedLine, setExpandedLine] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [approvalFor, setApprovalFor] = useState<WriteOff | null>(null);
+  const [approvalError, setApprovalError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const { online, pending: queued, queue, setOnline } = useOutbox();
 
@@ -79,6 +82,37 @@ export function OrderTerminal({
       const result = await work();
       if (!result.ok) setError(result.error ?? "INVALID_INPUT");
       else router.refresh();
+    });
+
+  /**
+   * Run a void or a comp, asking for a manager PIN only if the server says one
+   * is needed. The terminal never decides that itself.
+   */
+  const writeOff = (target: WriteOff, approvalPin?: string) =>
+    startTransition(async () => {
+      setError(null);
+      const result =
+        target.kind === "VOID"
+          ? await voidLineAction(target.lineId, "Terminal", approvalPin)
+          : await compLineAction(target.lineId, "Terminal", approvalPin);
+
+      if (result.ok) {
+        setApprovalFor(null);
+        setApprovalError(null);
+        router.refresh();
+        return;
+      }
+
+      if (result.error === "APPROVAL_REQUIRED") {
+        setApprovalFor(target);
+        setApprovalError(null);
+        return;
+      }
+      if (approvalPin) {
+        setApprovalError(posFailureText(result.error ?? "INVALID_INPUT", locale));
+        return;
+      }
+      setError(result.error ?? "INVALID_INPUT");
     });
 
   const addProduct = (product: TerminalProduct, modifierIds: string[]) => {
@@ -262,21 +296,21 @@ export function OrderTerminal({
                 {money(line.lineTotalMinor)}
               </button>
 
-              {expandedLine === line.id && line.status !== "VOID" && canApproveWriteOffs && (
+              {expandedLine === line.id && line.status !== "VOID" && (
                 <div className="pos-cart-line-actions">
                   <button
                     type="button"
                     className="pos-btn danger"
-                    disabled={pending}
-                    onClick={() => act(() => voidLineAction(line.id, "Terminal"))}
+                    disabled={pending || !online}
+                    onClick={() => writeOff({ kind: "VOID", lineId: line.id, label: line.name })}
                   >
                     {tx(locale, "Void", "İptal")}
                   </button>
                   <button
                     type="button"
                     className="pos-btn"
-                    disabled={pending || line.isComped}
-                    onClick={() => act(() => compLineAction(line.id, "Terminal"))}
+                    disabled={pending || line.isComped || !online}
+                    onClick={() => writeOff({ kind: "COMP", lineId: line.id, label: line.name })}
                   >
                     {tx(locale, "Comp", "İkram")}
                   </button>
@@ -334,6 +368,20 @@ export function OrderTerminal({
           </button>
         </div>
       </aside>
+
+      {approvalFor && (
+        <ApprovalSheet
+          locale={locale}
+          title={`${approvalFor.kind === "VOID" ? tx(locale, "Void", "İptal") : tx(locale, "Comp", "İkram")} · ${approvalFor.label}`}
+          error={approvalError}
+          pending={pending}
+          onCancel={() => {
+            setApprovalFor(null);
+            setApprovalError(null);
+          }}
+          onApprove={(pin) => writeOff(approvalFor, pin)}
+        />
+      )}
 
       {sheetProduct && (
         <div className="pos-sheet-backdrop" role="dialog" aria-modal="true">

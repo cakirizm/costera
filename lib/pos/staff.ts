@@ -140,3 +140,56 @@ export async function findStaffByPin(restaurantId: string, pin: string): Promise
   }
   return match;
 }
+
+/** Roles allowed to sign off a write-off: a void, a comp or a discount. */
+export const APPROVER_ROLES: Role[] = ["OWNER", "MANAGER"];
+
+const PIN_WINDOW_MS = 5 * 60 * 1000;
+const PIN_MAX_ATTEMPTS = 10;
+
+/**
+ * Rate limit PIN guessing.
+ *
+ * Counted per restaurant in a rolling window and, past the threshold, refused
+ * until the window rolls over. A short auto-expiring cooldown rather than a
+ * lockout: a venue must not be shut out of its own till by someone mashing the
+ * keypad, and 10 guesses per five minutes is nowhere near enough to walk a
+ * four-digit space.
+ */
+export async function allowPinAttempt(
+  restaurantId: string,
+  now = new Date(),
+): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
+  const bucket = Math.floor(now.getTime() / PIN_WINDOW_MS);
+  const expiresAt = new Date((bucket + 1) * PIN_WINDOW_MS);
+  const id = `${restaurantId}:${bucket}`;
+
+  const window = await prisma.posPinWindow.upsert({
+    where: { id },
+    create: { id, attempts: 1, expiresAt },
+    update: { attempts: { increment: 1 } },
+  });
+
+  return {
+    allowed: window.attempts <= PIN_MAX_ATTEMPTS,
+    retryAfterSeconds: Math.max(1, Math.ceil((expiresAt.getTime() - now.getTime()) / 1000)),
+  };
+}
+
+/** Forget the guesses once a PIN lands, so an honest typo does not accumulate. */
+export async function clearPinAttempts(restaurantId: string, now = new Date()): Promise<void> {
+  const bucket = Math.floor(now.getTime() / PIN_WINDOW_MS);
+  await prisma.posPinWindow.deleteMany({ where: { id: `${restaurantId}:${bucket}` } });
+}
+
+/**
+ * Resolve a manager PIN offered as approval for a write-off.
+ *
+ * Returns nothing unless the PIN belongs to someone in this restaurant who is
+ * allowed to sign one off; a waiter's own PIN can never approve their own void.
+ */
+export async function findApprover(restaurantId: string, pin: string): Promise<PinMatch | null> {
+  const match = await findStaffByPin(restaurantId, pin);
+  if (!match || !APPROVER_ROLES.includes(match.role)) return null;
+  return match;
+}

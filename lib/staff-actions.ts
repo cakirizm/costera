@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { isPosError } from "@/lib/pos/errors";
 import {
+  allowPinAttempt,
+  clearPinAttempts,
   createTerminalStaff,
   findStaffByPin,
   revokeStaffPin,
@@ -129,11 +131,16 @@ export async function unlockTerminalAction(pin: string): Promise<StaffResult> {
   if (!ctx) return { ok: false, error: "UNAUTHORIZED" };
   if (!restaurantId) return { ok: false, error: "NO_WORKSPACE" };
 
+  // The lock screen is the other door a PIN opens, so it is counted too.
+  const gate = await allowPinAttempt(restaurantId);
+  if (!gate.allowed) return { ok: false, error: "TOO_MANY_ATTEMPTS" };
+
   const match = await findStaffByPin(restaurantId, parsed.data);
   // One message for a wrong PIN and for an unknown one: the screen must not
   // help someone guess which digits were close.
   if (!match) return { ok: false, error: "PIN_REJECTED" };
 
+  await clearPinAttempts(restaurantId);
   await setActiveStaff(match.membershipId);
   await recordAudit({
     restaurantId,

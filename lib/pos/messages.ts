@@ -19,6 +19,9 @@ const MESSAGES: Record<PosErrorCode, { en: string; tr: string; ar: string }> = {
   PAYMENT_EXCEEDS_DUE: { en: "Payment is more than the amount due.", tr: "Ödeme kalan tutardan fazla.", ar: "الدفعة أكبر من المبلغ المستحق." },
   ORDER_UNPAID: { en: "There are still unpaid tickets on this shift.", tr: "Vardiyada ödenmemiş adisyon var.", ar: "لا تزال هناك طلبات غير مدفوعة." },
   NOTHING_TO_SEND: { en: "Nothing new to send.", tr: "Gönderilecek yeni ürün yok.", ar: "لا يوجد جديد للإرسال." },
+  APPROVAL_REQUIRED: { en: "A manager PIN is needed for this.", tr: "Bunun için yönetici PIN'i gerekli.", ar: "مطلوب رمز المدير." },
+  APPROVAL_REJECTED: { en: "That PIN cannot approve this.", tr: "Bu PIN bu işlemi onaylayamaz.", ar: "هذا الرمز لا يمكنه الموافقة." },
+  TOO_MANY_ATTEMPTS: { en: "Too many attempts. Wait a moment.", tr: "Çok fazla deneme. Biraz bekleyin.", ar: "محاولات كثيرة. انتظر قليلاً." },
   INVALID_INPUT: { en: "Invalid input.", tr: "Geçersiz giriş.", ar: "مدخل غير صالح." },
 };
 

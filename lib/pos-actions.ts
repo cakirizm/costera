@@ -12,6 +12,12 @@ import * as shifts from "@/lib/pos/shift-service";
 import { prisma } from "@/lib/prisma";
 import { recordAudit } from "@/lib/pos/audit";
 import { enrolDevice } from "@/lib/pos/bridge-auth";
+import {
+  allowPinAttempt,
+  APPROVER_ROLES,
+  clearPinAttempts,
+  findApprover,
+} from "@/lib/pos/staff";
 import { advanceLines } from "@/lib/pos/kds-service";
 import { currentShift } from "@/lib/pos/shift-service";
 import { setupTerminalWorkspace } from "@/lib/pos/setup";
@@ -86,6 +92,68 @@ async function run<T>(work: () => Promise<T>): Promise<PosActionResult<T>> {
 }
 
 const id = z.string().trim().min(1).max(64);
+const approvalPinSchema = z.string().trim().regex(/^[0-9]{4,6}$/).nullish();
+
+export type WriteOffApproval = { actor: PosActor; approvedBy: string | null; requestedBy: string | null };
+
+/**
+ * Who is signing off a void, a comp or a discount.
+ *
+ * A waiter cannot write money off on their own, but service does not stop while
+ * they fetch someone: a manager types their PIN on the spot and the write-off is
+ * recorded against the manager, with the person who asked for it kept alongside.
+ * A waiter's own PIN can never approve their own void.
+ */
+async function actorForWriteOff(approvalPin?: string | null): Promise<WriteOffApproval> {
+  const ctx = await getSessionContext();
+  if (!ctx) throw new Error("UNAUTHORIZED");
+
+  const restaurantId = ctx.restaurant?.id;
+  if (!restaurantId) throw new Error("NO_WORKSPACE");
+
+  const staff = await getActiveStaff(restaurantId);
+  const role = staff?.role ?? ctx.role;
+  const membershipId = staff?.membershipId ?? ctx.membershipId;
+
+  if (role && APPROVER_ROLES.includes(role)) {
+    if (!membershipId) throw new Error("NO_WORKSPACE");
+    return { actor: { restaurantId, membershipId }, approvedBy: null, requestedBy: null };
+  }
+
+  if (!approvalPin) throw new PosError("APPROVAL_REQUIRED");
+
+  // Counted before the PIN is checked, so a wrong guess costs an attempt.
+  const gate = await allowPinAttempt(restaurantId);
+  if (!gate.allowed) throw new PosError("TOO_MANY_ATTEMPTS");
+
+  const approver = await findApprover(restaurantId, approvalPin);
+  if (!approver) throw new PosError("APPROVAL_REJECTED");
+  await clearPinAttempts(restaurantId);
+
+  return {
+    actor: { restaurantId, membershipId: approver.membershipId },
+    approvedBy: approver.name,
+    requestedBy: membershipId ?? null,
+  };
+}
+
+/** Leaves a trail when one person authorised what another person asked for. */
+async function recordApproval(
+  approval: WriteOffApproval,
+  action: string,
+  entity: string,
+  entityId: string,
+): Promise<void> {
+  if (!approval.approvedBy) return;
+  await recordAudit({
+    restaurantId: approval.actor.restaurantId,
+    membershipId: approval.actor.membershipId,
+    action: "WRITE_OFF_APPROVED",
+    entity,
+    entityId,
+    meta: { action, approvedBy: approval.approvedBy, requestedBy: approval.requestedBy },
+  });
+}
 const reason = z.string().trim().min(1).max(200);
 const minorAmount = z.coerce.number().int().min(0).max(100_000_000);
 
@@ -153,39 +221,71 @@ export async function moveOrderAction(orderId: string, tableId: string | null) {
 // Voids, comps and discounts are money leaving the till. They need a manager,
 // they need a reason, and every one of them is written to PosAuditLog.
 
-export async function voidLineAction(lineId: string, why: string) {
-  const parsed = z.object({ lineId: id, why: reason }).safeParse({ lineId, why });
+export async function voidLineAction(lineId: string, why: string, approvalPin?: string | null) {
+  const parsed = z
+    .object({ lineId: id, why: reason, approvalPin: approvalPinSchema })
+    .safeParse({ lineId, why, approvalPin });
   if (!parsed.success) return { ok: false as const, error: "INVALID_INPUT" as const };
   return run(async () => {
-    const actor = await actorFor("OWNER", "MANAGER");
-    return orders.voidLine(actor, parsed.data.lineId, parsed.data.why);
+    const approval = await actorForWriteOff(parsed.data.approvalPin);
+    const order = await orders.voidLine(approval.actor, parsed.data.lineId, parsed.data.why);
+    await recordApproval(approval, "LINE_VOIDED", "PosOrderLine", parsed.data.lineId);
+    return order;
   });
 }
 
-export async function compLineAction(lineId: string, why: string) {
-  const parsed = z.object({ lineId: id, why: reason }).safeParse({ lineId, why });
+export async function compLineAction(lineId: string, why: string, approvalPin?: string | null) {
+  const parsed = z
+    .object({ lineId: id, why: reason, approvalPin: approvalPinSchema })
+    .safeParse({ lineId, why, approvalPin });
   if (!parsed.success) return { ok: false as const, error: "INVALID_INPUT" as const };
   return run(async () => {
-    const actor = await actorFor("OWNER", "MANAGER");
-    return orders.compLine(actor, parsed.data.lineId, parsed.data.why);
+    const approval = await actorForWriteOff(parsed.data.approvalPin);
+    const order = await orders.compLine(approval.actor, parsed.data.lineId, parsed.data.why);
+    await recordApproval(approval, "LINE_COMPED", "PosOrderLine", parsed.data.lineId);
+    return order;
   });
 }
 
-export async function setLineDiscountAction(lineId: string, discountMinor: number) {
-  const parsed = z.object({ lineId: id, discountMinor: minorAmount }).safeParse({ lineId, discountMinor });
+export async function setLineDiscountAction(
+  lineId: string,
+  discountMinor: number,
+  approvalPin?: string | null,
+) {
+  const parsed = z
+    .object({ lineId: id, discountMinor: minorAmount, approvalPin: approvalPinSchema })
+    .safeParse({ lineId, discountMinor, approvalPin });
   if (!parsed.success) return { ok: false as const, error: "INVALID_INPUT" as const };
   return run(async () => {
-    const actor = await actorFor("OWNER", "MANAGER");
-    return orders.setLineDiscount(actor, parsed.data.lineId, parsed.data.discountMinor);
+    const approval = await actorForWriteOff(parsed.data.approvalPin);
+    const order = await orders.setLineDiscount(
+      approval.actor,
+      parsed.data.lineId,
+      parsed.data.discountMinor,
+    );
+    await recordApproval(approval, "LINE_DISCOUNTED", "PosOrderLine", parsed.data.lineId);
+    return order;
   });
 }
 
-export async function setOrderDiscountAction(orderId: string, discountMinor: number) {
-  const parsed = z.object({ orderId: id, discountMinor: minorAmount }).safeParse({ orderId, discountMinor });
+export async function setOrderDiscountAction(
+  orderId: string,
+  discountMinor: number,
+  approvalPin?: string | null,
+) {
+  const parsed = z
+    .object({ orderId: id, discountMinor: minorAmount, approvalPin: approvalPinSchema })
+    .safeParse({ orderId, discountMinor, approvalPin });
   if (!parsed.success) return { ok: false as const, error: "INVALID_INPUT" as const };
   return run(async () => {
-    const actor = await actorFor("OWNER", "MANAGER");
-    return orders.setOrderDiscount(actor, parsed.data.orderId, parsed.data.discountMinor);
+    const approval = await actorForWriteOff(parsed.data.approvalPin);
+    const order = await orders.setOrderDiscount(
+      approval.actor,
+      parsed.data.orderId,
+      parsed.data.discountMinor,
+    );
+    await recordApproval(approval, "ORDER_DISCOUNTED", "PosOrder", parsed.data.orderId);
+    return order;
   });
 }
 

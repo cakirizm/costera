@@ -83,6 +83,7 @@ async function main() {
   await runOrderChecks(actor, order, table.id, shift.id, restaurant.id);
 
   await runStaffPinChecks(restaurant.id);
+  await runApprovalChecks(restaurant.id);
   await runOfflineReplayChecks(actor, burger.id);
 
   await runPrintQueueChecks(restaurant.id);
@@ -170,6 +171,36 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+/* Who may sign off a write-off, and how hard the PIN is to guess. */
+async function runApprovalChecks(restaurantId: string) {
+  const { createTerminalStaff, findApprover, allowPinAttempt, clearPinAttempts } = await import(
+    "@/lib/pos/staff"
+  );
+
+  await createTerminalStaff(restaurantId, "Smoke Manager", "MANAGER", "7788");
+  await createTerminalStaff(restaurantId, "Smoke Runner", "WAITER", "1122");
+
+  const manager = await findApprover(restaurantId, "7788");
+  check("a manager PIN can approve a write-off", manager?.role, "MANAGER");
+
+  const waiter = await findApprover(restaurantId, "1122");
+  check("a waiter cannot approve their own write-off", waiter, null);
+
+  const other = await prisma.restaurant.create({ data: { name: "Smoke Approver", currency: "TRY" } });
+  check("an approval PIN does not cross venues", await findApprover(other.id, "7788"), null);
+  await prisma.restaurant.delete({ where: { id: other.id } });
+
+  await clearPinAttempts(restaurantId);
+  let lastAllowed = true;
+  for (let attempt = 0; attempt < 11; attempt++) {
+    lastAllowed = (await allowPinAttempt(restaurantId)).allowed;
+  }
+  check("PIN guessing is cut off past the limit", lastAllowed, false);
+
+  await clearPinAttempts(restaurantId);
+  check("a successful PIN clears the count", (await allowPinAttempt(restaurantId)).allowed, true);
+}
 
 /* Till PINs: scoped to one venue, and revoking one ends the sign-in. */
 async function runStaffPinChecks(restaurantId: string) {

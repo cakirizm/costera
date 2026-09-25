@@ -106,7 +106,7 @@ Kasadaki Windows makinesinde çalışan servis (Electron tray veya Windows servi
 - `middleware.ts` + `middleware.test.ts` güncellemesi
 - Personel yönetimi: terminale özel hesaplar (web'e giremez), rol ataması, PIN verme/değiştirme/kaldırma
 - Terminal PIN kilidi: `/pos/lock`, imzalı httpOnly çerez, her POS aksiyonunun rolü **PIN'li personelin** rolüdür
-- İskonto/ikram/iptal `PosAuditLog`'a yazılıyor; **satır içi yönetici PIN onayı henüz yok** — şu an yalnızca OWNER/MANAGER rolü yapabiliyor
+- İskonto/ikram/iptal `PosAuditLog`'a yazılıyor ve satır içi yönetici PIN onayıyla korunuyor: garson işlemi başlatır, yönetici PIN'ini terminalde girer, işlem onaylayana yazılır, isteyen ayrı bir kayıtta durur. PIN denemeleri restoran başına 5 dakikada 10 ile sınırlı (kilit ekranı dahil).
 
 ### Faz 11 — Test & Pilot
 - Fiyatlama/vergi/para üstü için kapsamlı unit test
@@ -184,6 +184,6 @@ KDS (4), vardiya/rapor (5), köprü (6), ÖKC (7), offline (8) bunun üzerine ek
 - [x] Offline kuyruk tarayıcıda doğrulandı: kopukken satır eklendi, dönünce tek kez senkronlandı
 - [ ] Köprü için Windows servis kurulumu + otomatik güncelleme
 - [x] Personel + PIN kilidi: rol artık hesabın değil, terminaldeki kişinin rolü
+- [x] Satır içi yönetici onayı ve PIN deneme sınırı tarayıcıda doğrulandı
 - [ ] Offline soğuk açılış (adisyon durumunun istemcide önbelleklenmesi)
-- [ ] İskonto/iptal için satır içi yönetici PIN onayı (garson kendi PIN'iyle yönetici çağırabilsin)
 - [ ] Panonun da PIN oturumuna uyması: PIN'li garson "Çıkış" bağlantısını göremiyor ama pano hâlâ tarayıcı oturumuna güveniyor

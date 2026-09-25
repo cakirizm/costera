@@ -588,3 +588,7 @@
 .pos-lock-keys button:disabled { opacity: .4; cursor: not-allowed; }
 .pos-lock-keys button.ghost { background: transparent; font-size: 20px; }
 .pos-lock-keys button.go { background: var(--pos-gold); border-color: var(--pos-gold); color: #241a08; }
+
+.pos-approval .pos-sheet-body { max-width: 360px; margin: 0 auto; width: 100%; }
+.pos-approval .pos-sheet-foot { grid-template-columns: 1fr; }
+.pos-approval .pos-lock-keys button { min-height: 58px; font-size: 21px; }

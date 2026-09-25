@@ -16,6 +16,9 @@ export type PosErrorCode =
   | "PAYMENT_EXCEEDS_DUE"
   | "ORDER_UNPAID"
   | "NOTHING_TO_SEND"
+  | "APPROVAL_REQUIRED"
+  | "APPROVAL_REJECTED"
+  | "TOO_MANY_ATTEMPTS"
   | "INVALID_INPUT";
 
 export class PosError extends Error {

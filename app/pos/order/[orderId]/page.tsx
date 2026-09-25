@@ -18,11 +18,9 @@ export default async function PosOrderPage({
   const locale = await getAppLocale();
   const ctx = await getSessionContext();
   if (!ctx?.restaurant?.id || !ctx.membershipId) notFound();
-  // KITCHEN belongs on the kitchen screen, not on the till.
-  if (!hasAccess(ctx.role, "/pos")) redirect("/pos/kds");
-
   const staff = await requireTerminalStaff(ctx.restaurant.id);
-  const role = effectiveRole(staff, ctx.role);
+  // KITCHEN belongs on the kitchen screen, not on the till.
+  if (!hasAccess(effectiveRole(staff, ctx.role), "/pos")) redirect("/pos/kds");
 
   const actor = {
     restaurantId: ctx.restaurant.id,
@@ -38,7 +36,7 @@ export default async function PosOrderPage({
     <OrderTerminal
       locale={locale}
       currency={ctx.restaurant.currency}
-      canApproveWriteOffs={role === "OWNER" || role === "MANAGER"}
+
       menu={menu}
       order={{
         id: order.id,
