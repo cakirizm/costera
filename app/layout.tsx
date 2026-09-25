@@ -20,6 +20,7 @@ import "@/styles/dashboard/premium-qa.css";
 import "@/styles/dashboard/premium-qa-pages.css";
 import "@/styles/dashboard/premium-visual.css";
 import "@/styles/dashboard/ui.css";
+import "@/styles/dashboard/pos-terminal.css";
 import { getRequestLocale } from "@/lib/costera/i18n";
 
 const manrope = Manrope({
