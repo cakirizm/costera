@@ -113,7 +113,7 @@ export async function forgotPasswordAction(_prev: ActionState, formData: FormDat
   const genericMessage =
     "Eğer bu e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi. Gelen kutunuzu kontrol edin.";
 
-  if (user) {
+  if (user && !user.terminalOnly) {
     const token = randomBytes(32).toString("hex");
     await prisma.passwordResetToken.create({
       data: {

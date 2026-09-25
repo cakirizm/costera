@@ -10,5 +10,8 @@ export async function verifyCredentials(input: unknown) {
   if (!parsed.success) return null;
   const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
   const valid = await bcrypt.compare(parsed.data.password, user?.passwordHash ?? dummyHash);
+  // Terminal staff have a real password hash so the timing stays even, but no
+  // way in: they belong on a till, behind a PIN.
+  if (user?.terminalOnly) return null;
   return user && valid ? user : null;
 }
