@@ -3,6 +3,8 @@ import { getAppLocale, tx } from "@/lib/costera/i18n";
 import { requireRole } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { TargetsForm, RestaurantForm } from "@/components/app/SettingsForm";
+import { StaffManager } from "@/components/app/StaffManager";
+import { listStaff } from "@/lib/pos/staff";
 
 export default async function SettingsPage(){
  const locale = await getAppLocale();
@@ -10,6 +12,7 @@ export default async function SettingsPage(){
  const restaurant = ctx.restaurant
    ? await prisma.restaurant.findUnique({ where: { id: ctx.restaurant.id }, select: { name: true, city: true, currency: true, targetFoodCostPct: true } })
    : null;
+ const staff = ctx.restaurant ? await listStaff(ctx.restaurant.id) : [];
 
  return (
   <COSTERAAppShell active="/dashboard/settings" locale={locale} title={tx(locale,"Settings","Ayarlar")}>
@@ -24,15 +27,7 @@ export default async function SettingsPage(){
      <RestaurantForm locale={locale} name={restaurant?.name ?? ""} city={restaurant?.city ?? ""} currency={restaurant?.currency ?? "USD"} />
     </article>
 
-    <article className="costera-panel">
-     <div className="costera-panel-head"><div><span>{tx(locale,"ACCESS","ERİŞİM")}</span><h2>{tx(locale,"Roles","Roller")}</h2></div></div>
-     <div className="costera-role-list">
-      <span><b>{tx(locale, "Owner", "Owner")}</b><small>{tx(locale,"Full access","Tam erişim")}</small></span>
-      <span><b>{tx(locale, "Operations Manager", "Operations Manager")}</b><small>{tx(locale,"Operations + reports","Operasyon + raporlar")}</small></span>
-      <span><b>{tx(locale, "Kitchen Manager", "Kitchen Manager")}</b><small>{tx(locale,"Inventory + recipes","Stok + reçeteler")}</small></span>
-      <span><b>{tx(locale, "Finance", "Finance")}</b><small>{tx(locale,"Finance + reports","Finans + raporlar")}</small></span>
-     </div>
-    </article>
+    <StaffManager locale={locale} staff={staff} />
    </section>
   </COSTERAAppShell>
  )

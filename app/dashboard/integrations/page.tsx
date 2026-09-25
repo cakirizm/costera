@@ -1,5 +1,7 @@
 import { COSTERAAppShell } from "@/components/app/COSTERAAppShell";
 import { IntegrationStudio } from "@/components/app/IntegrationStudio";
+import { PosDeviceManager } from "@/components/app/PosDeviceManager";
+import { prisma } from "@/lib/prisma";
 import { getSessionContext } from "@/lib/session";
 import { getDataSource, getRestaurantInput } from "@/lib/costera/repository";
 import { analyzeCost } from "@/lib/costera/engine";
@@ -11,6 +13,13 @@ export default async function IntegrationsPage() {
   const restaurantId = ctx?.restaurant?.id ?? null;
 
   const source = restaurantId ? await getDataSource(restaurantId) : null;
+  const devices = restaurantId
+    ? await prisma.posDevice.findMany({
+        where: { restaurantId },
+        orderBy: [{ active: "desc" }, { createdAt: "asc" }],
+        select: { id: true, name: true, kind: true, active: true, lastSeenAt: true },
+      })
+    : [];
   const input = restaurantId && source ? await getRestaurantInput(restaurantId) : null;
 
   const preview = input
@@ -42,6 +51,15 @@ export default async function IntegrationsPage() {
       eyebrow={tx(locale, "CONNECTION CONTROL", "BAĞLANTI KONTROLÜ")}
     >
       <IntegrationStudio locale={locale} connected={Boolean(source)} preview={preview} />
+      <section className="costera-grid">
+        <PosDeviceManager
+          locale={locale}
+          devices={devices.map((device) => ({
+            ...device,
+            lastSeenAt: device.lastSeenAt?.toISOString() ?? null,
+          }))}
+        />
+      </section>
     </COSTERAAppShell>
   );
 }

@@ -2,11 +2,16 @@ import { COSTERAAppShell, StatusPill } from "@/components/app/COSTERAAppShell";
 import { getAppLocale, tx } from "@/lib/costera/i18n";
 import { getSessionContext } from "@/lib/session";
 import { getRestaurantInput } from "@/lib/costera/repository";
+import { PosDayReport } from "@/components/app/PosDayReport";
+import { getPosDaySummary } from "@/lib/pos/reports";
 
 export default async function ReportsPage() {
   const locale = await getAppLocale();
   const ctx = await getSessionContext();
   const input = ctx?.restaurant ? await getRestaurantInput(ctx.restaurant.id) : null;
+  // Only shown once the terminal has actually closed a ticket today; an empty
+  // day-close panel tells an owner nothing.
+  const posDay = ctx?.restaurant ? await getPosDaySummary(ctx.restaurant.id) : null;
   const hasData = !!input;
 
   const reports = [
@@ -47,6 +52,13 @@ export default async function ReportsPage() {
   return (
     <COSTERAAppShell active="/dashboard/reports" locale={locale} title={tx(locale, "Reports", "Raporlar")}>
       <section className="costera-grid">
+        {posDay && posDay.ticketCount > 0 && (
+          <PosDayReport
+            locale={locale}
+            currency={ctx?.restaurant?.currency ?? "TRY"}
+            summary={posDay}
+          />
+        )}
         <article className="costera-panel span-3">
           <div className="costera-panel-head">
             <div>
