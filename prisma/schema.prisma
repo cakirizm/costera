@@ -12,6 +12,8 @@ enum Role {
   MANAGER
   KITCHEN
   FINANCE
+  CASHIER
+  WAITER
 }
 
 enum DataSourceKind {
@@ -30,25 +32,28 @@ enum ExpenseCategory {
 }
 
 model User {
-  id           String       @id @default(cuid())
-  email        String       @unique
-  passwordHash String
-  name         String?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  memberships  Membership[]
-  resetTokens  PasswordResetToken[]
+  id             String               @id @default(cuid())
+  email          String               @unique
+  passwordHash   String
+  // Waiters and cooks sign in at the till with a PIN, not on the web. Their
+  // account exists only to hang a Membership off, and must never authenticate.
+  terminalOnly   Boolean              @default(false)
+  name           String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  memberships    Membership[]
+  resetTokens    PasswordResetToken[]
   mobileSessions MobileSession[]
 }
 
 model Restaurant {
-  id                String         @id @default(cuid())
+  id                String             @id @default(cuid())
   name              String
   city              String?
-  currency          String         @default("USD")
-  targetFoodCostPct Float          @default(25)
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  currency          String             @default("USD")
+  targetFoodCostPct Float              @default(25)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   memberships       Membership[]
   dataSource        DataSource?
   ingredients       Ingredient[]
@@ -56,6 +61,19 @@ model Restaurant {
   sales             Sale[]
   inventory         InventoryRow[]
   expenses          Expense[]
+  posAreas          PosArea[]
+  posTables         PosTable[]
+  posCategories     PosCategory[]
+  posTaxGroups      PosTaxGroup[]
+  posProducts       PosProduct[]
+  posModifierGroups PosModifierGroup[]
+  posOrders         PosOrder[]
+  posPayments       PosPayment[]
+  posShifts         PosShift[]
+  posDevices        PosDevice[]
+  posAuditLogs      PosAuditLog[]
+  posPrintJobs      PosPrintJob[]
+  fiscalReceipts    FiscalReceipt[]
 }
 
 model Expense {
@@ -122,9 +140,13 @@ model Sale {
   channel       String
   locationId    String
   netSales      Float?
+  occurredAt    DateTime   @default(now())
+  posOrderId    String?
   restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   @@index([restaurantId])
+  @@index([restaurantId, occurredAt])
+  @@index([posOrderId])
 }
 
 model InventoryRow {
@@ -143,13 +165,22 @@ model InventoryRow {
 }
 
 model Membership {
-  id           String     @id @default(cuid())
-  userId       String
-  restaurantId String
-  role         Role       @default(OWNER)
-  createdAt    DateTime   @default(now())
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  id            String            @id @default(cuid())
+  userId        String
+  restaurantId  String
+  role          Role              @default(OWNER)
+  createdAt     DateTime          @default(now())
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant    Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  posPin        PosStaffPin?
+  openedOrders  PosOrder[]        @relation("PosOrderOpenedBy")
+  closedOrders  PosOrder[]        @relation("PosOrderClosedBy")
+  voidedLines   PosOrderLine[]    @relation("PosOrderLineVoidedBy")
+  takenPayments PosPayment[]      @relation("PosPaymentReceivedBy")
+  openedShifts  PosShift[]        @relation("PosShiftOpenedBy")
+  closedShifts  PosShift[]        @relation("PosShiftClosedBy")
+  cashMovements PosCashMovement[] @relation("PosCashMovementCreatedBy")
+  posAuditLogs  PosAuditLog[]
 
   @@unique([userId, restaurantId])
 }
@@ -175,14 +206,497 @@ model MobileSession {
   expiresAt         DateTime
   createdAt         DateTime @default(now())
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([expiresAt])
 }
 
 // Shared across backend processes; login limits must not depend on one server's memory.
 model MobileLoginWindow {
-  id        String @id
-  attempts  Int @default(1)
+  id        String   @id
+  attempts  Int      @default(1)
   expiresAt DateTime
+
   @@index([expiresAt])
+}
+
+// ---------------------------------------------------------------------------
+// COSTERA POS
+//
+// Money in the POS domain is stored as Int minor units (kurus/cents), never
+// Float: a cashier-facing system cannot afford binary rounding drift. The
+// conversion back to the Float amounts the cost engine consumes happens in one
+// place only, the Sale projection.
+// ---------------------------------------------------------------------------
+
+enum PosOrderStatus {
+  OPEN
+  SENT
+  PARTIALLY_PAID
+  PAID
+  VOID
+}
+
+enum PosLineStatus {
+  NEW
+  SENT
+  PREPARING
+  READY
+  SERVED
+  VOID
+}
+
+enum PosPaymentMethod {
+  CASH
+  CARD
+  MEAL_CARD
+  ONLINE
+  ON_ACCOUNT
+}
+
+enum PosShiftStatus {
+  OPEN
+  CLOSED
+}
+
+enum PosCashMovementType {
+  PAID_IN
+  PAID_OUT
+}
+
+enum PosPrintJobKind {
+  RECEIPT
+  KITCHEN
+  REPORT
+}
+
+enum PosPrintJobStatus {
+  QUEUED
+  PRINTING
+  DONE
+  FAILED
+}
+
+enum FiscalReceiptStatus {
+  QUEUED
+  SENT
+  CONFIRMED
+  FAILED
+  CANCELLED
+}
+
+// --- Floor plan -------------------------------------------------------------
+
+model PosArea {
+  id           String     @id @default(cuid())
+  restaurantId String
+  name         String
+  sortOrder    Int        @default(0)
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  tables       PosTable[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+}
+
+model PosTable {
+  id           String     @id @default(cuid())
+  restaurantId String
+  areaId       String
+  name         String
+  seats        Int        @default(4)
+  posX         Int        @default(0)
+  posY         Int        @default(0)
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  area         PosArea    @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  orders       PosOrder[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+  @@index([areaId])
+}
+
+// --- Menu -------------------------------------------------------------------
+
+model PosTaxGroup {
+  id            String       @id @default(cuid())
+  restaurantId  String
+  name          String
+  ratePct       Float
+  // OKC devices bill per department; this maps a tax group to one.
+  okcDepartment Int?
+  restaurant    Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  products      PosProduct[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+}
+
+model PosCategory {
+  id           String       @id @default(cuid())
+  restaurantId String
+  name         String
+  // Which KDS station the lines of this category are routed to.
+  station      String       @default("KITCHEN")
+  color        String?
+  sortOrder    Int          @default(0)
+  active       Boolean      @default(true)
+  restaurant   Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  products     PosProduct[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+}
+
+model PosProduct {
+  id            String                    @id @default(cuid())
+  restaurantId  String
+  categoryId    String
+  // Join key into MenuItem.extId - this is what carries POS sales into the
+  // recipe/variance engine. Null means not mapped yet.
+  menuItemExtId String?
+  name          String
+  sku           String?
+  priceMinor    Int
+  taxGroupId    String?
+  color         String?
+  sortOrder     Int                       @default(0)
+  active        Boolean                   @default(true)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  restaurant    Restaurant                @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  category      PosCategory               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  taxGroup      PosTaxGroup?              @relation(fields: [taxGroupId], references: [id], onDelete: SetNull)
+  modifierLinks PosProductModifierGroup[]
+  orderLines    PosOrderLine[]
+
+  @@unique([restaurantId, sku])
+  @@index([restaurantId])
+  @@index([categoryId])
+  @@index([restaurantId, menuItemExtId])
+}
+
+model PosModifierGroup {
+  id           String                    @id @default(cuid())
+  restaurantId String
+  name         String
+  minSelect    Int                       @default(0)
+  maxSelect    Int                       @default(1)
+  required     Boolean                   @default(false)
+  sortOrder    Int                       @default(0)
+  restaurant   Restaurant                @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  modifiers    PosModifier[]
+  productLinks PosProductModifierGroup[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+}
+
+model PosModifier {
+  id         String                 @id @default(cuid())
+  groupId    String
+  name       String
+  priceMinor Int                    @default(0)
+  sortOrder  Int                    @default(0)
+  active     Boolean                @default(true)
+  group      PosModifierGroup       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  lineUses   PosOrderLineModifier[]
+
+  @@index([groupId])
+}
+
+model PosProductModifierGroup {
+  id        String           @id @default(cuid())
+  productId String
+  groupId   String
+  sortOrder Int              @default(0)
+  product   PosProduct       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  group     PosModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, groupId])
+  @@index([groupId])
+}
+
+// --- Orders -----------------------------------------------------------------
+
+model PosOrder {
+  id                   String          @id @default(cuid())
+  restaurantId         String
+  // Terminal-generated id. Unique so a retried request after a dropped
+  // connection can never create a second ticket.
+  clientOrderId        String          @unique
+  // Human-facing ticket number, restarted each business day.
+  code                 Int
+  businessDay          DateTime        @db.Date
+  tableId              String?
+  shiftId              String?
+  channel              String          @default("DINE_IN")
+  status               PosOrderStatus  @default(OPEN)
+  guestCount           Int             @default(1)
+  note                 String?
+  subtotalMinor        Int             @default(0)
+  // Discount asked for on the whole ticket. Kept apart from discountMinor (the
+  // computed total) so the order can be repriced from scratch after any edit.
+  orderDiscountMinor   Int             @default(0)
+  discountMinor        Int             @default(0)
+  serviceMinor         Int             @default(0)
+  taxMinor             Int             @default(0)
+  totalMinor           Int             @default(0)
+  paidMinor            Int             @default(0)
+  openedByMembershipId String
+  closedByMembershipId String?
+  openedAt             DateTime        @default(now())
+  closedAt             DateTime?
+  updatedAt            DateTime        @updatedAt
+  restaurant           Restaurant      @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table                PosTable?       @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  shift                PosShift?       @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  openedBy             Membership      @relation("PosOrderOpenedBy", fields: [openedByMembershipId], references: [id], onDelete: Restrict)
+  closedBy             Membership?     @relation("PosOrderClosedBy", fields: [closedByMembershipId], references: [id], onDelete: SetNull)
+  lines                PosOrderLine[]
+  payments             PosPayment[]
+  fiscalReceipts       FiscalReceipt[]
+
+  @@unique([restaurantId, businessDay, code])
+  @@index([restaurantId, status])
+  @@index([restaurantId, openedAt])
+  @@index([tableId])
+  @@index([shiftId])
+}
+
+model PosOrderLine {
+  id                   String                 @id @default(cuid())
+  orderId              String
+  // Terminal-generated, so an offline outbox replayed after a reconnect adds
+  // each line once however many times the request is retried.
+  clientLineId         String?                @unique
+  productId            String?
+  // Snapshots: the ticket must stay readable even if the product is renamed,
+  // repriced or deleted afterwards.
+  menuItemExtId        String?
+  name                 String
+  station              String                 @default("KITCHEN")
+  quantity             Int                    @default(1)
+  unitPriceMinor       Int
+  modifiersMinor       Int                    @default(0)
+  discountMinor        Int                    @default(0)
+  lineTotalMinor       Int                    @default(0)
+  taxRatePct           Float                  @default(10)
+  status               PosLineStatus          @default(NEW)
+  note                 String?
+  isComped             Boolean                @default(false)
+  voidReason           String?
+  voidedByMembershipId String?
+  createdAt            DateTime               @default(now())
+  sentAt               DateTime?
+  readyAt              DateTime?
+  servedAt             DateTime?
+  order                PosOrder               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product              PosProduct?            @relation(fields: [productId], references: [id], onDelete: SetNull)
+  voidedBy             Membership?            @relation("PosOrderLineVoidedBy", fields: [voidedByMembershipId], references: [id], onDelete: SetNull)
+  modifiers            PosOrderLineModifier[]
+
+  @@index([orderId])
+  @@index([status, station])
+}
+
+model PosOrderLineModifier {
+  id         String       @id @default(cuid())
+  lineId     String
+  modifierId String?
+  name       String
+  priceMinor Int          @default(0)
+  quantity   Int          @default(1)
+  line       PosOrderLine @relation(fields: [lineId], references: [id], onDelete: Cascade)
+  modifier   PosModifier? @relation(fields: [modifierId], references: [id], onDelete: SetNull)
+
+  @@index([lineId])
+}
+
+// --- Payments and fiscal ----------------------------------------------------
+
+model PosPayment {
+  id                     String           @id @default(cuid())
+  restaurantId           String
+  orderId                String
+  shiftId                String?
+  method                 PosPaymentMethod
+  amountMinor            Int
+  tenderedMinor          Int?
+  changeMinor            Int              @default(0)
+  reference              String?
+  receivedByMembershipId String
+  createdAt              DateTime         @default(now())
+  restaurant             Restaurant       @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  order                  PosOrder         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  shift                  PosShift?        @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  receivedBy             Membership       @relation("PosPaymentReceivedBy", fields: [receivedByMembershipId], references: [id], onDelete: Restrict)
+
+  @@index([restaurantId, createdAt])
+  @@index([orderId])
+  @@index([shiftId])
+}
+
+// One fiscal receipt attempt against a YN OKC device. An order stays open until
+// a CONFIRMED row exists; retries reuse the same row so the device is never
+// asked to print the same ticket twice.
+model FiscalReceipt {
+  id              String              @id @default(cuid())
+  restaurantId    String
+  orderId         String
+  deviceId        String?
+  provider        String
+  status          FiscalReceiptStatus @default(QUEUED)
+  okcSerial       String?
+  zNo             Int?
+  fiscalNo        String?
+  receiptNo       String?
+  requestPayload  Json?
+  responsePayload Json?
+  errorCode       String?
+  errorMessage    String?
+  attempts        Int                 @default(0)
+  createdAt       DateTime            @default(now())
+  sentAt          DateTime?
+  confirmedAt     DateTime?
+  restaurant      Restaurant          @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  order           PosOrder            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  device          PosDevice?          @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+
+  @@index([restaurantId, status])
+  @@index([orderId])
+}
+
+// --- Shifts and cash --------------------------------------------------------
+
+model PosShift {
+  id                   String            @id @default(cuid())
+  restaurantId         String
+  deviceId             String?
+  status               PosShiftStatus    @default(OPEN)
+  openingCashMinor     Int               @default(0)
+  expectedCashMinor    Int?
+  countedCashMinor     Int?
+  differenceMinor      Int?
+  note                 String?
+  openedByMembershipId String
+  closedByMembershipId String?
+  openedAt             DateTime          @default(now())
+  closedAt             DateTime?
+  restaurant           Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  device               PosDevice?        @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  openedBy             Membership        @relation("PosShiftOpenedBy", fields: [openedByMembershipId], references: [id], onDelete: Restrict)
+  closedBy             Membership?       @relation("PosShiftClosedBy", fields: [closedByMembershipId], references: [id], onDelete: SetNull)
+  orders               PosOrder[]
+  payments             PosPayment[]
+  cashMovements        PosCashMovement[]
+
+  @@index([restaurantId, status])
+  @@index([restaurantId, openedAt])
+}
+
+model PosCashMovement {
+  id                    String              @id @default(cuid())
+  shiftId               String
+  type                  PosCashMovementType
+  amountMinor           Int
+  reason                String
+  createdByMembershipId String
+  createdAt             DateTime            @default(now())
+  shift                 PosShift            @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  createdBy             Membership          @relation("PosCashMovementCreatedBy", fields: [createdByMembershipId], references: [id], onDelete: Restrict)
+
+  @@index([shiftId])
+}
+
+// --- Devices and staff auth -------------------------------------------------
+
+// A registered terminal, KDS screen or local bridge. Only a SHA-256 digest of
+// the enrolment token is stored, matching the MobileSession pattern.
+model PosDevice {
+  id                String             @id @default(cuid())
+  restaurantId      String
+  name              String
+  kind              String             @default("TERMINAL")
+  tokenHash         String             @unique
+  credentialVersion String
+  active            Boolean            @default(true)
+  lastSeenAt        DateTime?
+  createdAt         DateTime           @default(now())
+  restaurant        Restaurant         @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  sessions          PosDeviceSession[]
+  shifts            PosShift[]
+  printJobs         PosPrintJob[]
+  fiscalReceipts    FiscalReceipt[]
+
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
+}
+
+model PosDeviceSession {
+  id                String    @id @default(cuid())
+  deviceId          String
+  tokenHash         String    @unique
+  credentialVersion String
+  expiresAt         DateTime
+  createdAt         DateTime  @default(now())
+  device            PosDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId])
+  @@index([expiresAt])
+}
+
+// Per-staff PIN for a shared terminal. Hashed with the same bcrypt helper used
+// for account passwords; the plaintext PIN is never stored.
+model PosStaffPin {
+  id           String     @id @default(cuid())
+  membershipId String     @unique
+  pinHash      String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+}
+
+// --- Audit and printing -----------------------------------------------------
+
+// Every void, comp, discount and manual price override lands here. This is the
+// table an owner reads when the cash drawer does not balance.
+model PosAuditLog {
+  id           String      @id @default(cuid())
+  restaurantId String
+  membershipId String?
+  action       String
+  entity       String
+  entityId     String?
+  meta         Json?
+  createdAt    DateTime    @default(now())
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  membership   Membership? @relation(fields: [membershipId], references: [id], onDelete: SetNull)
+
+  @@index([restaurantId, createdAt])
+  @@index([entity, entityId])
+}
+
+// Queue drained by the local bridge service (thermal printer, cash drawer,
+// customer display). The server never talks to hardware directly.
+model PosPrintJob {
+  id           String            @id @default(cuid())
+  restaurantId String
+  deviceId     String?
+  kind         PosPrintJobKind
+  payload      Json
+  status       PosPrintJobStatus @default(QUEUED)
+  attempts     Int               @default(0)
+  lastError    String?
+  createdAt    DateTime          @default(now())
+  printedAt    DateTime?
+  restaurant   Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  device       PosDevice?        @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+
+  @@index([restaurantId, status])
+  @@index([deviceId, status])
 }
