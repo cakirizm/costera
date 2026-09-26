@@ -27,6 +27,21 @@ describe("localized middleware", () => {
     expect(response.headers.get("x-middleware-request-x-costera-locale")).toBe("en");
     expect(response.headers.get("set-cookie")).toContain("costera_app_lang=en");
   });
+  it("keeps the terminal behind the same sign-in wall as the dashboard", () => {
+    const response = run(request("/pos"));
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toContain("/login?callbackUrl=");
+  });
+  it("protects every terminal screen, not just the entry point", () => {
+    for (const path of ["/pos/kds", "/pos/shift", "/pos/lock", "/pos/order/abc123/pay"]) {
+      expect(run(request(path)).status, path).toBe(307);
+    }
+  });
+  it("lets an authenticated terminal request through with its language", () => {
+    const response = run(request("/pos", "costera_app_lang=tr", { user: { id: "test" } }));
+    expect(response.status).toBe(200);
+    expect(response.headers.get("x-middleware-request-x-costera-locale")).toBe("tr");
+  });
   it("does not change preferences during prefetch", () => {
     const req = request("/ar", "costera_app_lang=en");
     req.headers.set("next-router-prefetch", "1");

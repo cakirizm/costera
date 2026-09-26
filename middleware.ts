@@ -9,10 +9,10 @@ export default auth((request) => {
   const segment = path.split("/")[1];
   const saved = request.cookies.get("costera_app_lang")?.value;
   const requested = request.nextUrl.searchParams.get("lang");
-  const isApp = path.startsWith("/dashboard") || /^\/(login|register|forgot-password|reset-password)(\/|$)/.test(path);
+  const isApp = path.startsWith("/dashboard") || path.startsWith("/pos") || /^\/(login|register|forgot-password|reset-password)(\/|$)/.test(path);
   const locale = segment === "ar" || segment === "tr" ? segment : isApp && isAppLocale(requested) ? requested : isApp && isAppLocale(saved) ? saved : "en";
   // A custom Auth.js middleware callback must enforce the dashboard guard itself.
-  if (path.startsWith("/dashboard") && !request.auth?.user) {
+  if ((path.startsWith("/dashboard") || path.startsWith("/pos")) && !request.auth?.user) {
     const signInUrl = new URL(locale === "ar" ? "/ar/login" : "/login", request.url);
     signInUrl.searchParams.set("callbackUrl", request.nextUrl.href);
     return NextResponse.redirect(signInUrl);

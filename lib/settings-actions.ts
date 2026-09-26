@@ -17,6 +17,8 @@ const restaurantSchema = z.object({
   name: z.string().trim().min(1).max(200),
   city: z.string().trim().max(200).optional(),
   currency: z.enum(SUPPORTED_CURRENCIES).optional(),
+  // "" means no fiscal device: the POS prints information dockets only.
+  fiscalProvider: z.enum(["", "simulator"]).optional(),
 });
 
 export async function updateTargetsAction(_prev: SettingsState, formData: FormData): Promise<SettingsState> {
@@ -49,6 +51,7 @@ export async function updateRestaurantAction(_prev: SettingsState, formData: For
     name: formData.get("name"),
     city: formData.get("city"),
     currency: formData.get("currency") || undefined,
+    fiscalProvider: (formData.get("fiscalProvider") as string | null) ?? undefined,
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Geçersiz değer." };
 
@@ -58,6 +61,9 @@ export async function updateRestaurantAction(_prev: SettingsState, formData: For
       name: parsed.data.name,
       city: parsed.data.city ?? null,
       ...(parsed.data.currency ? { currency: parsed.data.currency } : {}),
+      ...(parsed.data.fiscalProvider !== undefined
+        ? { fiscalProvider: parsed.data.fiscalProvider || null }
+        : {}),
     },
   });
 

@@ -1,6 +1,7 @@
 "use server";
 
 import { createHash, randomBytes } from "crypto";
+import { clearActiveStaff, clearTillMarker } from "@/lib/pos/staff-session";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
@@ -10,6 +11,10 @@ import { signIn, signOut } from "@/auth";
 import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function signOutAction() {
+  // Also drops the till marker and any PIN session: signing the browser out is
+  // the one way to take a device back out of terminal duty.
+  await clearActiveStaff();
+  await clearTillMarker();
   await signOut({ redirectTo: "/login" });
 }
 
@@ -113,7 +118,7 @@ export async function forgotPasswordAction(_prev: ActionState, formData: FormDat
   const genericMessage =
     "Eğer bu e-posta kayıtlıysa, şifre sıfırlama bağlantısı gönderildi. Gelen kutunuzu kontrol edin.";
 
-  if (user) {
+  if (user && !user.terminalOnly) {
     const token = randomBytes(32).toString("hex");
     await prisma.passwordResetToken.create({
       data: {

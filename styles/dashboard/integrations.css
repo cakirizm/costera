@@ -1382,3 +1382,78 @@
 }
 
 
+
+/* --- POS hardware enrolment ---------------------------------------------- */
+
+.costera-device-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+.costera-device-form label { display: block; }
+.costera-device-form label span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.costera-device-form input,
+.costera-device-form select {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.costera-device-form .costera-btn {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid var(--navy);
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.costera-device-form .costera-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.costera-token-callout {
+  border: 1px solid var(--gold);
+  background: var(--gold-pale);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+.costera-token-callout strong { display: block; margin-bottom: 6px; }
+.costera-token-callout p { margin: 0 0 10px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.costera-token-callout code {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+.costera-btn-ghost {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.costera-form-error {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fdecea;
+  border: 1px solid #f3b8b3;
+  color: var(--danger);
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 720px) {
+  .costera-device-form { grid-template-columns: 1fr; }
+}

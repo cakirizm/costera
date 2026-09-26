@@ -1,0 +1,17 @@
+{
+  "name": "costera-pos-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local print bridge for the COSTERA POS: drains the server print queue onto the till hardware.",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env --import tsx src/index.ts",
+    "dev": "node --env-file=.env --import tsx --watch src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.2"
+  }
+}

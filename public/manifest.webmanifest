@@ -1,0 +1,19 @@
+{
+  "name": "COSTERA POS",
+  "short_name": "COSTERA POS",
+  "description": "Restaurant point of sale: tables, tickets, kitchen and drawer.",
+  "start_url": "/pos",
+  "scope": "/pos",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#061f35",
+  "theme_color": "#061f35",
+  "icons": [
+    {
+      "src": "/brand/costera-logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
