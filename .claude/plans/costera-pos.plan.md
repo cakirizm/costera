@@ -143,6 +143,13 @@ adisyonu işletir, sonra sildiği için dev veritabanında iz bırakmaz):
 node --env-file=.env --import tsx scripts/pos-smoke.ts
 ```
 
+Garson el terminalinin HTTP yüzeyi (çalışan bir dev sunucu ister; kendi cihazını
+ve personelini yaratıp sonunda siler):
+
+```bash
+node --env-file=.env --import tsx scripts/pos-handheld-http.ts
+```
+
 ## Efor Tahmini
 
 | Faz | Tahmin |
@@ -186,7 +193,7 @@ Garson masada kendi telefonundan sipariş girer; kasaya yürümez.
 
 ## Kalan Açık Maddeler
 
-- **Faz 12 doğrulaması** — Expo uygulaması cihaz/simülatör olmadan çalıştırılamadı; yalnızca tip denetimi yapıldı.
+- **Faz 12 Expo arayüzü** — cihaz/simülatör olmadan çalıştırılamadı; yalnızca tip denetimi yapıldı. Sunucu tarafı ve HTTP uçları uçtan uca doğrulandı.
 - **Faz 7 ÖKC** — marka (Ingenico / Verifone / Hugin / Beko-Profilo) ve TSM operatörü seçilmeden başlanamaz.
 - **Köprü otomatik güncelleme** — dağıtım kanalı yok; şimdilik tilltaki repoyu çekip görevi yeniden başlatmak gerekiyor.
 - **Çevrimdışı soğuk açılış** — adisyon durumunun istemcide önbelleklenmesi.
