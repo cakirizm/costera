@@ -33,7 +33,7 @@ const CURRENCIES = [
   { code: "SAR", label: "﷼ SAR" },
 ];
 
-export function RestaurantForm({ locale, name, city, currency }: { locale: AppLocale; name: string; city: string; currency: string }) {
+export function RestaurantForm({ locale, name, city, currency, fiscalProvider }: { locale: AppLocale; name: string; city: string; currency: string; fiscalProvider: string | null }) {
   const [state, action, pending] = useActionState(updateRestaurantAction, initial);
   return (
     <form action={action} className="costera-form-stack">
@@ -52,6 +52,20 @@ export function RestaurantForm({ locale, name, city, currency }: { locale: AppLo
             <option key={c.code} value={c.code}>{c.label}</option>
           ))}
         </select>
+      </label>
+      <label>
+        {tx(locale, "Fiscal device", "Mali cihaz")}
+        <select name="fiscalProvider" defaultValue={fiscalProvider ?? ""} disabled={pending}>
+          <option value="">{tx(locale, "None - information dockets only", "Yok - yalnızca bilgi fişi")}</option>
+          <option value="simulator">{tx(locale, "Simulator (testing)", "Simülatör (test)")}</option>
+        </select>
+        <small className="costera-field-note">
+          {tx(
+            locale,
+            "With a device selected, a ticket only closes once its receipt confirms.",
+            "Cihaz seçiliyken adisyon, fişi onaylanmadan kapanmaz.",
+          )}
+        </small>
       </label>
       <button type="submit" disabled={pending} className="costera-settings-save">
         {pending ? tx(locale, "Saving…", "Kaydediliyor…") : tx(locale, "Save", "Kaydet")}

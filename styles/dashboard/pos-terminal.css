@@ -592,3 +592,25 @@
 .pos-approval .pos-sheet-body { max-width: 360px; margin: 0 auto; width: 100%; }
 .pos-approval .pos-sheet-foot { grid-template-columns: 1fr; }
 .pos-approval .pos-lock-keys button { min-height: 58px; font-size: 21px; }
+
+/* --- Fiscal receipt failure ---------------------------------------------- */
+
+.pos-fiscal-warning {
+  border-radius: 14px;
+  border: 1px solid rgba(226, 88, 77, 0.5);
+  background: rgba(226, 88, 77, 0.14);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.pos-fiscal-warning strong { display: block; color: #ffb6af; margin-bottom: 6px; }
+.pos-fiscal-warning p { margin: 0 0 10px; color: var(--pos-muted); font-size: 13px; line-height: 1.5; }
+.pos-fiscal-warning code {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffc4be;
+  font-size: 12px;
+  margin-bottom: 12px;
+  word-break: break-word;
+}

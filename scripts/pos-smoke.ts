@@ -86,6 +86,7 @@ async function main() {
   await runStaffPinChecks(restaurant.id);
   await runApprovalChecks(restaurant.id);
   await runHandheldChecks(restaurant.id);
+  await runFiscalChecks(actor, burger.id);
   await runOfflineReplayChecks(actor, burger.id);
 
   await runPrintQueueChecks(restaurant.id);
@@ -173,6 +174,73 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+/* With a fiscal device configured, a ticket only closes once the receipt lands. */
+async function runFiscalChecks(
+  actor: { restaurantId: string; membershipId: string },
+  productId: string,
+) {
+  const { sharedSimulator } = await import("@/lib/pos/fiscal/simulator");
+  const simulator = sharedSimulator();
+
+  await prisma.restaurant.update({
+    where: { id: actor.restaurantId },
+    data: { fiscalProvider: "simulator" },
+  });
+
+  const ring = async () => {
+    const order = await orders.openOrder(actor, { clientOrderId: `fiscal-${randomUUID()}` });
+    const withLine = await orders.addLines(actor, order.id, [{ productId, quantity: 1 }]);
+    return withLine;
+  };
+
+  // The device refuses; the money is taken but the ticket must stay open.
+  simulator.failNext({ ok: false, code: "SIM_NO_PAPER", message: "Out of paper", retryable: true });
+  const failing = await ring();
+  const refused = await payments.takePayment(actor, failing.id, {
+    method: "CASH",
+    amountMinor: failing.totalMinor,
+  });
+  check("a refused receipt is reported to the cashier", refused.fiscal?.code, "SIM_NO_PAPER");
+  check("the ticket stays open when the receipt fails", refused.order.status, "PARTIALLY_PAID");
+
+  const paidAnyway = await prisma.posPayment.count({ where: { orderId: failing.id } });
+  check("the payment is still recorded - the money did arrive", paidAnyway, 1);
+
+  const failedReceipt = await prisma.fiscalReceipt.findFirst({ where: { orderId: failing.id } });
+  check("the failure is on file with its vendor code", failedReceipt?.status, "FAILED");
+  check("no sale reaches the engine from an unclosed ticket", await prisma.sale.count({ where: { posOrderId: failing.id } }), 0);
+
+  // Retrying reuses the same record rather than printing a second document.
+  const retried = await payments.closeSettledOrder(actor, await orders.getOrder(actor, failing.id));
+  check("retrying closes the ticket", retried.order.status, "PAID");
+  check("the retry reuses one receipt record", await prisma.fiscalReceipt.count({ where: { orderId: failing.id } }), 1);
+
+  const confirmed = await prisma.fiscalReceipt.findFirst({ where: { orderId: failing.id } });
+  check("the receipt is confirmed", confirmed?.status, "CONFIRMED");
+  check("the fiscal number is stored for reconciliation", Boolean(confirmed?.fiscalNo), true);
+
+  // The happy path: receipt confirms and the ticket closes in one go.
+  const clean = await ring();
+  const settled = await payments.takePayment(actor, clean.id, {
+    method: "CARD",
+    amountMinor: clean.totalMinor,
+  });
+  check("a confirmed receipt closes the ticket", settled.order.status, "PAID");
+  check("nothing is reported to the cashier", settled.fiscal, undefined);
+  check("the sale reaches the engine once closed", await prisma.sale.count({ where: { posOrderId: clean.id } }), 1);
+
+  const receipts = await prisma.fiscalReceipt.findMany({
+    where: { orderId: { in: [failing.id, clean.id] } },
+    select: { zNo: true, receiptNo: true },
+  });
+  check("receipts are numbered within a Z", receipts.every((r) => r.zNo === 1), true);
+
+  await prisma.restaurant.update({
+    where: { id: actor.restaurantId },
+    data: { fiscalProvider: null },
+  });
+}
 
 /* The waiter handheld: an enrolled phone plus a PIN, and nothing else. */
 async function runHandheldChecks(restaurantId: string) {

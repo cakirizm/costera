@@ -6,7 +6,11 @@ import type { AppLocale } from "@/lib/costera/i18n";
 import { tx } from "@/lib/costera/locale";
 import { posFailureText } from "@/lib/pos/messages";
 import { moneyMinor } from "@/lib/pos/money";
-import { setOrderDiscountAction, takePaymentAction } from "@/lib/pos-actions";
+import {
+  retryFiscalReceiptAction,
+  setOrderDiscountAction,
+  takePaymentAction,
+} from "@/lib/pos-actions";
 
 type Method = "CASH" | "CARD" | "MEAL_CARD" | "ONLINE";
 
@@ -49,6 +53,9 @@ export function PaymentPanel({
   const [tenderedMinor, setTenderedMinor] = useState<number | null>(null);
   const [discountText, setDiscountText] = useState("");
   const [change, setChange] = useState<number | null>(null);
+  // The money was taken but the legal receipt did not print. The cashier has to
+  // see why, because the ticket will not close until it does.
+  const [fiscal, setFiscal] = useState<{ message: string; retryable: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -76,6 +83,7 @@ export function PaymentPanel({
         return;
       }
       setChange(result.data.changeMinor);
+      setFiscal(result.data.fiscal ?? null);
       setTenderedMinor(null);
       setAmountText((result.data.remainingMinor / 100).toFixed(2));
       router.refresh();
@@ -136,6 +144,40 @@ export function PaymentPanel({
 
       <section className="pos-pay-main">
         {error && <p className="pos-error">{posFailureText(error, locale)}</p>}
+
+        {fiscal && (
+          <div className="pos-fiscal-warning">
+            <strong>{tx(locale, "Fiscal receipt did not print", "Mali fiş basılamadı")}</strong>
+            <p>
+              {tx(
+                locale,
+                "The payment is recorded. The ticket stays open until the receipt prints.",
+                "Ödeme kaydedildi. Fiş basılana kadar adisyon açık kalır.",
+              )}
+            </p>
+            <code>{fiscal.message}</code>
+            {fiscal.retryable && (
+              <button
+                type="button"
+                className="pos-btn good block"
+                disabled={pending}
+                onClick={() =>
+                  startTransition(async () => {
+                    const result = await retryFiscalReceiptAction(order.id);
+                    if (!result.ok) {
+                      setError(result.error);
+                      return;
+                    }
+                    setFiscal(result.data.fiscal ?? null);
+                    router.refresh();
+                  })
+                }
+              >
+                {tx(locale, "Try the receipt again", "Fişi tekrar dene")}
+              </button>
+            )}
+          </div>
+        )}
 
         {settled ? (
           <>

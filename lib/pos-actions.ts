@@ -440,3 +440,19 @@ export async function revokePosDeviceAction(deviceId: string) {
     return { revoked: true };
   });
 }
+
+/**
+ * Try the legal receipt again after the device refused.
+ *
+ * The money is already recorded; only the fiscal half is retried, and the
+ * ticket closes if it lands this time.
+ */
+export async function retryFiscalReceiptAction(orderId: string) {
+  const parsed = id.safeParse(orderId);
+  if (!parsed.success) return { ok: false as const, error: "INVALID_INPUT" as const };
+  return run(async () => {
+    const actor = await actorFor("OWNER", "MANAGER", "CASHIER");
+    const order = await orders.getOrder(actor, parsed.data);
+    return payments.closeSettledOrder(actor, order);
+  });
+}

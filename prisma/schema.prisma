@@ -52,6 +52,11 @@ model Restaurant {
   city              String?
   currency          String             @default("USD")
   targetFoodCostPct Float              @default(25)
+  // Which fiscal device closes this venue's tickets. Null means none, and the
+  // POS prints information dockets only - correct for a venue that has not
+  // connected its OKC yet. "simulator" exercises the whole flow without
+  // hardware; a vendor name will select a real adapter.
+  fiscalProvider    String?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   memberships       Membership[]

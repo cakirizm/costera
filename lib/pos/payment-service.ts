@@ -6,6 +6,7 @@ import { roundMinor } from "./money";
 import { changeFor, remainingDue } from "./pricing";
 import { getOrder, recalculateOrder, type OrderWithLines, type PosActor } from "./order-service";
 import { projectOrderToSales } from "./projection";
+import { issueFiscalReceipt } from "./fiscal/service";
 
 export type TakePaymentInput = {
   method: PosPaymentMethod;
@@ -16,10 +17,18 @@ export type TakePaymentInput = {
   shiftId?: string | null;
 };
 
+export type FiscalFailure = { code: string; message: string; retryable: boolean };
+
 export type TakePaymentResult = {
   order: OrderWithLines;
   changeMinor: number;
   remainingMinor: number;
+  /**
+   * Set when the money was taken but the legal receipt did not print. The
+   * payment stands - it really was collected - and the ticket stays open until
+   * a receipt confirms, because a sale without one is not a closed sale.
+   */
+  fiscal?: FiscalFailure;
 };
 
 const PAYABLE_STATUSES = ["OPEN", "SENT", "PARTIALLY_PAID"] as const;
@@ -42,7 +51,7 @@ export async function takePayment(
   const amountMinor = roundMinor(input.amountMinor);
   if (amountMinor <= 0) throw new PosError("INVALID_INPUT", "Payment must be positive.");
 
-  return prisma.$transaction(async (tx) => {
+  const taken = await prisma.$transaction(async (tx) => {
     const order = await tx.posOrder.findFirst({
       where: { id: orderId, restaurantId: actor.restaurantId },
       include: { lines: { include: { modifiers: true }, orderBy: { createdAt: "asc" } } },
@@ -84,9 +93,7 @@ export async function takePayment(
         // A ticket opened before the shift was, or before anyone opened one, is
         // adopted by the drawer that first takes money for it.
         shiftId: order.shiftId ?? input.shiftId ?? null,
-        status: settled ? "PAID" : "PARTIALLY_PAID",
-        closedAt: settled ? now : null,
-        closedByMembershipId: settled ? actor.membershipId : null,
+        status: "PARTIALLY_PAID",
       },
       include: { lines: { include: { modifiers: true }, orderBy: { createdAt: "asc" } } },
     });
@@ -95,7 +102,7 @@ export async function takePayment(
       {
         restaurantId: actor.restaurantId,
         membershipId: actor.membershipId,
-        action: settled ? "ORDER_SETTLED" : "PAYMENT_TAKEN",
+        action: "PAYMENT_TAKEN",
         entity: "PosOrder",
         entityId: order.id,
         meta: { method: input.method, amountMinor, remainingMinor },
@@ -103,13 +110,76 @@ export async function takePayment(
       tx,
     );
 
-    if (settled) {
-      await projectOrderToSales(tx, updated, now);
-      await queueReceipt(tx, updated);
-    }
-
-    return { order: updated, changeMinor, remainingMinor };
+    return { order: updated, changeMinor, remainingMinor, settled };
   });
+
+  if (!taken.settled) {
+    return { order: taken.order, changeMinor: taken.changeMinor, remainingMinor: taken.remainingMinor };
+  }
+
+  const closed = await closeSettledOrder(actor, taken.order, now);
+  return { ...closed, changeMinor: taken.changeMinor, remainingMinor: 0 };
+}
+
+/**
+ * Close a fully paid ticket.
+ *
+ * Split out so it can be retried on its own: when the fiscal device refuses,
+ * the money is already recorded and only this half has to be attempted again.
+ */
+export async function closeSettledOrder(
+  actor: PosActor,
+  order: OrderWithLines,
+  now = new Date(),
+): Promise<{ order: OrderWithLines; fiscal?: FiscalFailure }> {
+  const restaurant = await prisma.restaurant.findUnique({
+    where: { id: actor.restaurantId },
+    select: { fiscalProvider: true },
+  });
+
+  if (restaurant?.fiscalProvider) {
+    const receipt = await issueFiscalReceipt(order, restaurant.fiscalProvider, now);
+    if (!receipt.ok) {
+      await recordAudit({
+        restaurantId: actor.restaurantId,
+        membershipId: actor.membershipId,
+        action: "FISCAL_FAILED",
+        entity: "PosOrder",
+        entityId: order.id,
+        meta: { code: receipt.code, message: receipt.message },
+      });
+      // Deliberately left open. A ticket marked paid with no fiscal receipt is
+      // the one state an inspection would find, and the cashier can retry.
+      return {
+        order,
+        fiscal: { code: receipt.code, message: receipt.message, retryable: receipt.retryable },
+      };
+    }
+  }
+
+  const closed = await prisma.$transaction(async (tx) => {
+    const updated = await tx.posOrder.update({
+      where: { id: order.id },
+      data: { status: "PAID", closedAt: now, closedByMembershipId: actor.membershipId },
+      include: { lines: { include: { modifiers: true }, orderBy: { createdAt: "asc" } } },
+    });
+    await recordAudit(
+      {
+        restaurantId: actor.restaurantId,
+        membershipId: actor.membershipId,
+        action: "ORDER_SETTLED",
+        entity: "PosOrder",
+        entityId: order.id,
+        meta: { totalMinor: updated.totalMinor },
+      },
+      tx,
+    );
+    await projectOrderToSales(tx, updated, now);
+    await queueReceipt(tx, updated);
+    return updated;
+  });
+
+  return { order: closed };
 }
 
 /** Hand the ticket to the local bridge to print. Hardware is never driven from here. */

@@ -83,7 +83,20 @@ Kasadaki Windows makinesinde çalışan servis (Electron tray veya Windows servi
 - Faz 7'de ÖKC adaptörü de buraya oturur (tek kurulum, tek güncelleme kanalı)
 - ~~Otomatik güncelleme + uzaktan log~~ — ertelendi: Windows servis kurulumu ve güncelleme kanalı saha kararı
 
-### Faz 7 — YN ÖKC Entegrasyonu
+### Faz 7 — YN ÖKC Entegrasyonu — ADAPTÖR HAZIR, CİHAZ BEKLİYOR
+
+Marka kararı olmadan yapılabilecek her şey yapıldı:
+
+- `FiscalDevice` arayüzü marka-bağımsız. Cihaz seçimi tek bir uygulamayı belirler, başka hiçbir şeyi.
+- `builder.ts` siparişi mali fiş talebine çeviriyor: KDV departmanları, iptal ve ikram satırlarının fişten düşmesi, iskontonun satırlara dağılması. Saf ve testli — burada bir hata bug raporu değil, yanlış beyanname üretir.
+- `simulator.ts` gerçek cihazın reddettiklerini reddediyor (dengesiz tahsilat, boş fiş, çevrimdışı cihaz) ve komutla hata verebiliyor. Donanım alınmadan retry yolu ve kasiyerin gördüğü hata mesajı test edilebiliyor.
+- **Adisyon, fişi onaylanmadan kapanmıyor.** Ödeme her hâlükârda kaydediliyor (para geldi), ama fiş basılmazsa adisyon açık kalıyor ve kasiyer tekrar deneyebiliyor. Mali fişi olmayan kapanmış bir satış, denetimin bulacağı tek şeydir.
+- Cihaz veritabanı işlemi **dışında** çağrılıyor: kablonun ucundaki bir donanım beklerken satır kilidi tutmak tüm kasaları durdurur.
+- Ayar restoran başına: Ayarlar > Mali cihaz (Yok / Simülatör). Gerçek marka geldiğinde listeye eklenir.
+
+**Kalan:** gerçek vendor SDK'sı ve sertifikasyon. `resolveDevice()` içine bir satır ve bir adaptör dosyası.
+
+### Faz 7 — Özgün Plan
 - Köprü içinde ÖKC adaptörü (GMP-3 / vendor SDK), sunucuda `lib/pos/fiscal/` durum makinesi
 - Akış: ödeme onaylandı → `FiscalReceipt` QUEUED → köprü ÖKC'ye gönderir → onay/hata döner → sipariş PAID
 - ÖKC onayı gelmeden sipariş kapanmaz; timeout/çift gönderim koruması `clientOrderId` ile

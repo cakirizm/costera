@@ -10,7 +10,7 @@ export default async function SettingsPage(){
  const locale = await getAppLocale();
  const ctx = await requireRole("OWNER");
  const restaurant = ctx.restaurant
-   ? await prisma.restaurant.findUnique({ where: { id: ctx.restaurant.id }, select: { name: true, city: true, currency: true, targetFoodCostPct: true } })
+   ? await prisma.restaurant.findUnique({ where: { id: ctx.restaurant.id }, select: { name: true, city: true, currency: true, targetFoodCostPct: true, fiscalProvider: true } })
    : null;
  const staff = ctx.restaurant ? await listStaff(ctx.restaurant.id) : [];
 
@@ -24,7 +24,7 @@ export default async function SettingsPage(){
 
     <article className="costera-panel">
      <div className="costera-panel-head"><div><span>{tx(locale,"ORGANIZATION","ORGANİZASYON")}</span><h2>{tx(locale,"Restaurant settings","Restoran ayarları")}</h2></div></div>
-     <RestaurantForm locale={locale} name={restaurant?.name ?? ""} city={restaurant?.city ?? ""} currency={restaurant?.currency ?? "USD"} />
+     <RestaurantForm locale={locale} name={restaurant?.name ?? ""} city={restaurant?.city ?? ""} currency={restaurant?.currency ?? "USD"} fiscalProvider={restaurant?.fiscalProvider ?? null} />
     </article>
 
     <StaffManager locale={locale} staff={staff} />
