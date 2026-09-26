@@ -13,6 +13,8 @@
  * number and id, so there would be nothing for the waiter to open.
  */
 
+import { OUTBOX_STORE, run } from "./db";
+
 export type OutboxEntry = {
   id: string;
   kind: "ADD_LINES";
@@ -28,48 +30,15 @@ export type OutboxEntry = {
   };
 };
 
-const DB_NAME = "costera-pos";
-const DB_VERSION = 1;
-const STORE = "outbox";
-
-function openDatabase(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(STORE)) {
-        db.createObjectStore(STORE, { keyPath: "id" });
-      }
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
-
-function run<T>(
-  mode: IDBTransactionMode,
-  work: (store: IDBObjectStore) => IDBRequest<T>,
-): Promise<T> {
-  return openDatabase().then(
-    (db) =>
-      new Promise<T>((resolve, reject) => {
-        const tx = db.transaction(STORE, mode);
-        const request = work(tx.objectStore(STORE));
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-        tx.oncomplete = () => db.close();
-      }),
-  );
-}
-
 export type NewOutboxEntry = Omit<OutboxEntry, "createdAt">;
 
 export async function enqueue(entry: NewOutboxEntry, now = Date.now()): Promise<void> {
-  await run("readwrite", (store) => store.put({ ...entry, createdAt: now }));
+  await run(OUTBOX_STORE, "readwrite", (store) => store.put({ ...entry, createdAt: now }));
 }
 
 export async function listQueue(): Promise<OutboxEntry[]> {
   const entries = await run<OutboxEntry[]>(
+    OUTBOX_STORE,
     "readonly",
     (store) => store.getAll() as IDBRequest<OutboxEntry[]>,
   );
@@ -79,13 +48,11 @@ export async function listQueue(): Promise<OutboxEntry[]> {
 }
 
 export async function remove(id: string): Promise<void> {
-  await run("readwrite", (store) => store.delete(id));
+  await run(OUTBOX_STORE, "readwrite", (store) => store.delete(id));
 }
 
 export async function queueSize(): Promise<number> {
-  return run<number>("readonly", (store) => store.count());
+  return run<number>(OUTBOX_STORE, "readonly", (store) => store.count());
 }
 
-export function isSupported(): boolean {
-  return typeof indexedDB !== "undefined";
-}
+export { isSupported } from "./db";

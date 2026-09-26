@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import type { AppLocale } from "@/lib/costera/i18n";
 import { tx } from "@/lib/costera/locale";
 import { posFailureText } from "@/lib/pos/messages";
+import { cacheMenu, cacheOrder } from "@/lib/pos/offline/ticket-cache";
 import { useOutbox } from "@/lib/pos/offline/use-outbox";
 import { ApprovalSheet } from "./ApprovalSheet";
 import { moneyMinor } from "@/lib/pos/money";
@@ -71,6 +72,40 @@ export function OrderTerminal({
     order.lines.map((line) => line.clientLineId).filter((id): id is string => !!id),
   );
   const unsyncedLines = optimistic.filter((line) => !storedClientIds.has(line.clientLineId ?? ""));
+
+  // Kept up to date on every server render, so a reload during an outage has
+  // something to show instead of an empty table.
+  useEffect(() => {
+    void cacheOrder({
+      id: order.id,
+      code: order.code,
+      status: order.status,
+      totalMinor: order.totalMinor,
+      lines: order.lines.map((line) => ({
+        id: line.id,
+        name: line.name,
+        quantity: line.quantity,
+        lineTotalMinor: line.lineTotalMinor,
+        status: line.status,
+      })),
+    });
+  }, [order]);
+
+  useEffect(() => {
+    void cacheMenu({
+      currency,
+      categories: menu.map((c) => ({
+        id: c.id,
+        name: c.name,
+        products: c.products.map((p) => ({
+          id: p.id,
+          name: p.name,
+          priceMinor: p.priceMinor,
+          hasOptions: p.modifierGroups.length > 0,
+        })),
+      })),
+    });
+  }, [menu, currency]);
 
   const category = menu.find((c) => c.id === activeCategory) ?? menu[0];
   const hasUnsent = order.lines.some((line) => line.status === "NEW");

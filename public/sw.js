@@ -11,13 +11,24 @@
  * a paid table as occupied is worse than an offline notice.
  */
 
-const VERSION = "costera-pos-v1";
+const VERSION = "costera-pos-v2";
 const ASSETS = `${VERSION}-assets`;
 const OFFLINE_URL = "/offline.html";
+// A real page rather than a static notice: it reads the ticket the terminal
+// cached and lets the waiter keep adding to it while the network is gone.
+const TICKET_SHELL_URL = "/pos/offline";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(ASSETS).then((cache) => cache.addAll([OFFLINE_URL])).then(() => self.skipWaiting()),
+    caches
+      .open(ASSETS)
+      .then(async (cache) => {
+        await cache.add(OFFLINE_URL);
+        // Best effort: without it a cold start falls back to the plain notice,
+        // which is a worse experience but not a broken one.
+        await cache.add(TICKET_SHELL_URL).catch(() => undefined);
+      })
+      .then(() => self.skipWaiting()),
   );
 });
 
@@ -62,6 +73,12 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request).catch(async () => {
         const cache = await caches.open(ASSETS);
+        // A terminal navigation gets the ticket shell; the browser keeps the
+        // requested URL, so that page can tell which table it is standing on.
+        if (url.pathname.startsWith("/pos/")) {
+          const shell = await cache.match(TICKET_SHELL_URL);
+          if (shell) return shell;
+        }
         return (await cache.match(OFFLINE_URL)) ?? Response.error();
       }),
     );

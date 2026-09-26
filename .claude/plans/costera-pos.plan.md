@@ -104,6 +104,8 @@ Marka kararı olmadan yapılabilecek her şey yapıldı:
 
 ### Faz 8 — Offline / PWA — TAMAMLANDI (sınırları aşağıda)
 - Service Worker + IndexedDB outbox: adisyon alma, ürün ekleme, mutfağa gönderme offline çalışır; kuyruk `clientOrderId` idempotency'si ile senkronlanır
+- **Soğuk açılış yapıldı:** terminal her sunucu render'ında adisyonu ve menüyü IndexedDB'ye yazıyor. Ulaşılamayan bir `/pos/*` gezinmesinde service worker `/pos/offline` kabuğunu sunuyor; tarayıcı istenen URL'i koruduğu için ekran hangi masada olduğunu biliyor. Son onaylanan satırlar ile kuyruktakiler ayrı gösteriliyor ve toplam **yeniden hesaplanmıyor** — fiyatlama sunucunun işi, tahmin etmek kasanın sonradan yalanlayacağı bir sayı yazmak olurdu.
+- Modifier'lı ürünler çevrimdışı eklenemiyor: seçenek verisi önbellekte tutulmuyor ve modifier'lı bir fiyatı tahmin etmek garsonu bekletmekten kötü.
 - Dürüst sınır: ÖKC'li ödeme offline yapılamaz ve soğuk açılış (offline'ken sayfa yenileme) desteklenmez — offline, servis sırasındaki bağlantı kopmalarını kurtarır.
 
 ### Faz 9 — Motora Bağlanma (POS → Costera analizi)
@@ -209,7 +211,6 @@ Garson masada kendi telefonundan sipariş girer; kasaya yürümez.
 - **Faz 12 Expo arayüzü** — cihaz/simülatör olmadan çalıştırılamadı; yalnızca tip denetimi yapıldı. Sunucu tarafı ve HTTP uçları uçtan uca doğrulandı.
 - **Faz 7 ÖKC** — marka (Ingenico / Verifone / Hugin / Beko-Profilo) ve TSM operatörü seçilmeden başlanamaz.
 - **Köprü otomatik güncelleme** — dağıtım kanalı yok; şimdilik tilltaki repoyu çekip görevi yeniden başlatmak gerekiyor.
-- **Çevrimdışı soğuk açılış** — adisyon durumunun istemcide önbelleklenmesi.
 
 ## Kabul Kriterleri
 
