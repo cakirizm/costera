@@ -165,22 +165,23 @@ model InventoryRow {
 }
 
 model Membership {
-  id            String            @id @default(cuid())
-  userId        String
-  restaurantId  String
-  role          Role              @default(OWNER)
-  createdAt     DateTime          @default(now())
-  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  restaurant    Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  posPin        PosStaffPin?
-  openedOrders  PosOrder[]        @relation("PosOrderOpenedBy")
-  closedOrders  PosOrder[]        @relation("PosOrderClosedBy")
-  voidedLines   PosOrderLine[]    @relation("PosOrderLineVoidedBy")
-  takenPayments PosPayment[]      @relation("PosPaymentReceivedBy")
-  openedShifts  PosShift[]        @relation("PosShiftOpenedBy")
-  closedShifts  PosShift[]        @relation("PosShiftClosedBy")
-  cashMovements PosCashMovement[] @relation("PosCashMovementCreatedBy")
-  posAuditLogs  PosAuditLog[]
+  id             String             @id @default(cuid())
+  userId         String
+  restaurantId   String
+  role           Role               @default(OWNER)
+  createdAt      DateTime           @default(now())
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant     Restaurant         @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  posPin         PosStaffPin?
+  openedOrders   PosOrder[]         @relation("PosOrderOpenedBy")
+  closedOrders   PosOrder[]         @relation("PosOrderClosedBy")
+  voidedLines    PosOrderLine[]     @relation("PosOrderLineVoidedBy")
+  takenPayments  PosPayment[]       @relation("PosPaymentReceivedBy")
+  openedShifts   PosShift[]         @relation("PosShiftOpenedBy")
+  closedShifts   PosShift[]         @relation("PosShiftClosedBy")
+  cashMovements  PosCashMovement[]  @relation("PosCashMovementCreatedBy")
+  posAuditLogs   PosAuditLog[]
+  deviceSessions PosDeviceSession[]
 
   @@unique([userId, restaurantId])
 }
@@ -638,15 +639,21 @@ model PosDevice {
 }
 
 model PosDeviceSession {
-  id                String    @id @default(cuid())
+  id                String      @id @default(cuid())
   deviceId          String
-  tokenHash         String    @unique
+  // A handheld session names both the phone and the waiter holding it: the
+  // device token proves the phone is enrolled, the PIN says who is carrying it,
+  // and every ticket is attributed to that membership.
+  membershipId      String?
+  tokenHash         String      @unique
   credentialVersion String
   expiresAt         DateTime
-  createdAt         DateTime  @default(now())
-  device            PosDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt         DateTime    @default(now())
+  device            PosDevice   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  membership        Membership? @relation(fields: [membershipId], references: [id], onDelete: Cascade)
 
   @@index([deviceId])
+  @@index([membershipId])
   @@index([expiresAt])
 }
 

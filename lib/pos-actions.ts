@@ -401,7 +401,7 @@ export async function registerPosDeviceAction(name: string, kind: string) {
   const parsed = z
     .object({
       name: z.string().trim().min(1).max(60),
-      kind: z.enum(["TERMINAL", "BRIDGE", "KDS"]),
+      kind: z.enum(["TERMINAL", "BRIDGE", "KDS", "HANDHELD"]),
     })
     .safeParse({ name, kind });
   if (!parsed.success) return { ok: false as const, error: "INVALID_INPUT" as const };

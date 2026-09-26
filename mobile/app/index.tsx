@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import { useAuth } from "../src/lib/auth";
 import { getRestaurants, getOverview, type MobileOverview, type MobileRestaurant } from "../src/lib/api";
 import { colors, spacing } from "../src/lib/theme";
@@ -70,6 +71,7 @@ function ChannelBar({ name, sales, maxSales }: { name: string; sales: number; ma
 
 export default function OverviewScreen() {
   const auth = useAuth();
+  const router = useRouter();
   const [restaurant, setRestaurant] = useState<MobileRestaurant | null>(null);
   const [overview, setOverview] = useState<MobileOverview | null>(null);
   const [loading, setLoading] = useState(true);
@@ -135,6 +137,9 @@ export default function OverviewScreen() {
             <View style={s.badgeSmall}>
               <Text style={s.badgeSmallText}>{t("MONITOR")}</Text>
             </View>
+            <TouchableOpacity onPress={() => router.push("/waiter")} activeOpacity={0.7}>
+              <Text style={s.waiterLink}>Garson</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={auth.signOut} activeOpacity={0.7}>
               <Text style={s.logoutText}>{t("Logout")}</Text>
             </TouchableOpacity>
@@ -219,6 +224,7 @@ const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   header: { backgroundColor: colors.navy, paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, paddingTop: spacing.sm },
+  waiterLink: { color: colors.gold, fontSize: 13, fontWeight: "600" },
   headerTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   headerRight: { flexDirection: "row", alignItems: "center", gap: spacing.md },
   logo: { fontSize: 14, fontWeight: "800", letterSpacing: 3, color: colors.white },

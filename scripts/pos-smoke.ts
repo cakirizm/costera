@@ -85,6 +85,7 @@ async function main() {
   await runDayCloseChecks(restaurant.id, membership.id);
   await runStaffPinChecks(restaurant.id);
   await runApprovalChecks(restaurant.id);
+  await runHandheldChecks(restaurant.id);
   await runOfflineReplayChecks(actor, burger.id);
 
   await runPrintQueueChecks(restaurant.id);
@@ -172,6 +173,50 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+/* The waiter handheld: an enrolled phone plus a PIN, and nothing else. */
+async function runHandheldChecks(restaurantId: string) {
+  const { enrolDevice } = await import("@/lib/pos/bridge-auth");
+  const { createTerminalStaff, revokeStaffPin } = await import("@/lib/pos/staff");
+  const { signInHandheld, authenticateHandheld } = await import("@/lib/pos/handheld-auth");
+
+  const phone = await enrolDevice(restaurantId, "Smoke Phone", "HANDHELD");
+  await createTerminalStaff(restaurantId, "Smoke Waiter 2", "WAITER", "5150");
+  await createTerminalStaff(restaurantId, "Smoke Cook", "KITCHEN", "6160");
+
+  const bad = await signInHandheld("not-a-real-device-token", "5150");
+  check("an unenrolled phone is refused", bad.ok === false && bad.error, "DEVICE_UNKNOWN");
+
+  const wrongPin = await signInHandheld(phone.token, "0001");
+  check("a wrong PIN is refused", wrongPin.ok === false && wrongPin.error, "PIN_REJECTED");
+
+  // A cook has a PIN but no business taking orders at a table.
+  const cook = await signInHandheld(phone.token, "6160");
+  check("a kitchen PIN cannot take orders", cook.ok === false && cook.error, "NOT_A_WAITER");
+
+  const session = await signInHandheld(phone.token, "5150");
+  check("a waiter PIN on an enrolled phone signs in", session.ok, true);
+  if (!session.ok) return;
+
+  const asRequest = (token: string) =>
+    new Request("http://localhost/api/pos/handheld/bootstrap", {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+  const actor = await authenticateHandheld(asRequest(session.token));
+  check("the session names the waiter, not the device owner", actor?.staffName, "Smoke Waiter 2");
+  check("the session is scoped to its venue", actor?.restaurantId, restaurantId);
+
+  check("a made-up token authenticates nobody", await authenticateHandheld(asRequest("x".repeat(43))), null);
+
+  // Revoking the PIN must end the session immediately, not at expiry.
+  await revokeStaffPin(restaurantId, session.actor.membershipId);
+  check("revoking the PIN ends the session", await authenticateHandheld(asRequest(session.token)), null);
+
+  await prisma.posDevice.update({ where: { id: phone.deviceId }, data: { active: false } });
+  const afterRevoke = await signInHandheld(phone.token, "5150");
+  check("a revoked phone cannot sign in again", afterRevoke.ok === false && afterRevoke.error, "DEVICE_UNKNOWN");
+}
 
 /* The day close must only gather what belongs to that business day. */
 async function runDayCloseChecks(restaurantId: string, membershipId: string) {

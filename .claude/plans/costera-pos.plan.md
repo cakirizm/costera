@@ -167,8 +167,26 @@ Toplam ~9–13 hafta geliştirme; ÖKC sertifikasyonu takvimi uzatabilir.
 Önce dikey dilim: **Faz 1 → 2 → 3 → 9**. Masa aç, sipariş al, nakit öde, veri motora aksın.
 KDS (4), vardiya/rapor (5), köprü (6), ÖKC (7), offline (8) bunun üzerine eklenir.
 
+## Faz 12 — Garson El Terminali (mobil)
+
+Garson masada kendi telefonundan sipariş girer; kasaya yürümez.
+
+- Kimlik iki parçalı: **cihaz kaydı + personel PIN'i**. Telefon bir kez panodan
+  "Garson telefonu" olarak kaydedilir, sonra her vardiya PIN'le girilir. Garsona
+  şifre verilmez, mevcut `PosDevice` + `PosStaffPin` altyapısı aynen kullanılır.
+  Telefon kaybolursa cihaz iptal edilir; garson ayrılırsa PIN'i alınır.
+- Sahibin salt-okunur `MobileSession` akışına **dokunulmadı**; el terminali
+  tamamen ayrı bir kimlik yolu (`PosDeviceSession.membershipId`).
+- Uçlar: oturum aç/kapa, bootstrap (salon + menü tek istekte), adisyon aç,
+  adisyon oku, satır ekle, mutfağa gönder.
+- **Telefondan ödeme yok** — pilot kafede tek yazarkasa var ve kasaya bağlı.
+- Her satır `clientLineId` taşır: kafe ağında kaybolan istek tekrar basılınca
+  adisyon ikiye katlanmaz.
+- Garson tüm masaları görür (vardiya devri kolay olsun diye).
+
 ## Kalan Açık Maddeler
 
+- **Faz 12 doğrulaması** — Expo uygulaması cihaz/simülatör olmadan çalıştırılamadı; yalnızca tip denetimi yapıldı.
 - **Faz 7 ÖKC** — marka (Ingenico / Verifone / Hugin / Beko-Profilo) ve TSM operatörü seçilmeden başlanamaz.
 - **Köprü otomatik güncelleme** — dağıtım kanalı yok; şimdilik tilltaki repoyu çekip görevi yeniden başlatmak gerekiyor.
 - **Çevrimdışı soğuk açılış** — adisyon durumunun istemcide önbelleklenmesi.

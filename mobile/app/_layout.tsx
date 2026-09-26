@@ -5,13 +5,15 @@ import { AuthProvider, useAuth } from "../src/lib/auth";
 
 function AuthGate() {
   const auth = useAuth();
-  const segments = useSegments();
+  const segments = useSegments() as string[];
   const router = useRouter();
 
   useEffect(() => {
     if (auth.status === "loading") return;
     const inAuth = segments[0] === "login";
-    if (auth.status === "unauthenticated" && !inAuth) router.replace("/login");
+    // The waiter section authenticates itself with a device token and a PIN.
+    const inWaiter = segments[0] === "waiter";
+    if (auth.status === "unauthenticated" && !inAuth && !inWaiter) router.replace("/login");
     if (auth.status === "authenticated" && inAuth) router.replace("/");
   }, [auth.status, segments]);
 

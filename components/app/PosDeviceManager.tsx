@@ -78,6 +78,7 @@ export function PosDeviceManager({
             <option value="BRIDGE">{tx(locale, "Print bridge", "Yazıcı köprüsü")}</option>
             <option value="TERMINAL">{tx(locale, "Till", "Kasa")}</option>
             <option value="KDS">{tx(locale, "Kitchen screen", "Mutfak ekranı")}</option>
+            <option value="HANDHELD">{tx(locale, "Waiter phone", "Garson telefonu")}</option>
           </select>
         </label>
         <button
